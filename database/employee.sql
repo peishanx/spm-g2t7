@@ -1,20 +1,24 @@
-create database employee;
-use employee;
+-- Creating the database and setting it as the active database
+CREATE DATABASE employee;
+USE employee;
+
+-- Creating the employee table
 CREATE TABLE employee (
-	sid int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    staff_fname varchar(50) not null,
-    staff_lname varchar(50) not null,
-    dept varchar(50) not null,
-    position varchar(50) not null,
-    country varchar(50) not null,
-	email varchar(250) unique not null,
-    reporting_manager int not null,
-    role int not null,
-    constraint primary key (sid),
-    constraint foreign key (reporting_manager)
+    sid int NOT NULL AUTO_INCREMENT,
+    staff_fname varchar(50) NOT NULL,
+    staff_lname varchar(50) NOT NULL,
+    dept varchar(50) NOT NULL,
+    position varchar(50) NOT NULL,
+    country varchar(50) NOT NULL,
+    email varchar(250) UNIQUE NOT NULL,
+    reporting_manager int,  -- Changed to allow NULL for top positions
+    role int NOT NULL,
+    PRIMARY KEY (sid),
+    CONSTRAINT fk_reporting_manager FOREIGN KEY (reporting_manager) REFERENCES employee(sid)
 );
 
-
+-- Inserting values into the employee table
+-- For heads of departments, reporting_manager is set to NULL
 INSERT INTO employee (staff_fname, staff_lname, dept, position, country, email, reporting_manager, role)
 VALUES
 ('John', 'Doe', 'Sales', 'Sales Executive', 'USA', 'johndoe@example.com', 1, 2),
@@ -28,14 +32,10 @@ VALUES
 ('Mark', 'Adams', 'Finance', 'Finance Analyst', 'UK', 'markadams@example.com', 10, 2),
 ('Isabella', 'Clark', 'Finance', 'Finance Manager', 'Canada', 'isabellaclark@example.com', 11, 1),
 ('James', 'Wilson', 'IT', 'IT Support', 'Australia', 'jameswilson@example.com', 12, 2),
-('Olivia', 'Davis', 'IT', 'IT Manager', 'Singapore', 'oliviadavis@example.com', 13, 1);
-
-INSERT INTO employee (staff_fname, staff_lname, dept, position, country, email, reporting_manager, role)
-VALUES
-('Alex', 'Miller', 'Sales', 'Sales Director', 'USA', 'alexmiller@example.com', 0, 1),  -- Alex is the head of Sales (reporting_manager = 0 as no higher manager)
-('Laura', 'Johnson', 'Consult', 'Consulting Director', 'Canada', 'laurajohnson@example.com', 0, 1),  -- Laura is the head of Consulting
-('Brian', 'Evans', 'System solutioning', 'System Solutions Director', 'UK', 'brianevans@example.com', 0, 1),  -- Brian is head of System Solutions
-('Chloe', 'Martinez', 'HR and Admin', 'HR Director', 'Singapore', 'chloemartinez@example.com', 0, 1),  -- Chloe is head of HR and Admin
-('Daniel', 'Harris', 'Finance', 'Finance Director', 'Australia', 'danielharris@example.com', 0, 1),  -- Daniel is head of Finance
-('Nina', 'Turner', 'IT', 'IT Director', 'Singapore', 'ninaturner@example.com', 0, 1);  -- Nina is head of IT
-
+('Olivia', 'Davis', 'IT', 'IT Manager', 'Singapore', 'oliviadavis@example.com', 13, 1),
+('Alex', 'Miller', 'Sales', 'Sales Director', 'USA', 'alexmiller@example.com', NULL, 1),
+('Laura', 'Johnson', 'Consult', 'Consulting Director', 'Canada', 'laurajohnson@example.com', NULL, 1),
+('Brian', 'Evans', 'System solutioning', 'System Solutions Director', 'UK', 'brianevans@example.com', NULL, 1),
+('Chloe', 'Martinez', 'HR and Admin', 'HR Director', 'Singapore', 'chloemartinez@example.com', NULL, 1),
+('Daniel', 'Harris', 'Finance', 'Finance Director', 'Australia', 'danielharris@example.com', NULL, 1),
+('Nina', 'Turner', 'IT', 'IT Director', 'Singapore', 'ninaturner@example.com', NULL, 1);
