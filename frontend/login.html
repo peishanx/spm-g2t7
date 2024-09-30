@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      display: flex;
+      width: 80%;
+      max-width: 1200px;
+      background-color: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-side {
+      width: 60%;
+      background-color: #f7f7ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .image-side img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .login-side {
+      width: 40%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-side h1 {
+      margin-bottom: 20px;
+      font-size: 36px;
+      color: #333;
+    }
+
+    .login-side h2 {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .login-side .form-group {
+      margin-bottom: 20px;
+    }
+
+    .login-side .form-group label {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .login-side .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    .login-side .form-group input:focus {
+      outline: none;
+      border-color: #6a67ce;
+    }
+
+    .login-side a {
+      color: #6a67ce;
+      text-decoration: none;
+    }
+
+    .login-side a:hover {
+      text-decoration: underline;
+    }
+
+    .form-group .forgot-password {
+      text-align: right;
+    }
+
+    .login-side .login-btn {
+      width: 100%;
+      padding: 15px;
+      background-color: #6a67ce;
+      color: #fff;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .login-side .login-btn:hover {
+      background-color: #5a55b8;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+    }
+
+    .eye-icon img {
+      width: 24px; 
+      height: 24px; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Side with Image -->
+    <div class="image-side">
+      <img src="your-image-url-here" alt="Work from Home System Image">
+    </div>
+
+    <!-- Right Side with Login Form -->
+    <div class="login-side">
+      <h1>HRMS</h1>
+      <h2>Welcome 👋<br>Please login here</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Email Address" required>
+        </div>
+        <div class="form-group" style="position: relative;">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Password" required>
+          <button type="button" class="eye-icon" id="togglePassword">
+            <img src="eye-icon-pw.png" alt="Toggle Password" id="eyeImage">
+          </button>
+        </div>
+        <div class="form-group forgot-password">
+          <a href="#">Forgot Password?</a>
+        </div>
+        <button class="login-btn" type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function () {
+      const passwordInput = document.getElementById('password');
+      const eyeImage = document.getElementById('eyeImage');
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+
+      // Toggle the eye icon image based on the password field state
+      eyeImage.src = type === 'password' 
+        ? 'eye-icon-pw.png' 
+        : 'eye-lock-icon-pw.png'; 
+    });
+
+    // Handle form submission (simplified for demonstration purposes)
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Redirect based on role
+        if (data.role === '1') {
+          window.location.href = '/role1.html';
+        } else if (data.role === '2') {
+          window.location.href = '/role2.html';
+        } else if (data.role === '3') {
+          window.location.href = '/role3.html';
+        }
+      } else {
+        alert('Invalid email or password');
+      }
+    });
+  </script>
+</body>
+</html>
