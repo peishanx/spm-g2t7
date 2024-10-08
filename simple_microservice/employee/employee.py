@@ -7,7 +7,7 @@ import sys
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    environ.get("dbURL") or "mysql+mysqlconnector://root:@localhost:3306/user"
+    environ.get("dbURL") or "mysql+mysqlconnector://root:@localhost:3306/employee"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 299}
@@ -61,5 +61,5 @@ def find_by_Staff_ID(Staff_ID):
         return jsonify({"code": 200, "data": staff_entry.json()})
     return jsonify({"code": 404, "message": "Staff not found."}), 404
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     app.run(host="0.0.0.0", port = 5100, debug =True)
