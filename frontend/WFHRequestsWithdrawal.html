@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Requests</title>
+
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+</head>
+
+<body>
+    <div class="wfhrequestformdetails">
+        <div class="main-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
+                    <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
+                </div>
+                <nav class="nav-menu">
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
+                        <span>Requests</span>
+                        <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-up-01.svg" />
+                    </a>
+                    <a href="#" class="nav-item active">
+                        <span>My Requests</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span>Team Requests</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
+                        <span>Schedules</span>
+                        <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-interface-outline-setting.svg" alt="" class="nav-icon">
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Header -->
+                <header class="header">
+                    <div class="header-content">
+                        <h1>Requests</h1>
+                        <p>All WFH Applications</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="notification-btn">
+                            <img src="img/huge-icon-device-outline-notification-1.svg" alt="Notifications">
+                        </button>
+                        <div class="user-profile">
+                            <img src="img/rectangle-3463281.png" alt="Profile" class="profile-img">
+                            <div class="user-info">
+                                <h3>Robert Allen</h3>
+                                <p>HR Manager</p>
+                            </div>
+                            <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
+                                class="dropdown-icon">
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Form -->
+                <div class="form-container">
+                    <div class="form-header">
+                        <img src="img/huge-icon-user-solid-user.svg" alt="" class="form-icon">
+                        <h2 class="contenttitle">Work From Home Details</h2>
+                    </div>
+                    <div class="requestapproveddetails">
+                        <div class="statusgroup">
+                            <span class="statuslabel">Status</span>
+                            <span class="status">Approved</span>
+                        </div>
+                        <div class="approvedbygroup">
+                            <span class="reportingmanagerlabel">Approved by:</span>
+                            <span class="reportingmanager">Jane Lim</span>
+                        </div>
+                        <div class="approvaldategroup">
+                            <span class="approvaldatetimelabel">Date and Time of Approval:</span>
+                            <span class="approvaldatetime">03/07/2024 9:00:56AM</span>
+                        </div>
+                    </div>
+
+                    <form class="wfh-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstname">FirstName:</label>
+                                <p id="firstname">Darlene</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname">LastName:</label>
+                                <p id="lastname">Robertson</p>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="department">Department:</label>
+                                <p id="department">Finance</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Role:</label>
+                                <p id="role">Staff</p>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fromdate">From Date:</label>
+                                <p id="fromdate">05/07/2024</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="todate">To Date:</label>
+                                <p id="todate">08/07/2024</p>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="type">Type:</label>
+                                <p id="type">AM</p>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="reason">Reason:</label>
+                                <p id="reason">On Course</p>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="attachments">Attachments:</label>
+                                <p>📄 virtual_seminar.pdf</p>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="reason">Reasons for Withdrawal</label>
+                                <textarea id="additionalreason" placeholder="Reason"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="backbtn">Back</button>
+                            <button type="submit" class="btn btn-primary" id="withhdrawbtn">Withdraw</button>
+                        </div>
+                    </form>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

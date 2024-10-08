@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Schedules</title>
+
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    
+
+</head>
+
+<body>
+    <div class="schedulesspecialhrjack">
+        <div class="main-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
+                    <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
+                </div>
+                <nav class="nav-menu">
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
+                        <span>Requests</span>
+                        <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+                    </a>
+
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
+                        <span>Schedules</span>
+                        <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-up-01.svg" />
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span>Calendars</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span>Organization</span>
+                    </a>
+                    <a href="#" class="nav-item active">
+                        <span>Team</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="img/huge-icon-interface-outline-setting.svg" alt="" class="nav-icon">
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header class="header">
+                    <div class="header-content">
+                        <h1>Schedules</h1>
+                        <p>Department and Teams</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="notification-btn">
+                            <img src="img/huge-icon-device-outline-notification-1.svg" alt="Notifications">
+                        </button>
+                        <div class="user-profile">
+                            <img src="img/rectangle-3463281.png" alt="Profile" class="profile-img">
+                            <div class="user-info">
+                                <h3>Robert Allen</h3>
+                                <p>HR Manager</p>
+                            </div>
+                            <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
+                                class="dropdown-icon">
+                        </div>
+                    </div>
+                </header>
+                <div class="content">
+                    <div class="actions">
+                        <input type="search" placeholder="Search" id="searchbar">
+
+                        <div class="filters">
+                            <select class="dropdown" id="statusdropdown">
+                                <option>In Office (Full Day)</option>
+                                <option>In Office (AM)</option>
+                                <option>In Office (PM)</option>
+                                <option>WFH (Full Day)</option>
+                                <option>WFH (AM)</option>
+                                <option>WFH (PM)</option>
+                                <option>On Leave</option>
+                            </select>
+                            <button type="button" class="btn" id="requestdate" src="">Request Date<i
+                                    class="fa fa-filter"></i></button>
+                        </div>
+                    </div>
+                    <div class="departmentteamfilters">
+                        <div class="departmentfilters">
+                            <label>Department:</label>
+                            <select class="departmentdropdown" id="department">
+                                <option id="hramin">HR and Admin</option>
+                                <option id="sales">Sales</option>
+                                <option id="consultancy">Consultancy</option>
+                                <option id="systemsolutioning">System Solutioning</option>
+                                <option id="engineeringoperations">Engineering Operations</option>
+                                <option id="finance">Finance</option>
+                                <option id="it">IT</option>
+                            </select>
+                        </div>
+                        <div class="teamfilters">
+                            <label>Team:</label>
+                            <select class="teamdropdown" id="teamdropdown">
+                                <option id="1">1</option>
+                                <option id="2">2</option>
+                                <option id="3">3</option>
+                                <option id="4">4</option>
+                                <option id="5">5</option>
+                                <option id="6">6</option>
+                                <option id="7">7</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="contentheader">
+                        <h2 class="contenttitle">My Department Schedule</h2>
+                    </div>
+
+                    <table class="requests-table">
+                        <thead>
+                            <tr>
+                                <th>Employee Name</th>
+                                <th>Department</th>
+                                <th>Team</th>
+                                <th>Month</th>
+                                <th>Date</th>
+                                <th>Request Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>01/07/2023</td>
+                                <td>Darlene Robertson</td>
+                                <td>Design</td>
+                                <td>June</td>
+                                <td>05</td>
+                                <td><span class="status officefull">In Office(Full Day)</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>01/07/2023</td>
+                                <td>Darlene Robertson</td>
+                                <td>Design</td>
+                                <td>June</td>
+                                <td>05</td>
+                                <td><span class="status officeam">In Office(AM)</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>01/07/2023</td>
+                                <td>Darlene Robertson</td>
+                                <td>Design</td>
+                                <td>June</td>
+                                <td>05</td>
+                                <td><span class="status officepm">In Office(PM)</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>01/07/2023</td>
+                                <td>Darlene Robertson</td>
+                                <td>Design</td>
+                                <td>June</td>
+                                <td>05</td>
+                                <td><span class="status wfhfull">WFH (Full Day)</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>01/07/2023</td>
+                                <td>Darlene Robertson</td>
+                                <td>Design</td>
+                                <td>June</td>
+                                <td>05</td>
+                                <td><span class="status wfham">WFH (AM)</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>01/07/2023</td>
+                                <td>Darlene Robertson</td>
+                                <td>Design</td>
+                                <td>June</td>
+                                <td>05</td>
+                                <td><span class="status wfhpm">WFH (PM)</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>01/07/2023</td>
+                                <td>Darlene Robertson</td>
+                                <td>Design</td>
+                                <td>June</td>
+                                <td>05</td>
+                                <td><span class="status onleave">On Leave</span></td>
+                            </tr>
+                            <!-- More rows here -->
+                        </tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <div class="per-page">
+                            <span>Showing</span>
+                            <select>
+                                <option>10</option>
+                            </select>
+                        </div>
+                        <p>Showing 1 to 10 out of 60 records</p>
+                        <div class="page-numbers">
+                            <button>&lt;</button>
+                            <button class="active" type="button">1</button>
+                            <button type="button">2</button>
+                            <button type="button">3</button>
+                            <button type="button">4</button>
+                            <button>&gt;</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Requests</title>
+
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="style.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+</head>
+
+<body>
+  <div class="wfhrequestsoverviewstaff">
+    <div class="main-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
+          <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
+        </div>
+        <nav class="nav-menu">
+          <a href="#" class="nav-item">
+            <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item">
+            <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
+            <span>Requests</span>
+            <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-up-01.svg" />
+          </a>
+          <a href="#" class="nav-item active">
+            <span>My Requests</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span>Team Requests</span>
+          </a>
+          <a href="#" class="nav-item">
+            <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
+            <span>Schedules</span>
+            <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+          </a>
+          <a href="#" class="nav-item">
+            <img src="img/huge-icon-interface-outline-setting.svg" alt="" class="nav-icon">
+            <span>Settings</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-content">
+            <h1>Requests</h1>
+            <p>All WFH Applications</p>
+          </div>
+          <div class="header-actions">
+            <button class="notification-btn">
+              <img src="img/huge-icon-device-outline-notification-1.svg" alt="Notifications">
+            </button>
+            <div class="user-profile">
+              <img src="img/rectangle-3463281.png" alt="Profile" class="profile-img">
+              <div class="user-info">
+                <h3>Robert Allen</h3>
+                <p>HR Manager</p>
+              </div>
+              <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt="" class="dropdown-icon">
+            </div>
+          </div>
+        </header>
+
+        <div class="content">
+          <div class="actions">
+            <input class="searchbar" type="search" placeholder="Search">
+            <div class="filters">
+              <select class="dropdown" id="statusdropdown">
+                <option>Pending</option>
+                <option>Approved</option>
+                <option>Rejected</option>
+                <option>Withdraw</option>
+            </select>
+              <button type="button" class="btn" id="requestdate" src="">Request Date<i
+                  class="fa fa-filter"></i></button>
+              <button type="button" class="btn" id="applybtn">Apply</button>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Request Date</th>
+                <th>Reason</th>
+                <th>Approved WFH</th>
+                <th>Approved By</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01/07/2023</td>
+                <td>05 May 2023</td>
+                <td>On Course</td>
+                <td>1/2</td>
+                <td>Jane Lim</td>
+                <td><span class="status pending">Pending</span></td>
+              </tr>
+
+              <tr>
+                <td>01/07/2023</td>
+                <td>05 May 2023</td>
+                <td>On Course</td>
+                <td>1/2</td>
+                <td>Jane Lim</td>
+                <td><span class="status approved">Approved</span></td>
+              </tr>
+
+              <tr>
+                <td>01/07/2023</td>
+                <td>05 May 2023</td>
+                <td>On Course</td>
+                <td>1/2</td>
+                <td>Jane Lim</td>
+                <td><span class="status rejected">Rejected</span></td>
+              </tr>
+
+              <tr>
+                <td>01/07/2023</td>
+                <td>05 May 2023</td>
+                <td>On Course</td>
+                <td>1/2</td>
+                <td>Jane Lim</td>
+                <td><span class="status withdraw">Withdraw</span></td>
+              </tr>
+              <!-- Repeat similar rows -->
+            </tbody>
+          </table>
+
+          <div class="pagination">
+            <div class="per-page">
+              <span>Showing</span>
+              <select>
+                <option>10</option>
+              </select>
+            </div>
+            <p>Showing 1 to 10 out of 60 records</p>
+            <div class="page-numbers">
+              <button>&lt;</button>
+              <button class="active" type="button">1</button>
+              <button type="button">2</button>
+              <button type="button">3</button>
+              <button type="button">4</button>
+              <button>&gt;</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+
+</html>
