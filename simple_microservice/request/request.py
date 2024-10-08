@@ -47,11 +47,11 @@ class Request(db.Model):
 def create_request():
     data = request.get_json()
 
-    rid = data.get("rid")
+    # rid = data.get("rid")
     sid = data.get("sid")
     type = data.get("type")
 
-    if rid is None or sid is None or type is None:
+    if sid is None or type is None:
         return jsonify(
         {
                 "code": 400,
