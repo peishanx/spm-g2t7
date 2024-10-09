@@ -78,6 +78,11 @@
                     <div class="actions">
                         <input class="searchbar" type="search" placeholder="Search">
                         <div class="filters">
+                            <select class="dropdown" id="wfhtypedropdown">
+                                <option>AM</option>
+                                <option>PM</option>
+                                <option>Full Day</option>
+                            </select>
                             <select class="dropdown" id="statusdropdown">
                                 <option>Pending</option>
                                 <option>Approved</option>
@@ -89,7 +94,9 @@
                             <button type="button" class="btn" id="applybtn">Apply</button>
                         </div>
                     </div>
-                    <label>Team:</label>
+                    <div class="teamfilterlabel">
+                        <label>Team:</label>
+                    </div>
                     <select class="teamdropdown" id="teamdropdown">
                         <option id="1">1</option>
                         <option id="2">2</option>
@@ -108,6 +115,7 @@
                                 <th>Team</th>
                                 <th>Requested Date</th>
                                 <th>Reason</th>
+                                <th>WFH Type</th>
                                 <th>Approved WFH</th>
                                 <th>Approved By</th>
                                 <th>Status</th>
@@ -120,6 +128,7 @@
                                 <td>Design</td>
                                 <td>05 May 2023</td>
                                 <td>On Course</td>
+                                <td>AM</td>
                                 <td>1/2</td>
                                 <td>Jane Lim</td>
                                 <td><span class="status pending">Pending</span></td>
@@ -131,6 +140,7 @@
                                 <td>Design</td>
                                 <td>05 May 2023</td>
                                 <td>On Course</td>
+                                <td>AM</td>
                                 <td>1/2</td>
                                 <td>Jane Lim</td>
                                 <td><span class="status approved">Approved</span></td>
@@ -142,6 +152,7 @@
                                 <td>Design</td>
                                 <td>05 May 2023</td>
                                 <td>On Course</td>
+                                <td>AM</td>
                                 <td>1/2</td>
                                 <td>Jane Lim</td>
                                 <td><span class="status rejected">Rejected</span></td>
@@ -153,6 +164,7 @@
                                 <td>Design</td>
                                 <td>05 May 2023</td>
                                 <td>On Course</td>
+                                <td>AM</td>
                                 <td>1/2</td>
                                 <td>Jane Lim</td>
                                 <td><span class="status withdraw">Withdraw</span></td>

@@ -149,11 +149,11 @@
 }
 
 .wfhrequestsoverviewjack .departmentfilterlabel {
-  margin-top: 10px;
+  padding-bottom: 10px;
 }
 
 .wfhrequestsoverviewjack .btn,
-.wfhrequestsoverviewjack #statusdropdown {
+.wfhrequestsoverviewjack #statusdropdown, .wfhrequestsoverviewjack #wfhtypedropdown{
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
@@ -161,7 +161,7 @@
 }
 
 .wfhrequestsoverviewjack #statusdropdown,
-.wfhrequestsoverviewjack #requestdate {
+.wfhrequestsoverviewjack #requestdate, .wfhrequestsoverviewjack #wfhtypedropdown {
   border: 1px solid #dadada;
   background: white;
 }
@@ -175,7 +175,7 @@
   color: #7a7a7a;
 }
 
-.wfhrequestsoverviewjack .filters #statusdropdown,
+.wfhrequestsoverviewjack .filters #statusdropdown, .wfhrequestsoverviewjack #wfhtypedropdown,
 .wfhrequestsoverviewjack .departmentdropdown {
   margin-right: 5px;
 }
@@ -261,16 +261,22 @@
   margin-bottom: 20px;
 }
 
-.wfhrequestsoverviewmanagerdirector .searchbar,
-.wfhrequestsoverviewmanagerdirector .teamdropdown {
+.wfhrequestsoverviewmanagerdirector .searchbar
+{
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   width: 300px;
 }
+.wfhrequestsoverviewmanagerdirector .teamdropdown {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  width: 250px;
+}
 
 .wfhrequestsoverviewmanagerdirector .btn,
-.wfhrequestsoverviewmanagerdirector #statusdropdown {
+.wfhrequestsoverviewmanagerdirector #statusdropdown, .wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
@@ -278,9 +284,13 @@
 }
 
 .wfhrequestsoverviewmanagerdirector #statusdropdown,
-.wfhrequestsoverviewmanagerdirector #requestdate {
+.wfhrequestsoverviewmanagerdirector #requestdate, .wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
   border: 1px solid #dadada;
   background: white;
+}
+
+.wfhrequestsoverviewmanagerdirector .teamfilterlabel{
+  padding-bottom: 10px;
 }
 
 .wfhrequestsoverviewmanagerdirector .fa.fa-filter {
@@ -358,7 +368,7 @@
   border-color: #6941C6;
 }
 
-  /*Page: WFH Request Overview (Manager/Director View)*/
+  /*Page: WFH Request Overview (staff View)*/
   /* Table Styles */
   .wfhrequestsoverviewstaff table {
     width: 100%;
@@ -399,15 +409,13 @@
   }
   
   /* Actions Bar Styles */
-  .wfhrequestsoverviewstaff  .actions,
-  .wfhrequestsoverviewstaff  .departmentdropdown {
+  .wfhrequestsoverviewstaff  .actions {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
   }
   
-  .wfhrequestsoverviewstaff  .searchbar,
-  .wfhrequestsoverviewstaff  .departmentdropdown {
+  .wfhrequestsoverviewstaff  .searchbar{
     padding: 10px;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
@@ -415,7 +423,7 @@
   }
   
   .wfhrequestsoverviewstaff  .btn,
-  .wfhrequestsoverviewstaff #statusdropdown {
+  .wfhrequestsoverviewstaff #statusdropdown, .wfhrequestsoverviewstaff #wfhtypedropdown {
     padding: 10px;
     border-radius: 10px;
     font-size: 14px;
@@ -423,7 +431,7 @@
   }
   
   .wfhrequestsoverviewstaff #statusdropdown,
-  .wfhrequestsoverviewstaff #requestdate {
+  .wfhrequestsoverviewstaff #requestdate, .wfhrequestsoverviewstaff #wfhtypedropdown {
     border: 1px solid #dadada;
     background: white;
   }
@@ -434,9 +442,8 @@
     color: #7a7a7a;
   }
   
-  .wfhrequestsoverviewstaff .filters #statusdropdown,
-  .departmentdropdown {
-    margin-right: 5px;
+  .wfhrequestsoverviewstaff #statusdropdown, .wfhrequestsoverviewstaff #wfhtypedropdown {
+    margin-right: 2px;
   }
   
   .wfhrequestsoverviewstaff #applybtn {
