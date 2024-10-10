@@ -61,5 +61,33 @@ def find_by_Staff_ID(Staff_ID):
         return jsonify({"code": 200, "data": staff_entry.json()})
     return jsonify({"code": 404, "message": "Staff not found."}), 404
 
+@app.route("/employee/filter/<string:Dept>")
+def find_by_dept(Dept):
+    employees = db.session.query(Employee.Staff_ID, Employee.Staff_FName, Employee.Staff_LName).filter_by(Dept=Dept).all()
+
+    if employees:
+        employee_list = [{"Staff_ID": e.Staff_ID, "Staff_FName": e.Staff_FName, "Staff_LName": e.Staff_LName} for e in employees]
+        return jsonify({"code": 200, "data": employee_list})
+    return jsonify({"code": 404, "message": f"No employees found in the department {Dept}."}), 404
+
+@app.route("/employee/position/<string:Position>")
+def find_by_position(Position):
+    employees = db.session.query(Employee.Staff_ID, Employee.Staff_FName, Employee.Staff_LName).filter_by(Position=Position).all()
+
+    if employees:
+        employee_list = [{"Staff_ID": e.Staff_ID, "Staff_FName": e.Staff_FName, "Staff_LName": e.Staff_LName} for e in employees]
+        return jsonify({"code": 200, "data": employee_list})
+    return jsonify({"code": 404, "message": f"No employees found with the position {Position}."}), 404
+
+# @app.route("/employee/role/<int:Role>")
+# def find_by_role(Role):
+#     employees = db.session.query(Employee.Staff_ID, Employee.Staff_FName, Employee.Staff_LName).filter_by(Role=Role).all()
+
+#     if employees:
+#         employee_list = [{"Staff_ID": e.Staff_ID, "Staff_FName": e.Staff_FName, "Staff_LName": e.Staff_LName} for e in employees]
+#         return jsonify({"code": 200, "data": employee_list})
+#     return jsonify({"code": 404, "message": f"No employees found with the role {Role}."}), 404
+
+
 if __name__ == "__main__": 
     app.run(host="0.0.0.0", port = 5100, debug =True)

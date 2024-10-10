@@ -138,5 +138,66 @@ def reject_request(rid, sid):
             "message": "An error occurred while rejecting the request. " + str(e)
         }), 500
 
+@app.route("/request/<int:rid>/employee/<int:sid>/withdraw", methods = ["PUT"])
+def withdraw_request(rid, sid):
+    try:
+        request_entry = Request.query.filter_by(rid=rid, sid=sid).filter(Request.status.in_(["Pending", "Approved"])).one()
+
+        if not request_entry:
+            return jsonify({
+                "code": 404,
+                "message": f"Request with ID {rid} for employee {sid} not found."
+            }), 404
+
+        if request_entry.status not in ["Pending", "Approved"]:
+            return jsonify({
+                "code": 400,
+                "message": f"Request {rid} for employee {sid} cannot be withdrawn as its status is '{request_entry.status}'."
+            }), 400
+
+        request_entry.status = "Withdrawn"
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": f"Request {rid} for employee {sid} has been successfully withdrawn."
+        }), 200
+
+    except Exception as e:
+        # Roll back any changes if an error occurs
+        db.session.rollback()
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred while withdrawing the request. " + str(e)
+        }), 500
+
+@app.route("/request/auto-reject", methods=["PUT"])
+def auto_reject_old_pending_requests():
+    try:
+        now = datetime.now(tz=timezone.utc)
+        
+        pending_requests = Request.query.filter_by(status="Pending").all()
+
+        for req in pending_requests:
+            time_difference = now - req.createdAt
+
+            if time_difference > timedelta(hours=24):
+                req.status = "Rejected"
+        db.session.commit()
+
+        return jsonify({
+            "code": 200,
+            "message": "All pending requests older than 24 hours have been rejected."
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred while rejecting the old pending requests. " + str(e)
+        }), 500
+
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port = 5200, debug = True)
