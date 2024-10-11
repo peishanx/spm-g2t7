@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <title>Requests</title>
 
   <link rel="stylesheet" href="css/main.css">
@@ -13,12 +13,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+  <!--Session storage after the login-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const staffId = sessionStorage.getItem('staff_id');
+      const staffName = sessionStorage.getItem('staff_name');
+      const dept = sessionStorage.getItem('dept');
+      const role = sessionStorage.getItem('role');
+
+      // Now you can use these variables as needed in your page
+      console.log(`Staff ID: ${staffId}, Name: ${staffName}, Dept: ${dept}, Role: ${role}`);
+
+      // Optionally, populate the HTML page with these details
+      document.getElementById('staffNameDisplay').textContent = staffName;
+      document.getElementById('deptDisplay').textContent = dept;
+      document.getElementById('roleDisplay').textContent = role;
+    });
+  </script>
+
+  <!-- Somewhere in your HTML -->
+  <!-- <div id="staffNameDisplay"></div>
+  <div id="deptDisplay"></div>
+  <div id="roleDisplay"></div> -->
+
 
 </head>
 
 <body>
+
   <div class="wfhrequestsoverviewstaff">
     <div class="main-container">
+
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="logo">
@@ -26,32 +51,56 @@
           <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
         </div>
         <nav class="nav-menu">
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" onclick="navigateTo('dashboard.html')">
             <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
             <span>Dashboard</span>
           </a>
-          <a href="#" class="nav-item">
-            <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
-            <span>Requests</span>
-            <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-up-01.svg" />
-          </a>
-          <a href="#" class="nav-item active">
-            <span>My Requests</span>
-          </a>
-          <a href="#" class="nav-item">
-            <span>Team Requests</span>
-          </a>
-          <a href="#" class="nav-item">
-            <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
-            <span>Schedules</span>
-            <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-          </a>
-          <a href="#" class="nav-item">
+
+          <!-- Requests Dropdown -->
+          <div class="dropdown">
+            <button class="dropbtn" onclick="toggleDropdown('requestsDropdown', 'requestsArrow')">
+              <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
+              <span>Requests</span>
+              <img alt="Arrow" class="icon-arrow" id="requestsArrow"
+                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+            </button>
+            <div class="dropdown-content" id="requestsDropdown">
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestForm.html')">Apply</a>
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_Staff.html')">My Requests</a>
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_ManagerDirector.html')">Team Requests</a>
+            </div>
+          </div>
+
+          <!-- Schedules Dropdown -->
+          <div class="dropdown">
+            <button class="dropbtn" onclick="toggleDropdown('schedulesDropdown', 'schedulesArrow')">
+              <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
+              <span>Schedules</span>
+              <img alt="Arrow" class="icon-arrow" id="schedulesArrow"
+                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+            </button>
+            <div class="dropdown-content" id="schedulesDropdown">
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHCalendarStaff.html')">Calendars</a>
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsSchedules_Organization.html')">Organization</a>
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsSchedules_SHRJack.html')">Team</a>
+            </div>
+          </div>
+
+          <a href="#" class="nav-item" onclick="navigateTo('settings.html')">
             <img src="img/huge-icon-interface-outline-setting.svg" alt="" class="nav-icon">
             <span>Settings</span>
           </a>
         </nav>
       </aside>
+
+
+
+
+
+
+
+
+
 
       <!-- Main Content -->
       <main class="main-content">
@@ -84,13 +133,13 @@
                 <option>AM</option>
                 <option>PM</option>
                 <option>Full Day</option>
-            </select>
+              </select>
               <select class="dropdown" id="statusdropdown">
                 <option>Pending</option>
                 <option>Approved</option>
                 <option>Rejected</option>
                 <option>Withdraw</option>
-            </select>
+              </select>
               <button type="button" class="btn" id="requestdate" src="">Request Date<i
                   class="fa fa-filter"></i></button>
               <button type="button" class="btn" id="applybtn">Apply</button>
@@ -170,10 +219,17 @@
               <button>&gt;</button>
             </div>
           </div>
+          <h1>Welcome to WFH Requests Overview</h1>
+          <p>Name: <span id="staffNameDisplay"></span></p>
+          <p>Department: <span id="deptDisplay"></span></p>
+          <p>Role: <span id="roleDisplay"></span></p>
         </div>
       </main>
     </div>
   </div>
+
+  <!--Routing for different pages and clickable dropdown menu-->
+  <script src="MenuRoute.js"></script>
 </body>
 
 </html>

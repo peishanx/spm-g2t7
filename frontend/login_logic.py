@@ -48,6 +48,15 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
             if user and bcrypt.checkpw(password.encode('utf-8'), user['Password'].encode('utf-8')):
                 # Password matches, respond with success and user role
+                #Return data:
+                response_data = {
+                    'success': True,
+                    'staff_id': user['Staff_ID'],
+                    'firstname': user['Staff_FName'],
+                    'lastname': user['Staff_LName'],
+                    'dept': user['Dept'],
+                    'role': user['Role']
+                }
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()

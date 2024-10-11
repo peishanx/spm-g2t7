@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,11 +129,12 @@
     }
 
     .eye-icon img {
-      width: 24px; 
-      height: 24px; 
+      width: 24px;
+      height: 24px;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <!-- Left Side with Image -->
@@ -173,15 +175,15 @@
       passwordInput.setAttribute('type', type);
 
       // Toggle the eye icon image based on the password field state
-      eyeImage.src = type === 'password' 
-        ? 'eye-icon-pw.png' 
-        : 'eye-lock-icon-pw.png'; 
+      eyeImage.src = type === 'password'
+        ? 'eye-icon-pw.png'
+        : 'eye-lock-icon-pw.png';
     });
 
     // Handle form submission (simplified for demonstration purposes)
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
@@ -196,18 +198,26 @@
       const data = await response.json();
 
       if (data.success) {
+        // Store the staff details in sessionStorage
+        sessionStorage.setItem('staff_id', data.staff_id);
+        sessionStorage.setItem('staff_name', `${data.firstname} ${data.lastname}`);
+        sessionStorage.setItem('dept', data.dept);
+        sessionStorage.setItem('role', data.role);
         // Redirect based on role
-        if (data.role === '1') {
-          window.location.href = '/role1.html';
-        } else if (data.role === '2') {
-          window.location.href = '/role2.html';
-        } else if (data.role === '3') {
-          window.location.href = '/role3.html';
-        }
+        // if (data.role === '1') {
+        //   window.location.href = '/role1.html';
+        // } else if (data.role === '2') {
+        //   window.location.href = '/role2.html';
+        // } else if (data.role === '3') {
+        //   window.location.href = '/role3.html';
+        // }
+        window.location.href = 'WFHRequestsOverview_Staff.html';
+
       } else {
         alert('Invalid email or password');
       }
     });
   </script>
 </body>
+
 </html>

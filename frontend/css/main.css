@@ -32,41 +32,100 @@
     gap: 20px;
   }
   
-  /* Sidebar Styles */
-  .sidebar {
-    width: 280px;
-    background-color: var(--gray-5);
-    border-radius: 20px;
-    padding: 30px;
-  }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    margin-bottom: 30px;
-  }
-  
-  .nav-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 13px 16px;
-    text-decoration: none;
-    color: var(--gray-80);
-    border-radius: 10px;
-  }
-  
-  .nav-item.active {
-    background-color: var(--primary-500);
-    color: var(--white);
-  }
+/* Sidebar Styles */
+.sidebar {
+  width: 280px;
+  background-color: var(--gray-5);
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 16px;
+  text-decoration: none;
+  color: var(--gray-80);
+  border-radius: 10px;
+}
+
+.icon-arrow {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+/* Dropdown Button */
+.dropbtn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  background-color: transparent; /* No background for button */
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--gray-80);
+  font-size: 16px;
+  gap: 16px;
+}
+
+/* Dropdown Styles */
+.dropdown-content {
+  display: none; /* Hidden by default */
+  flex-direction: column;
+  background-color: var(--gray-5);
+  padding-left: 20px;
+  width: 100%; /* Ensures the dropdown takes full width under the nav item */
+  border-radius: 10px; /* Optional: Adds rounding to dropdown */
+  position: relative; /* Positions the dropdown relative to the dropdown container */
+  left: 0; /* Aligns dropdown to the left of the button */
+  z-index: 1; /* Ensures dropdown is on top of other elements */
+}
+
+.dropdown.show .dropdown-content {
+  display: flex; /* Show dropdown when 'show' class is added */
+}
+
+.nav-subitem {
+  padding: 10px 0;
+  color: var(--gray-80);
+  text-decoration: none;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 30px;
+}
+
+.nav-item.active {
+  background-color: var(--primary-500);
+  color: var(--white);
+}
+
+.icon-arrow {
+  transition: transform 0.3s;
+}
+
+.dropdown.show .icon-arrow {
+  transform: rotate(180deg); /* Rotate arrow when dropdown is expanded */
+}
+
+
+
+
+
+
+
+
   
   /* Main Content Styles */
   .main-content {
