@@ -12,7 +12,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+
 </head>
 
 <body>
@@ -25,27 +25,46 @@
                     <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
                 </div>
                 <nav class="nav-menu">
-                    <a href="#" class="nav-item">
+                    <a href="#" class="nav-item" onclick="navigateTo('dashboard.html')">
                         <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
                         <span>Dashboard</span>
                     </a>
-                    <a href="#" class="nav-item">
-                        <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
-                        <span>Requests</span>
-                        <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-up-01.svg" />
-                    </a>
-                    <a href="#" class="nav-item active">
-                        <span>My Requests</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <span>Team Requests</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
-                        <span>Schedules</span>
-                        <img alt="" class="icon-arrow" src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-                    </a>
-                    <a href="#" class="nav-item">
+
+                    <!-- Requests Dropdown -->
+                    <div class="dropdown">
+                        <button class="dropbtn" onclick="toggleDropdown('requestsDropdown', 'requestsArrow')">
+                            <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
+                            <span>Requests</span>
+                            <img alt="Arrow" class="icon-arrow" id="requestsArrow"
+                                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+                        </button>
+                        <div class="dropdown-content" id="requestsDropdown">
+                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestForm.html')">Apply</a>
+                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_Staff.html')">My
+                                Requests</a>
+                            <a href="#" class="nav-subitem"
+                                onclick="navigateTo('WFHRequestsOverview_ManagerDirector.html')">Team Requests</a>
+                        </div>
+                    </div>
+
+                    <!-- Schedules Dropdown -->
+                    <div class="dropdown">
+                        <button class="dropbtn" onclick="toggleDropdown('schedulesDropdown', 'schedulesArrow')">
+                            <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
+                            <span>Schedules</span>
+                            <img alt="Arrow" class="icon-arrow" id="schedulesArrow"
+                                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+                        </button>
+                        <div class="dropdown-content" id="schedulesDropdown">
+                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHCalendarStaff.html')">Calendars</a>
+                            <a href="#" class="nav-subitem"
+                                onclick="navigateTo('WFHRequestsSchedules_Organization.html')">Organization</a>
+                            <a href="#" class="nav-subitem"
+                                onclick="navigateTo('WFHRequestsSchedules_SHRJack.html')">Team</a>
+                        </div>
+                    </div>
+
+                    <a href="#" class="nav-item" onclick="navigateTo('settings.html')">
                         <img src="img/huge-icon-interface-outline-setting.svg" alt="" class="nav-icon">
                         <span>Settings</span>
                     </a>
@@ -163,6 +182,8 @@
             </main>
         </div>
     </div>
+    <!--Routing for different pages and clickable dropdown menu-->
+    <script src="MenuRoute.js"></script>
 </body>
 
 </html>

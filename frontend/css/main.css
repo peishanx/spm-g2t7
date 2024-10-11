@@ -1,37 +1,37 @@
 :root {
-    --primary-500: #6941C6;
-    --primary: #7152f3;
-    --gray-5: #F9FAFB;
-    --gray-20: #E4E7EC;
-    --gray-50: #85888c;
-    --gray-80: #1D2939;
-    --dark-500: #101828;
-    --white: #FFFFFF;
-    --light-gray: #e5e5e5;
-    --bg-gray: #f5f5f5;
-    --dark: #333333;
-    --gray: #666666;
+  --primary-500: #6941C6;
+  --primary: #7152f3;
+  --gray-5: #F9FAFB;
+  --gray-20: #E4E7EC;
+  --gray-50: #85888c;
+  --gray-80: #1D2939;
+  --dark-500: #101828;
+  --white: #FFFFFF;
+  --light-gray: #e5e5e5;
+  --bg-gray: #f5f5f5;
+  --dark: #333333;
+  --gray: #666666;
 
-  }
-  
-  body {
-    font-family: 'Lexend', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--white);
-  }
-  
-  /* .leave-overview-staff {
+}
+
+body {
+  font-family: 'Lexend', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--white);
+}
+
+/* .leave-overview-staff {
       width: 1440px;
       height: 1024px;
     } */
-  
-  .main-container {
-    display: flex;
-    padding: 20px;
-    gap: 20px;
-  }
-  
+
+.main-container {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
 /* Sidebar Styles */
 .sidebar {
   width: 280px;
@@ -66,8 +66,9 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 10px;
-  background-color: transparent; /* No background for button */
+  padding: 13px 16px;
+  background-color: transparent;
+  /* No background for button */
   border: none;
   outline: none;
   cursor: pointer;
@@ -78,19 +79,26 @@
 
 /* Dropdown Styles */
 .dropdown-content {
-  display: none; /* Hidden by default */
+  display: none;
+  /* Hidden by default */
   flex-direction: column;
   background-color: var(--gray-5);
-  padding-left: 20px;
-  width: 100%; /* Ensures the dropdown takes full width under the nav item */
-  border-radius: 10px; /* Optional: Adds rounding to dropdown */
-  position: relative; /* Positions the dropdown relative to the dropdown container */
-  left: 0; /* Aligns dropdown to the left of the button */
-  z-index: 1; /* Ensures dropdown is on top of other elements */
+  padding-left: 60px;
+  width: 100%;
+  /* Ensures the dropdown takes full width under the nav item */
+  border-radius: 10px;
+  /* Optional: Adds rounding to dropdown */
+  position: relative;
+  /* Positions the dropdown relative to the dropdown container */
+  left: 0;
+  /* Aligns dropdown to the left of the button */
+  z-index: 1;
+  /* Ensures dropdown is on top of other elements */
 }
 
 .dropdown.show .dropdown-content {
-  display: flex; /* Show dropdown when 'show' class is added */
+  display: flex;
+  /* Show dropdown when 'show' class is added */
 }
 
 .nav-subitem {
@@ -116,92 +124,85 @@
 }
 
 .dropdown.show .icon-arrow {
-  transform: rotate(180deg); /* Rotate arrow when dropdown is expanded */
+  transform: rotate(180deg);
+  /* Rotate arrow when dropdown is expanded */
 }
 
+/* Main Content Styles */
+.main-content {
+  flex: 1;
+}
 
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
 
+.header-content h1 {
+  font-size: 24px;
+  color: var(--dark-500);
+  margin-bottom: 4px;
+}
 
+.header-content p {
+  font-size: 14px;
+  color: var(--gray-80);
+}
 
+.header-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
 
+.contenttitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 3px solid var(--primary);
+}
 
+.notification-btn {
+  width: 50px;
+  height: 50px;
+  background-color: var(--gray-5);
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
-  
-  /* Main Content Styles */
-  .main-content {
-    flex: 1;
-  }
-  
-  /* Header Styles */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
-  .header-content h1 {
-    font-size: 24px;
-    color: var(--dark-500);
-    margin-bottom: 4px;
-  }
-  
-  .header-content p {
-    font-size: 14px;
-    color: var(--gray-80);
-  }
-  
-  .header-actions {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
-  
-  .contenttitle {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 0;
-    color: var(--primary);
-    text-decoration: none;
-    border-bottom: 3px solid var(--primary);
-  }
-  
-  .notification-btn {
-    width: 50px;
-    height: 50px;
-    background-color: var(--gray-5);
-    border: none;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 5px;
-    border: 1px solid var(--gray-20);
-    border-radius: 8px;
-  }
-  
-  .profile-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-  }
-  
-  .user-info h3 {
-    font-size: 16px;
-    color: var(--dark-500);
-    margin: 0;
-  }
-  
-  .user-info p {
-    font-size: 14px;
-    color: var(--gray-80);
-    margin: 0;
-  }
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  border: 1px solid var(--gray-20);
+  border-radius: 8px;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.user-info h3 {
+  font-size: 16px;
+  color: var(--dark-500);
+  margin: 0;
+}
+
+.user-info p {
+  font-size: 14px;
+  color: var(--gray-80);
+  margin: 0;
+}
