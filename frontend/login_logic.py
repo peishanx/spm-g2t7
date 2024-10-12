@@ -3,6 +3,7 @@ import json
 import mysql.connector
 import bcrypt  # For password hashing verification
 from mysql.connector import Error
+import os
 
 # Function to retrieve a user by email from the MySQL database
 def get_user_by_email(email):
@@ -34,6 +35,14 @@ def get_user_by_email(email):
 
 # Class to handle HTTP requests for the login process
 class RequestHandler(http.server.SimpleHTTPRequestHandler):
+    
+    # Serve HTML files and other static content
+    def do_GET(self):
+        if self.path == "/":
+            self.path = "/login.html"
+        return http.server.SimpleHTTPRequestHandler.do_GET(self)
+
+    # Handle POST requests
     def do_POST(self):
         if self.path == '/login':
             content_length = int(self.headers['Content-Length'])
@@ -48,23 +57,29 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
             if user and bcrypt.checkpw(password.encode('utf-8'), user['Password'].encode('utf-8')):
                 # Password matches, respond with success and user role
-                #Return data:
                 response_data = {
                     'success': True,
                     'staff_id': user['Staff_ID'],
                     'firstname': user['Staff_FName'],
                     'lastname': user['Staff_LName'],
                     'dept': user['Dept'],
-                    'role': user['Role']
+                    'role': user['Role'],
+                    'position': user['Position'],
+                    'country': user['Country'],
+                    'email': user['Email'],
+                    'reportingmanager': user['Reporting_Manager']
                 }
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
+                # Allow CORS
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
-                self.wfile.write(json.dumps({'success': True, 'role': user['Role']}).encode())
+                self.wfile.write(json.dumps(response_data).encode())
             else:
                 # Authentication failed, respond with error
                 self.send_response(401)
                 self.send_header('Content-type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps({'success': False, 'message': 'Invalid email or password'}).encode())
         else:

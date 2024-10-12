@@ -167,19 +167,6 @@
   </div>
 
   <script>
-    // Toggle password visibility
-    document.getElementById('togglePassword').addEventListener('click', function () {
-      const passwordInput = document.getElementById('password');
-      const eyeImage = document.getElementById('eyeImage');
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-
-      // Toggle the eye icon image based on the password field state
-      eyeImage.src = type === 'password'
-        ? 'eye-icon-pw.png'
-        : 'eye-lock-icon-pw.png';
-    });
-
     // Handle form submission (simplified for demonstration purposes)
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -187,37 +174,36 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      try {
+        const response = await fetch('http://localhost:8000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (data.success) {
-        // Store the staff details in sessionStorage
-        sessionStorage.setItem('staff_id', data.staff_id);
-        sessionStorage.setItem('staff_name', `${data.firstname} ${data.lastname}`);
-        sessionStorage.setItem('dept', data.dept);
-        sessionStorage.setItem('role', data.role);
-        // Redirect based on role
-        // if (data.role === '1') {
-        //   window.location.href = '/role1.html';
-        // } else if (data.role === '2') {
-        //   window.location.href = '/role2.html';
-        // } else if (data.role === '3') {
-        //   window.location.href = '/role3.html';
-        // }
-        window.location.href = 'WFHRequestsOverview_Staff.html';
+        if (data.success) {
+          // Store the staff details in sessionStorage
+          sessionStorage.setItem('staff_id', data.staff_id);
+          sessionStorage.setItem('staff_name', `${data.firstname} ${data.lastname}`);
+          sessionStorage.setItem('dept', data.dept);
+          sessionStorage.setItem('rolenum', data.role);
+          sessionStorage.setItem('position', data.position);
 
-      } else {
-        alert('Invalid email or password');
+          // Redirect to the overview page
+          window.location.href = 'WFHRequestsOverview_Staff.html';
+        } else {
+          alert('Invalid email or password');
+        }
+      } catch (error) {
+        console.error('Error:', error);
       }
     });
   </script>
+
 </body>
 
 </html>
