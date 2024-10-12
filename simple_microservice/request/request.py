@@ -57,7 +57,73 @@ class Request(db.Model):
             "status": self.status,
             "createdAt": self.createdAt
         }
-    
+
+@app.route("/request/employee/<int:sid>", methods=["GET"])
+def get_requests_by_sid(sid):
+    try:
+        requests = db.session.query(Request).filter_by(sid=sid).all()
+
+        if not requests:
+            return jsonify({
+                "code": 404,
+                "message": f"No requests found for employee with sid {sid}."
+            }), 404
+        
+        request_list = [r.json() for r in requests]
+
+        return jsonify({
+            "code": 200,
+            "data": request_list
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred while retrieving the requests. " + str(e)
+        }), 500
+
+@app.route("/request/employee/check", methods=["GET"])
+def get_requests_for_employees(employee_list):
+    return_list = []
+
+    if not employee_list or not isinstance(employee_list, list):
+        return {
+            "code": 400,
+            "message": "Invalid input. Expected a list of employee entries."
+        }
+
+    try:
+        for employee in employee_list:
+            staff_id = employee.get("Staff_ID")
+
+            if staff_id is None:
+                return {
+                    "code": 400,
+                    "message": f"Employee entry is missing 'Staff_ID'. Received: {employee}"
+                }
+
+            matching_requests = Request.query.filter_by(sid=staff_id).all()
+
+            if matching_requests:
+                for request_entry in matching_requests:
+                    return_list.append(request_entry.json())
+            else:
+                return {
+                    "code": 404,
+                    "message": f"No matching requests found for Staff_ID: {staff_id}"
+                }
+
+        return {
+            "code": 200,
+            "data": return_list
+        }
+
+    except Exception as e:
+        return {
+            "code": 500,
+            "message": f"An error occurred while processing the request. Error: {str(e)}"
+        }
+
 @app.route("/request", methods = ["POST"])
 def create_request():
     # Process the form data
