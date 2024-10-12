@@ -189,9 +189,14 @@
           // Store the staff details in sessionStorage
           sessionStorage.setItem('staff_id', data.staff_id);
           sessionStorage.setItem('staff_name', `${data.firstname} ${data.lastname}`);
+          sessionStorage.setItem('staff_fname', data.firstname);
+          sessionStorage.setItem('staff_lname', data.lastname);
           sessionStorage.setItem('dept', data.dept);
           sessionStorage.setItem('rolenum', data.role);
           sessionStorage.setItem('position', data.position);
+          sessionStorage.setItem('country', data.country);
+          sessionStorage.setItem('email', data.email);
+          sessionStorage.setItem('reportingmanager', data.reportingmanager);
 
           // Redirect to the overview page
           window.location.href = 'WFHRequestsOverview_Staff.html';

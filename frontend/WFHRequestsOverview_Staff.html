@@ -18,12 +18,18 @@
     document.addEventListener("DOMContentLoaded", function () {
       const staffId = sessionStorage.getItem('staff_id');
       const staffName = sessionStorage.getItem('staff_name');
+      const staffFname = sessionStorage.getItem('staff_fname');
+      const staffLname = sessionStorage.getItem('staff_lname')
       const dept = sessionStorage.getItem('dept');
-      const role = sessionStorage.getItem('role');
+      const role = sessionStorage.getItem('rolenum');
       const position = sessionStorage.getItem('position');
+      const country = sessionStorage.getItem('country');
+      const email = sessionStorage.getItem('email');
+      const reportingmanager = sessionStorage.getItem('reportingmanager')
+
 
       // Now you can use these variables as needed in your page
-      console.log(`Staff ID: ${staffId}, Name: ${staffName}, Dept: ${dept}, Role: ${role}, Position: ${position}`);
+      console.log(`Staff ID: ${staffId}, Name: ${staffName}, Dept: ${dept}, Role: ${role}, Position: ${position}, Country: ${country}, Email:${email},Reportin Manager: ${reportingmanager}`);
 
       // Optionally, populate the HTML page with these details
       document.getElementById('staffNameDisplay').textContent = staffName;
@@ -32,12 +38,6 @@
     });
   </script>
 
-  <!-- Somewhere in your HTML -->
-  <!-- <div id="staffNameDisplay"></div>
-  <div id="deptDisplay"></div>
-  <div id="roleDisplay"></div> -->
-
-
 </head>
 
 <body>
@@ -45,58 +45,57 @@
   <div class="wfhrequestsoverviewstaff">
     <div class="main-container">
 
-            <!-- Sidebar -->
-            <aside class="sidebar">
-              <div class="logo">
-                  <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
-                  <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
-              </div>
-              <nav class="nav-menu">
-                  <a href="#" class="nav-item" onclick="navigateTo('dashboard.html')">
-                      <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
-                      <span>Dashboard</span>
-                  </a>
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
+          <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
+        </div>
+        <nav class="nav-menu">
+          <a href="#" class="nav-item" onclick="navigateTo('dashboard.html')">
+            <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
+            <span>Dashboard</span>
+          </a>
 
-                  <!-- Requests Dropdown -->
-                  <div class="dropdown">
-                      <button class="dropbtn" onclick="toggleDropdown('requestsDropdown', 'requestsArrow')">
-                          <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
-                          <span>Requests</span>
-                          <img alt="Arrow" class="icon-arrow" id="requestsArrow"
-                              src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-                      </button>
-                      <div class="dropdown-content" id="requestsDropdown">
-                          <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestForm.html')">Apply</a>
-                          <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_Staff.html')">My
-                              Requests</a>
-                          <a href="#" class="nav-subitem"
-                              onclick="navigateTo('WFHRequestsOverview_ManagerDirector.html')">Team Requests</a>
-                      </div>
-                  </div>
+          <!-- Requests Dropdown -->
+          <div class="dropdown">
+            <button class="dropbtn" onclick="toggleDropdown('requestsDropdown', 'requestsArrow')">
+              <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
+              <span>Requests</span>
+              <img alt="Arrow" class="icon-arrow" id="requestsArrow"
+                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+            </button>
+            <div class="dropdown-content" id="requestsDropdown">
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestForm.html')">Apply</a>
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_Staff.html')">My
+                Requests</a>
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_ManagerDirector.html')">Team
+                Requests</a>
+            </div>
+          </div>
 
-                  <!-- Schedules Dropdown -->
-                  <div class="dropdown">
-                      <button class="dropbtn" onclick="toggleDropdown('schedulesDropdown', 'schedulesArrow')">
-                          <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
-                          <span>Schedules</span>
-                          <img alt="Arrow" class="icon-arrow" id="schedulesArrow"
-                              src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-                      </button>
-                      <div class="dropdown-content" id="schedulesDropdown">
-                          <a href="#" class="nav-subitem" onclick="navigateTo('WFHCalendarStaff.html')">Calendars</a>
-                          <a href="#" class="nav-subitem"
-                              onclick="navigateTo('WFHRequestsSchedules_Organization.html')">Organization</a>
-                          <a href="#" class="nav-subitem"
-                              onclick="navigateTo('WFHRequestsSchedules_SHRJack.html')">Team</a>
-                      </div>
-                  </div>
+          <!-- Schedules Dropdown -->
+          <div class="dropdown">
+            <button class="dropbtn" onclick="toggleDropdown('schedulesDropdown', 'schedulesArrow')">
+              <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
+              <span>Schedules</span>
+              <img alt="Arrow" class="icon-arrow" id="schedulesArrow"
+                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
+            </button>
+            <div class="dropdown-content" id="schedulesDropdown">
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHCalendarStaff.html')">Calendars</a>
+              <a href="#" class="nav-subitem"
+                onclick="navigateTo('WFHRequestsSchedules_Organization.html')">Organization</a>
+              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsSchedules_SHRJack.html')">Team</a>
+            </div>
+          </div>
 
-                  <a href="#" class="nav-item" onclick="navigateTo('login.html')">
-                      <!-- <img src="img/huge-icon-interface-outline-setting.svg" alt="" class="nav-icon"> -->
-                      <span>Log Out</span>
-                  </a>
-              </nav>
-          </aside>
+          <a href="#" class="nav-item" onclick="navigateTo('login.html')">
+            <!-- <img src="img/huge-icon-interface-outline-setting.svg" alt="" class="nav-icon"> -->
+            <span>Log Out</span>
+          </a>
+        </nav>
+      </aside>
 
       <!-- Main Content -->
       <main class="main-content">
@@ -215,10 +214,11 @@
               <button>&gt;</button>
             </div>
           </div>
-          <h1>Welcome to WFH Requests Overview</h1>
+          <!--Testing session storage-->
+          <!-- <h1>Welcome to WFH Requests Overview</h1>
           <p>Name: <span id="staffNameDisplay"></span></p>
           <p>Department: <span id="deptDisplay"></span></p>
-          <p>Role: <span id="roleDisplay"></span></p>
+          <p>Role: <span id="roleDisplay"></span></p> -->
         </div>
       </main>
     </div>

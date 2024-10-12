@@ -13,6 +13,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <!--Session storage after the login-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const staffId = sessionStorage.getItem('staff_id');
+            const staffName = sessionStorage.getItem('staff_name');
+            const staffFname = sessionStorage.getItem('staff_fname');
+            const staffLname = sessionStorage.getItem('staff_lname')
+            const dept = sessionStorage.getItem('dept');
+            const role = sessionStorage.getItem('rolenum');
+            const position = sessionStorage.getItem('position');
+            const country = sessionStorage.getItem('country');
+            const email = sessionStorage.getItem('email');
+            const reportingmanager = sessionStorage.getItem('reportingmanager')
+
+            // Console log test
+            console.log(`Staff ID: ${staffId}, Name: ${staffName}, Dept: ${dept}, Role: ${role}, Position: ${position}, Country: ${country}, Email:${email},Reportin Manager: ${reportingmanager}`);
+
+            // Optionally, populate the HTML page with these details
+
+            // Update all elements with the class 'staffNameDisplay' for fullname
+            const staffnameElements = document.querySelectorAll('.staffNameDisplay');
+            staffnameElements.forEach(element => {
+                element.textContent = staffName;
+            });
+
+            // id elements
+            document.getElementById('staffFname').textContent = staffFname;
+            document.getElementById('staffLname').textContent = staffLname;
+
+            document.getElementById('deptDisplay').textContent = dept;
+            document.getElementById('positionDisplay').textContent = position;
+        });
+    </script>
 </head>
 
 <body>
@@ -86,8 +119,9 @@
                         <div class="user-profile">
                             <img src="img/rectangle-3463281.png" alt="Profile" class="profile-img">
                             <div class="user-info">
-                                <h3>Robert Allen</h3>
-                                <p>HR Manager</p>
+                                <!--Display the login user name and position-->
+                                <h3 class="staffNameDisplay"></h3>
+                                <p id="positionDisplay"></p>
                             </div>
                             <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
                                 class="dropdown-icon">

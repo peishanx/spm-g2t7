@@ -1,137 +1,137 @@
 /*Page: Approve/Reject WFH Request (Manager/Director)*/
 .approverequest .status-pending {
-    background-color: #efbe121a;
-    color: #EFBE12;
-    padding: 3px 8px;
-    border-radius: 4px;
-  }
-  
-  /* Form Styles */
-  .approverequest.form-container {
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    padding: 20px;
-  }
-  
-  .approverequest .form-header,
-  .approverequest .requestapproveddetails {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-  
-  .approverequest .form-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .approverequest .form-group {
-    flex: 1;
-  }
-  
-  .approverequest .form-group .full-width {
-    flex: 2;
-  }
-  
-  .approverequest .input-icon {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .approverequest .upload-section {
-    width: 100%;
-    padding: 16px;
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-  }
-  
-  .approverequest .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
-    margin-top: 30px;
-  }
-  
-  .approverequest label,
-  .approverequest #additionalreason {
-    display: relative;
-    margin-bottom: 10px;
-    color: #808080;
-    padding-bottom: 16px;
-  }
-  
-  .approverequest input,
-  .approverequest textarea,
-  .approverequest #additionalreason {
-    width: 100%;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    font-size: 16px;
-    color: var(--gray-80);
-  }
-  
-  .approverequest textarea {
-    height: 100px;
-    resize: none;
-  }
-  
-  .approverequest .btn {
-    padding: 13px 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .approverequest .btn-secondary {
-    background-color: transparent;
-    border: 1px solid var(--gray-20);
-    color: var(--gray-80);
-  }
-  
-  .approverequest .btn-primary {
-    background-color: var(--primary-500);
-    border: none;
-    color:
-      var(--white);
-  }
-  
-  .approverequest .btn-reject {
-    background-color: var(--gray-50);
-    border: none;
-    color:
-      var(--white);
-  }
-  
-  .approverequest .requestapproveddetails {
-    display: flex;
-    margin-bottom: 30px;
-    justify-content: flex-start;
-  }
-  
-  .approverequest .approvaldatetimelabel,
-  .approverequest .reportingmanagerlabel,
-  .approverequest .approvaldatetimelabel {
-    color: #808080;
-  }
-  
-  .approverequest .requestapproveddetails,
-  .approverequest .approvedbygroup,
-  .approverequest .statusgroup {
-    margin-right: 20px;
-  }
+  background-color: #efbe121a;
+  color: #EFBE12;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
 
-  /*Page: WFH Request Overview (Jack View)*/
-  /* Actions Bar Styles */
+/* Form Styles */
+.approverequest.form-container {
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.approverequest .form-header,
+.approverequest .requestapproveddetails {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.approverequest .form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.approverequest .form-group {
+  flex: 1;
+}
+
+.approverequest .form-group .full-width {
+  flex: 2;
+}
+
+.approverequest .input-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.approverequest .upload-section {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.approverequest .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.approverequest label,
+.approverequest #additionalreason {
+  display: relative;
+  margin-bottom: 10px;
+  color: #808080;
+  padding-bottom: 16px;
+}
+
+.approverequest input,
+.approverequest textarea,
+.approverequest #additionalreason {
+  width: 100%;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  font-size: 16px;
+  color: var(--gray-80);
+}
+
+.approverequest textarea {
+  height: 100px;
+  resize: none;
+}
+
+.approverequest .btn {
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.approverequest .btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--gray-20);
+  color: var(--gray-80);
+}
+
+.approverequest .btn-primary {
+  background-color: var(--primary-500);
+  border: none;
+  color:
+    var(--white);
+}
+
+.approverequest .btn-reject {
+  background-color: var(--gray-50);
+  border: none;
+  color:
+    var(--white);
+}
+
+.approverequest .requestapproveddetails {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: flex-start;
+}
+
+.approverequest .approvaldatetimelabel,
+.approverequest .reportingmanagerlabel,
+.approverequest .approvaldatetimelabel {
+  color: #808080;
+}
+
+.approverequest .requestapproveddetails,
+.approverequest .approvedbygroup,
+.approverequest .statusgroup {
+  margin-right: 20px;
+}
+
+/*Page: WFH Request Overview (Jack View)*/
+/* Actions Bar Styles */
 .wfhrequestsoverviewjack .actions,
 .wfhrequestsoverviewjack .departmentdropdown {
   display: flex;
@@ -153,7 +153,8 @@
 }
 
 .wfhrequestsoverviewjack .btn,
-.wfhrequestsoverviewjack #statusdropdown, .wfhrequestsoverviewjack #wfhtypedropdown{
+.wfhrequestsoverviewjack #statusdropdown,
+.wfhrequestsoverviewjack #wfhtypedropdown {
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
@@ -161,7 +162,8 @@
 }
 
 .wfhrequestsoverviewjack #statusdropdown,
-.wfhrequestsoverviewjack #requestdate, .wfhrequestsoverviewjack #wfhtypedropdown {
+.wfhrequestsoverviewjack #requestdate,
+.wfhrequestsoverviewjack #wfhtypedropdown {
   border: 1px solid #dadada;
   background: white;
 }
@@ -170,12 +172,13 @@
     background: rgb(0, 0, 0);
   } */
 
-  .wfhrequestsoverviewjack .fa.fa-filter {
+.wfhrequestsoverviewjack .fa.fa-filter {
   padding-left: 5px;
   color: #7a7a7a;
 }
 
-.wfhrequestsoverviewjack .filters #statusdropdown, .wfhrequestsoverviewjack #wfhtypedropdown,
+.wfhrequestsoverviewjack .filters #statusdropdown,
+.wfhrequestsoverviewjack #wfhtypedropdown,
 .wfhrequestsoverviewjack .departmentdropdown {
   margin-right: 5px;
 }
@@ -251,7 +254,7 @@
 }
 
 
-  /*Page: WFH Request Overview (Manager/Director View)*/
+/*Page: WFH Request Overview (Manager/Director View)*/
 
 /* Actions Bar Styles */
 .wfhrequestsoverviewmanagerdirector .actions,
@@ -261,13 +264,13 @@
   margin-bottom: 20px;
 }
 
-.wfhrequestsoverviewmanagerdirector .searchbar
-{
+.wfhrequestsoverviewmanagerdirector .searchbar {
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   width: 300px;
 }
+
 .wfhrequestsoverviewmanagerdirector .teamdropdown {
   padding: 10px;
   border: 1px solid #e0e0e0;
@@ -276,7 +279,8 @@
 }
 
 .wfhrequestsoverviewmanagerdirector .btn,
-.wfhrequestsoverviewmanagerdirector #statusdropdown, .wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
+.wfhrequestsoverviewmanagerdirector #statusdropdown,
+.wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
@@ -284,12 +288,13 @@
 }
 
 .wfhrequestsoverviewmanagerdirector #statusdropdown,
-.wfhrequestsoverviewmanagerdirector #requestdate, .wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
+.wfhrequestsoverviewmanagerdirector #requestdate,
+.wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
   border: 1px solid #dadada;
   background: white;
 }
 
-.wfhrequestsoverviewmanagerdirector .teamfilterlabel{
+.wfhrequestsoverviewmanagerdirector .teamfilterlabel {
   padding-bottom: 10px;
 }
 
@@ -368,324 +373,331 @@
   border-color: #6941C6;
 }
 
-  /*Page: WFH Request Overview (staff View)*/
-  /* Table Styles */
-  .wfhrequestsoverviewstaff table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .wfhrequestsoverviewstaff  th,
-  .wfhrequestsoverviewstaff  td {
-    padding: 15px 10px;
-    text-align: left;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .wfhrequestsoverviewstaff  .status {
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .wfhrequestsoverviewstaff  .status.pending {
-    background-color: #efbe121a;
-    color: #EFBE12;
-  }
-  
-  .wfhrequestsoverviewstaff  .status.approved {
-    background-color: #3fc28a1a;
-    color: #3FC28A;
-  }
-  
-  .wfhrequestsoverviewstaff  .status.rejected {
-    background-color: #f45b691a;
-    color: #F45B69;
-  }
-  
-  .wfhrequestsoverviewstaff  .status.withdraw {
-    background-color: #808080;
-    color: #FFFFFF;
-  }
-  
-  /* Actions Bar Styles */
-  .wfhrequestsoverviewstaff  .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .wfhrequestsoverviewstaff  .searchbar{
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    width: 300px;
-  }
-  
-  .wfhrequestsoverviewstaff  .btn,
-  .wfhrequestsoverviewstaff #statusdropdown, .wfhrequestsoverviewstaff #wfhtypedropdown {
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 14px;
+/*Page: WFH Request Overview (staff View)*/
+/* Table Styles */
+.wfhrequestsoverviewstaff table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  }
-  
-  .wfhrequestsoverviewstaff #statusdropdown,
-  .wfhrequestsoverviewstaff #requestdate, .wfhrequestsoverviewstaff #wfhtypedropdown {
-    border: 1px solid #dadada;
-    background: white;
-  }
-  
+.wfhrequestsoverviewstaff th,
+.wfhrequestsoverviewstaff td {
+  padding: 15px 10px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
 
-  .wfhrequestsoverviewstaff .fa.fa-filter {
-    padding-left: 5px;
-    color: #7a7a7a;
-  }
-  
-  .wfhrequestsoverviewstaff #statusdropdown, .wfhrequestsoverviewstaff #wfhtypedropdown {
-    margin-right: 2px;
-  }
-  
-  .wfhrequestsoverviewstaff #applybtn {
-    background: #6941C6;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 10px;
-    margin-left: 5px;
-  }
-  
-  /* Pagination Styles */
-  .wfhrequestsoverviewstaff .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .wfhrequestsoverviewstaff .page-numbers button {
-    padding: 5px 10px;
-    border: 1px solid #e0e0e0;
-    background: white;
-    border-radius: 50%;
-    margin: 0 2px;
-  }
-  
-  .wfhrequestsoverviewstaff .page-numbers button.active {
-    background: #6941C6;
-    color: white;
-    border-color: #6941C6;
-  }
+.wfhrequestsoverviewstaff .status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
 
-  /*Page: Schedule Overview for Staff*/
-  
+.wfhrequestsoverviewstaff .status.pending {
+  background-color: #efbe121a;
+  color: #EFBE12;
+}
+
+.wfhrequestsoverviewstaff .status.approved {
+  background-color: #3fc28a1a;
+  color: #3FC28A;
+}
+
+.wfhrequestsoverviewstaff .status.rejected {
+  background-color: #f45b691a;
+  color: #F45B69;
+}
+
+.wfhrequestsoverviewstaff .status.withdraw {
+  background-color: #808080;
+  color: #FFFFFF;
+}
+
+/* Actions Bar Styles */
+.wfhrequestsoverviewstaff .actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.wfhrequestsoverviewstaff .searchbar {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  width: 300px;
+}
+
+.wfhrequestsoverviewstaff .btn,
+.wfhrequestsoverviewstaff #statusdropdown,
+.wfhrequestsoverviewstaff #wfhtypedropdown {
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+
+}
+
+.wfhrequestsoverviewstaff #statusdropdown,
+.wfhrequestsoverviewstaff #requestdate,
+.wfhrequestsoverviewstaff #wfhtypedropdown {
+  border: 1px solid #dadada;
+  background: white;
+}
+
+
+.wfhrequestsoverviewstaff .fa.fa-filter {
+  padding-left: 5px;
+  color: #7a7a7a;
+}
+
+.wfhrequestsoverviewstaff #statusdropdown,
+.wfhrequestsoverviewstaff #wfhtypedropdown {
+  margin-right: 2px;
+}
+
+.wfhrequestsoverviewstaff #applybtn {
+  background: #6941C6;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  margin-left: 5px;
+}
+
+/* Pagination Styles */
+.wfhrequestsoverviewstaff .pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.wfhrequestsoverviewstaff .page-numbers button {
+  padding: 5px 10px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 50%;
+  margin: 0 2px;
+}
+
+.wfhrequestsoverviewstaff .page-numbers button.active {
+  background: #6941C6;
+  color: white;
+  border-color: #6941C6;
+}
+
+/*Page: Schedule Overview for Staff*/
+
 /* Actions Bar Styles */
 .wfhschedulestaff .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
-  
-  .wfhschedulestaff .searchbar {
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    width: 300px;
-  }
-  
-  .wfhschedulestaff .btn,
-  .wfhschedulestaff #statusdropdown {
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 14px;
-    /* cursor: pointer; */
-  }
-  
-  .wfhschedulestaff #statusdropdown,
-  .wfhschedulestaff #requestdate {
-    border: 1px solid #dadada;
-    background: white;
-  }
-  
-  /* #requestdate:active{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.wfhschedulestaff .searchbar {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  width: 300px;
+}
+
+.wfhschedulestaff .btn,
+.wfhschedulestaff #statusdropdown {
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  /* cursor: pointer; */
+}
+
+.wfhschedulestaff #statusdropdown,
+.wfhschedulestaff #requestdate {
+  border: 1px solid #dadada;
+  background: white;
+}
+
+/* #requestdate:active{
       background: rgb(0, 0, 0);
     } */
-  
-    .wfhschedulestaff .fa.fa-filter {
-    padding-left: 5px;
-    color: #7a7a7a;
-  }
-  
-  .wfhschedulestaff .filters #statusdropdown,
-  .wfhschedulestaff .departmentdropdown {
-    margin-right: 5px;
-  }
-  
-  
-  /* Table Styles */
-  .wfhschedulestaff table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .wfhschedulestaff th,
-  .wfhschedulestaff td {
-    padding: 15px 10px;
-    text-align: left;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .wfhschedulestaff .status {
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .wfhschedulestaff .status.officefull,
-  .wfhschedulestaff .status.officeam,
-  .wfhschedulestaff .status.officepm {
-    background-color: #f0ebff;
-    color: #7152f3;
-  }
-  
-  .wfhschedulestaff .status.wfhfull,
-  .wfhschedulestaff .status.wfham,
-  .wfhschedulestaff .status.wfhpm {
-    background-color: #3fc28a1a;
-    color: #3FC28A;
-  }
-  
-  .wfhschedulestaff .status.onleave {
-    background-color: #e5e5e5;
-    color: #101828;
-  }
-  
-  
-  /* Pagination Styles */
-  .wfhschedulestaff .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .wfhschedulestaff .page-numbers button {
-    padding: 5px 10px;
-    border: 1px solid #e0e0e0;
-    background: white;
-    border-radius: 50%;
-    margin: 0 2px;
-  }
-  
-  .wfhschedulestaff .page-numbers button.active {
-    background: #6941C6;
-    color: white;
-    border-color: #6941C6;
-  }
+
+.wfhschedulestaff .fa.fa-filter {
+  padding-left: 5px;
+  color: #7a7a7a;
+}
+
+.wfhschedulestaff .filters #statusdropdown,
+.wfhschedulestaff .departmentdropdown {
+  margin-right: 5px;
+}
 
 
-    /*Page: WFH Request Form*/
+/* Table Styles */
+.wfhschedulestaff table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-    /* Form Styles */
-    .wfhrequestform .form-container {
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    padding: 20px;
+.wfhschedulestaff th,
+.wfhschedulestaff td {
+  padding: 15px 10px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.wfhschedulestaff .status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.wfhschedulestaff .status.officefull,
+.wfhschedulestaff .status.officeam,
+.wfhschedulestaff .status.officepm {
+  background-color: #f0ebff;
+  color: #7152f3;
+}
+
+.wfhschedulestaff .status.wfhfull,
+.wfhschedulestaff .status.wfham,
+.wfhschedulestaff .status.wfhpm {
+  background-color: #3fc28a1a;
+  color: #3FC28A;
+}
+
+.wfhschedulestaff .status.onleave {
+  background-color: #e5e5e5;
+  color: #101828;
+}
+
+
+/* Pagination Styles */
+.wfhschedulestaff .pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.wfhschedulestaff .page-numbers button {
+  padding: 5px 10px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 50%;
+  margin: 0 2px;
+}
+
+.wfhschedulestaff .page-numbers button.active {
+  background: #6941C6;
+  color: white;
+  border-color: #6941C6;
+}
+
+
+/*Page: WFH Request Form*/
+
+/* Form Styles */
+.wfhrequestform .form-container {
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  padding: 20px;
 }
 
 .wfhrequestform .form-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
 .wfhrequestform .form-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .wfhrequestform .form-group {
-    flex: 1;
+  flex: 1;
 }
 
 .wfhrequestform .form-group.full-width {
-    flex: 2;
+  flex: 2;
 }
 
 .wfhrequestform label {
-    display: flex;
-    /* margin-bottom: 10px; */
-    color: var(--gray-80);
-    padding-bottom: 10px;
+  display: flex;
+  /* margin-bottom: 10px; */
+  color: var(--gray-80);
+  padding-bottom: 10px;
 }
 
 
 .wfhrequestform .input-wrapper {
-    position: relative;
+  position: relative;
 }
 
 .wfhrequestform input,
 .wfhrequestform textarea,
 .wfhrequestform #department,
 .wfhrequestform #type {
-    width: 100%;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    font-size: 16px;
-    color: var(--gray-80);
+  width: 100%;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  font-size: 16px;
+  color: var(--gray-80);
 }
 
 .wfhrequestform textarea {
-    height: 100px;
-    resize: none;
+  height: 100px;
+  resize: none;
 }
 
 .wfhrequestform .input-icon {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .wfhrequestform .upload-section {
-    width: 100%;
-    padding: 16px;
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.wfhrequestform input#attachment {
+  padding-left: 10px;
 }
 
 .wfhrequestform .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
-    margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 30px;
 }
 
 .wfhrequestform .btn {
-    padding: 13px 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .wfhrequestform .btn-secondary {
-    background-color: transparent;
-    border: 1px solid var(--gray-20);
-    color: var(--gray-80);
+  background-color: transparent;
+  border: 1px solid var(--gray-20);
+  color: var(--gray-80);
 }
 
 .wfhrequestform .btn-primary {
-    background-color: var(--primary-500);
-    border: none;
-    color: var(--white);
+  background-color: var(--primary-500);
+  border: none;
+  color: var(--white);
 }
 
 
@@ -693,134 +705,134 @@
 /*Page: WFH Request Form Details*/
 /* Form Styles */
 .wfhrequestformdetails .form-container {
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    padding: 20px;
-  }
-  
-  .wfhrequestformdetails .form-header,
-  .wfhrequestformdetails .requestapproveddetails {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-  
-  .wfhrequestformdetails .form-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .wfhrequestformdetails .form-group {
-    flex: 1;
-  }
-  
-  .wfhrequestformdetails .form-group.full-width {
-    flex: 2;
-  }
-  
-  .wfhrequestformdetails .input-icon {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .wfhrequestformdetails .upload-section {
-    width: 100%;
-    padding: 16px;
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-  }
-  
-  .wfhrequestformdetails .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
-    margin-top: 30px;
-  }
-  
-  .wfhrequestformdetails label,
-  .wfhrequestformdetails #additionalreason {
-    display: relative;
-    margin-bottom: 10px;
-    color: var(--gray-80);
-    padding-bottom: 16px;
-  }
-  
-  .wfhrequestformdetails input,
-  .wfhrequestformdetails textarea,
-  .wfhrequestformdetails #additionalreason {
-    width: 100%;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    font-size: 16px;
-    color: var(--gray-80);
-  }
-  
-  .wfhrequestformdetails textarea {
-    height: 100px;
-    resize: none;
-  }
-  
-  .wfhrequestformdetails .btn {
-    padding: 13px 20px;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .wfhrequestformdetails .btn-secondary {
-    background-color: transparent;
-    border: 1px solid var(--gray-20);
-    color: var(--gray-80);
-  }
-  
-  .wfhrequestformdetails .btn-primary {
-    background-color: var(--primary-500);
-    border: none;
-    color:
-      var(--white);
-  }
-  
-  .wfhrequestformdetails .requestapproveddetails {
-    display: flex;
-    margin-bottom: 30px;
-    justify-content: flex-start;
-  }
-  
-  .wfhrequestformdetails .approvaldatetimelabel,
-  .wfhrequestformdetails .reportingmanagerlabel,
-  .wfhrequestformdetails .approvaldatetimelabel {
-    color: #808080;
-  }
-  
-  .wfhrequestformdetails .requestapproveddetails,
-  .wfhrequestformdetails .approvedbygroup,
-  .wfhrequestformdetails .statusgroup {
-    margin-right: 20px;
-  }
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  padding: 20px;
+}
 
- 
- 
-  /*Page: Schedules for Organization*/
+.wfhrequestformdetails .form-header,
+.wfhrequestformdetails .requestapproveddetails {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
 
-  .organizationschedules .organizationschedulescontainer {
-    border: 1px solid var(--gray-20);
-    border-radius: 10px;
-    padding: 20px;
+.wfhrequestformdetails .form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.wfhrequestformdetails .form-group {
+  flex: 1;
+}
+
+.wfhrequestformdetails .form-group.full-width {
+  flex: 2;
+}
+
+.wfhrequestformdetails .input-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.wfhrequestformdetails .upload-section {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.wfhrequestformdetails .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.wfhrequestformdetails label,
+.wfhrequestformdetails #additionalreason {
+  display: relative;
+  margin-bottom: 10px;
+  color: var(--gray-80);
+  padding-bottom: 16px;
+}
+
+.wfhrequestformdetails input,
+.wfhrequestformdetails textarea,
+.wfhrequestformdetails #additionalreason {
+  width: 100%;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  font-size: 16px;
+  color: var(--gray-80);
+}
+
+.wfhrequestformdetails textarea {
+  height: 100px;
+  resize: none;
+}
+
+.wfhrequestformdetails .btn {
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.wfhrequestformdetails .btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--gray-20);
+  color: var(--gray-80);
+}
+
+.wfhrequestformdetails .btn-primary {
+  background-color: var(--primary-500);
+  border: none;
+  color:
+    var(--white);
+}
+
+.wfhrequestformdetails .requestapproveddetails {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: flex-start;
+}
+
+.wfhrequestformdetails .approvaldatetimelabel,
+.wfhrequestformdetails .reportingmanagerlabel,
+.wfhrequestformdetails .approvaldatetimelabel {
+  color: #808080;
+}
+
+.wfhrequestformdetails .requestapproveddetails,
+.wfhrequestformdetails .approvedbygroup,
+.wfhrequestformdetails .statusgroup {
+  margin-right: 20px;
+}
+
+
+
+/*Page: Schedules for Organization*/
+
+.organizationschedules .organizationschedulescontainer {
+  border: 1px solid var(--gray-20);
+  border-radius: 10px;
+  padding: 20px;
 }
 
 /* Department styles */
 .organizationschedules .departmenttypes {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 .organizationschedules .salesdepartmenttitle,
@@ -830,12 +842,12 @@
 .organizationschedules .hradmindepartmenttitle,
 .organizationschedules .financedepartmenttitle,
 .organizationschedules .itdepartmenttitle {
-    color: var(--primary);
-    font-size: 20px;
-    font-weight: 400;
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--light-gray);
+  color: var(--primary);
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--light-gray);
 }
 
 .organizationschedules .salesteams,
@@ -845,9 +857,9 @@
 .organizationschedules .hradmindteams,
 .organizationschedules .financeteams,
 .organizationschedules .itteams {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 .organizationschedules .salesmanagers,
@@ -865,8 +877,8 @@
 .organizationschedules .financemanagers,
 .organizationschedules .financeexective,
 .organizationschedules .it {
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--light-gray);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--light-gray);
 }
 
 .organizationschedules .salesmanagers h3,
@@ -884,10 +896,10 @@
 .organizationschedules .financemanagers h3,
 .organizationschedules .financeexective h3,
 .organizationschedules .it h3 {
-    margin: 0 0 5px;
-    font-size: 16px;
-    font-weight: 400;
-    color: var(--gray);
+  margin: 0 0 5px;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--gray);
 }
 
 .organizationschedules .salesmanagers p,
@@ -905,128 +917,128 @@
 .organizationschedules .financemanagers p,
 .organizationschedules .financeexective p,
 .organizationschedules .it p {
-    margin: 0;
-    color: var(--dark);
-    line-height: 1.5;
+  margin: 0;
+  color: var(--dark);
+  line-height: 1.5;
 }
 
-  /*Page: Schedules for Special HR and Jack*/
+/*Page: Schedules for Special HR and Jack*/
 
-  
+
 /* Actions Bar Styles */
 .schedulesspecialhrjack .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .schedulesspecialhrjack .departmentteamfilters {
-    display: flex;
-    justify-content: flex-start;
-  }
-  
-  .schedulesspecialhrjack .departmentfilters {
-    padding-right: 20px;
-  }
-  
-  .schedulesspecialhrjack #searchbar {
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    width: 300px;
-  }
-  
-  .schedulesspecialhrjack .teamdropdown,
-  .schedulesspecialhrjack .departmentdropdown {
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    width: 200px;
-  }
-  
-  .schedulesspecialhrjack .btn,
-  .schedulesspecialhrjack #statusdropdown {
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 14px;
-    /* cursor: pointer; */
-  }
-  
-  .schedulesspecialhrjack #statusdropdown,
-  .schedulesspecialhrjack #requestdate {
-    border: 1px solid #dadada;
-    background: white;
-  }
-  
-  
-  /* #requestdate:active{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.schedulesspecialhrjack .departmentteamfilters {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.schedulesspecialhrjack .departmentfilters {
+  padding-right: 20px;
+}
+
+.schedulesspecialhrjack #searchbar {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  width: 300px;
+}
+
+.schedulesspecialhrjack .teamdropdown,
+.schedulesspecialhrjack .departmentdropdown {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  width: 200px;
+}
+
+.schedulesspecialhrjack .btn,
+.schedulesspecialhrjack #statusdropdown {
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  /* cursor: pointer; */
+}
+
+.schedulesspecialhrjack #statusdropdown,
+.schedulesspecialhrjack #requestdate {
+  border: 1px solid #dadada;
+  background: white;
+}
+
+
+/* #requestdate:active{
     background: rgb(0, 0, 0);
   } */
-  
-  .schedulesspecialhrjack .fa.fa-filter {
-    padding-left: 5px;
-    color: #7a7a7a;
-  }
-  
-  
-  
-  /* Table Styles */
-  .schedulesspecialhrjack table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .schedulesspecialhrjack th,
-  .schedulesspecialhrjack td {
-    padding: 15px 10px;
-    text-align: left;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .schedulesspecialhrjack .status {
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .schedulesspecialhrjack .status.officefull,
-  .schedulesspecialhrjack .status.officeam,
-  .schedulesspecialhrjack .status.officepm {
-    background-color: #f0ebff;
-    color: #7152f3;
-  }
-  
-  .schedulesspecialhrjack .status.wfhfull,
-  .schedulesspecialhrjack .status.wfham,
-  .schedulesspecialhrjack .status.wfhpm {
-    background-color: #3fc28a1a;
-    color: #3FC28A;
-  }
-  
-  .schedulesspecialhrjack .status.onleave {
-    background-color: #e5e5e5;
-    color: #101828;
-  }
-  
-  
-  /* Pagination Styles */
-  .schedulesspecialhrjack .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .schedulesspecialhrjack .page-numbers button {
-    padding: 5px 10px;
-    border: 1px solid #e0e0e0;
-    background: white;
-    border-radius: 50%;
-    margin: 0 2px;
-  }
-  
-  .schedulesspecialhrjack .page-numbers button.active {
-    background: #6941C6;
-    color: white;
-    border-color: #6941C6;
-  }
+
+.schedulesspecialhrjack .fa.fa-filter {
+  padding-left: 5px;
+  color: #7a7a7a;
+}
+
+
+
+/* Table Styles */
+.schedulesspecialhrjack table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedulesspecialhrjack th,
+.schedulesspecialhrjack td {
+  padding: 15px 10px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.schedulesspecialhrjack .status {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.schedulesspecialhrjack .status.officefull,
+.schedulesspecialhrjack .status.officeam,
+.schedulesspecialhrjack .status.officepm {
+  background-color: #f0ebff;
+  color: #7152f3;
+}
+
+.schedulesspecialhrjack .status.wfhfull,
+.schedulesspecialhrjack .status.wfham,
+.schedulesspecialhrjack .status.wfhpm {
+  background-color: #3fc28a1a;
+  color: #3FC28A;
+}
+
+.schedulesspecialhrjack .status.onleave {
+  background-color: #e5e5e5;
+  color: #101828;
+}
+
+
+/* Pagination Styles */
+.schedulesspecialhrjack .pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.schedulesspecialhrjack .page-numbers button {
+  padding: 5px 10px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 50%;
+  margin: 0 2px;
+}
+
+.schedulesspecialhrjack .page-numbers button.active {
+  background: #6941C6;
+  color: white;
+  border-color: #6941C6;
+}
