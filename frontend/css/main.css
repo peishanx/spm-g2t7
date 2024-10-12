@@ -60,7 +60,10 @@ body {
   margin-left: auto;
   transition: transform 0.3s ease;
 }
-
+#logouticon{
+  color:var(--gray-80);
+  padding-left: 5px;
+}
 /* Dropdown Button */
 .dropbtn {
   display: flex;

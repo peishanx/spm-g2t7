@@ -43,7 +43,7 @@ document.getElementById('submitbtn').addEventListener('click', function (event) 
             console.log('Success:', data);
             alert('Request submitted successfully!');
             // Redirect to overview page
-            window.location.href = 'WFHRequestsWithdrawal.html';
+            window.location.href = 'WFHRequestsOverview_Staff.html';
             window.history.forward(); 
         })
         .catch(error => {
