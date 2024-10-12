@@ -79,14 +79,14 @@ def find_by_position(Position):
         return jsonify({"code": 200, "data": employee_list})
     return jsonify({"code": 404, "message": f"No employees found with the position {Position}."}), 404
 
-# @app.route("/employee/role/<int:Role>")
-# def find_by_role(Role):
-#     employees = db.session.query(Employee.Staff_ID, Employee.Staff_FName, Employee.Staff_LName).filter_by(Role=Role).all()
+@app.route("/employee/role/<int:Role>")
+def find_by_role(Role):
+    employees = db.session.query(Employee.Staff_ID, Employee.Staff_FName, Employee.Staff_LName).filter_by(Role=Role).all()
 
-#     if employees:
-#         employee_list = [{"Staff_ID": e.Staff_ID, "Staff_FName": e.Staff_FName, "Staff_LName": e.Staff_LName} for e in employees]
-#         return jsonify({"code": 200, "data": employee_list})
-#     return jsonify({"code": 404, "message": f"No employees found with the role {Role}."}), 404
+    if employees:
+        employee_list = [{"Staff_ID": e.Staff_ID, "Staff_FName": e.Staff_FName, "Staff_LName": e.Staff_LName} for e in employees]
+        return jsonify({"code": 200, "data": employee_list})
+    return jsonify({"code": 404, "message": f"No employees found with the role {Role}."}), 404
 
 
 if __name__ == "__main__": 

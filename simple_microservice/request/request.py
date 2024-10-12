@@ -7,13 +7,17 @@ import os
 import sys
 import math
 import pytz
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    environ.get("dbURL") or "mysql+mysqlconnector://root:example@localhost:3306/request"
+    environ.get("dbURL") or "mysql+mysqlconnector://root:@localhost:3306/request"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 299}
+app.config['UPLOAD_FOLDER'] = 'uploads'  # Define where to store uploaded attachment files for form submission
+
 
 db = SQLAlchemy(app)
 
@@ -22,57 +26,78 @@ CORS(app)
 class Request(db.Model):
     __tablename__ = "request"
 
-    rid = db.Column(db.Integer, primary_key=True)
-    sid = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(50))
-    status = db.Column(db.String(50))
-    createdAt = db.Column(db.TIMESTAMP(timezone=True), default = db.func.current_timestamp(), nullable = False)
+    rid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    sid = db.Column(db.Integer, nullable=False)
+    request_date = db.Column(db.Date, nullable=False)
+    wfh_type = db.Column(db.String(50))
+    reason = db.Column(db.String(255), nullable=True) 
+    approved_wfh = db.Column(db.Integer, default=0)
+    approved_by = db.Column(db.String(100), nullable=True)
+    status = db.Column(db.String(50), default="Pending")
+    createdAt = db.Column(db.TIMESTAMP(timezone=True), default=db.func.current_timestamp(), nullable=False)
+    attachment = db.Column(db.String(255), nullable=True)  # Add attachment field
 
-    def __init__(self, rid, sid, type, status="Pending"):
-        self.rid = rid
+
+    def __init__(self, sid, request_date, wfh_type, reason=None, approved_wfh=0, approved_by=None, status="Pending", attachment=None):
         self.sid = sid
-        self.type = type
+        self.request_date = request_date
+        self.wfh_type = wfh_type
+        self.reason = reason 
+        self.approved_wfh = approved_wfh
+        self.approved_by = approved_by
         self.status = status
+        self.attachment = attachment  # Set attachment
+
     
     def json(self):
         return {
             "rid": self.rid,
             "sid": self.sid,
-            "type": self.type,
+            "type": self.wfh_type,
             "status": self.status,
             "createdAt": self.createdAt
         }
     
 @app.route("/request", methods = ["POST"])
 def create_request():
-    data = request.get_json()
+    # Process the form data
+    sid = request.form.get('sid')
+    wfh_type = request.form.get('type')
+    reason = request.form.get('reason')
 
-    # rid = data.get("rid")
-    sid = data.get("sid")
-    type = data.get("type")
+    # Log values for debugging
+    app.logger.info(f"SID: {sid}, wfh_type: {wfh_type}, Reason: {reason}")
 
-    if sid is None or type is None:
-        return jsonify(
-        {
-                "code": 400,
-                "message": "Missing required parameter(s)."
-        }
-        ),400
-    new_request = Request(rid=None, sid=sid, type=type)
+    # Handle file upload
+    if 'attachment' not in request.files:
+        return jsonify({"code": 400, "message": "No file part in the request."}), 400
 
+    file = request.files['attachment']
+    if file.filename == '':
+        return jsonify({"code": 400, "message": "No selected file."}), 400
+
+    filename = None
+    if file:
+        filename = secure_filename(file.filename)  # Secure the filename
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))  # Save file
+
+    request_dates = request.form.getlist('request_dates')  # Get all request dates
+
+    # Insert request data into the database
     try:
-        db.session.add(new_request)
+        for request_date in request_dates:
+            new_request = Request(sid=sid, request_date=request_date, wfh_type=wfh_type, reason=reason, attachment=filename)
+            db.session.add(new_request)
+
         db.session.commit()
-        return jsonify({"code":201, "message": f"Employee {sid} has submitted request({new_request.rid}) successfully."}),201
-    
+        return jsonify({"code": 201, "message": f"Employee {sid} submitted request successfully."}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify(
-            {
-                "code": 500,
-                "message": "An error occurred while creating the queue. " + str(e)
-             }
-             ), 500
+        print(f"Error occurred: {str(e)}")  # Log the error for debugging
+
+        return jsonify({"code": 500, "message": "An error occurred while creating the request. " + str(e)}), 500    
+
+
 
 @app.route("/request/<int:rid>/employee/<int:sid>/approve", methods=["PUT"])
 def approve_request(rid, sid):
@@ -200,4 +225,8 @@ def auto_reject_old_pending_requests():
 
 
 if __name__ == "__main__":
+       # Ensure upload folder exists
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+        
     app.run(host="0.0.0.0", port = 5200, debug = True)
