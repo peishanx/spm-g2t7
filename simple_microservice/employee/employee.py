@@ -4,6 +4,7 @@ from os import environ
 from flask_cors import CORS
 import os
 import sys
+from sqlalchemy import and_
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
@@ -87,6 +88,49 @@ def find_by_role(Role):
         employee_list = [{"Staff_ID": e.Staff_ID, "Staff_FName": e.Staff_FName, "Staff_LName": e.Staff_LName} for e in employees]
         return jsonify({"code": 200, "data": employee_list})
     return jsonify({"code": 404, "message": f"No employees found with the role {Role}."}), 404
+
+@app.route("/employee/filter/<string:dept>/<int:role>/<string:comparison>", methods=["GET"])
+def filter_by_dept_and_role(dept, role, comparison):
+    try:
+        if comparison == "equal":
+            employees = Employee.query.filter(
+                and_(
+                    Employee.Dept == dept,
+                    Employee.Role == role
+                )
+            ).all()
+        elif comparison == "not_equal":
+            employees = Employee.query.filter(
+                and_(
+                    Employee.Dept == dept,
+                    Employee.Role != role
+                )
+            ).all()
+        else:
+            return jsonify({
+                "code": 400,
+                "message": "Invalid comparison type. Use 'equal' or 'not_equal'."
+            }), 400
+
+        if not employees:
+            return jsonify({
+                "code": 404,
+                "message": f"No employees found for department '{dept}' with role {comparison} to '{role}'."
+            }), 404
+
+        employee_list = [employee.json() for employee in employees]
+
+        return jsonify({
+            "code": 200,
+            "data": employee_list
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred while fetching the employees. " + str(e)
+        }), 500
+
 
 
 if __name__ == "__main__": 
