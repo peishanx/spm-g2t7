@@ -207,6 +207,24 @@
         console.error('Error:', error);
       }
     });
+     // Toggle password visibility
+    const passwordInput = document.getElementById('password');
+    const togglePasswordButton = document.getElementById('togglePassword');
+    const eyeImage = document.getElementById('eyeImage');
+
+    // Add click event listener to the button
+    togglePasswordButton.addEventListener('click', function () {
+      // Toggle the type attribute of the password input field
+      const currentType = passwordInput.getAttribute('type');
+      passwordInput.setAttribute('type', currentType === 'password' ? 'text' : 'password');
+
+      // Optionally change the icon to indicate visibility
+      if (currentType === 'password') {
+        eyeImage.src = 'img/eye-lock-icon-pw.png'; // Change to "eye-open" icon
+      } else {
+        eyeImage.src = 'img/eye-icon-pw.png'; // Change back to "eye-closed" icon
+      }
+  });
   </script>
 
 </body>
