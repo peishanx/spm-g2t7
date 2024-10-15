@@ -4,7 +4,11 @@ import mysql.connector
 import bcrypt  # For password hashing verification
 from mysql.connector import Error
 import os
+from flask import Flask
+from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 # Function to retrieve a user by email from the MySQL database
 def get_user_by_email(email):
     try:

@@ -218,7 +218,6 @@
       const currentType = passwordInput.getAttribute('type');
       passwordInput.setAttribute('type', currentType === 'password' ? 'text' : 'password');
 
-      // Optionally change the icon to indicate visibility
       if (currentType === 'password') {
         eyeImage.src = 'img/eye-lock-icon-pw.png'; // Change to "eye-open" icon
       } else {

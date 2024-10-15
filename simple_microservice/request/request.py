@@ -53,7 +53,8 @@ class Request(db.Model):
         return {
             "rid": self.rid,
             "sid": self.sid,
-            "type": self.wfh_type,
+            "wfh_type": self.wfh_type,
+            "request_date": self.request_date.isoformat(),
             "status": self.status,
             "createdAt": self.createdAt
         }
