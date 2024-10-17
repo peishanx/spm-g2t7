@@ -131,65 +131,81 @@
 }
 
 /*Page: WFH Request Overview (Jack View)*/
-/* Actions Bar Styles */
-.wfhrequestsoverviewjack .actions,
-.wfhrequestsoverviewjack .departmentdropdown {
+.wfhrequestsoverviewjack .actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Ensure the searchbar and apply button are far apart */
+  align-items: center; /* Vertically align items */
   margin-bottom: 20px;
-
 }
 
-.wfhrequestsoverviewjack .searchbar,
-.wfhrequestsoverviewjack .departmentdropdown {
+.wfhrequestsoverviewjack .searchbar {
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   width: 300px;
+  margin-right: 20px; /* Space between search bar and filters */
 }
-
-.wfhrequestsoverviewjack .departmentfilterlabel {
+/* Flexbox layout for filters and buttons */
+.wfhrequestsoverviewjack .filter-row {
+  display: flex;
+  align-items: center; /* Vertically center the items */
+  gap: 20px; /* Space between filters and buttons */
+  margin-top: 10px; /* Space above the filter row */
   padding-bottom: 10px;
 }
 
-.wfhrequestsoverviewjack .btn,
+.wfhrequestsoverviewjack .filters-container {
+  display: flex; /* Maintain a horizontal layout for filters */
+  gap: 20px; /* Space between filters */
+}
+/* Styling for filters */
+.wfhrequestsoverviewjack #departmentdropdown{
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid #dadada;
+  background: white;
+  width: 180px; /* Consistent width for filters */
+}
 .wfhrequestsoverviewjack #statusdropdown,
+.wfhrequestsoverviewjack .datefilter,
 .wfhrequestsoverviewjack #wfhtypedropdown {
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
-  /* cursor: pointer; */
+  border: 1px solid #dadada;
+  background: white;
+  width: 150px; /* Consistent width for filters */
 }
 
 .wfhrequestsoverviewjack #statusdropdown,
-.wfhrequestsoverviewjack #requestdate,
-.wfhrequestsoverviewjack #wfhtypedropdown {
-  border: 1px solid #dadada;
-  background: white;
+.wfhrequestsoverviewjack #wfhtypedropdown  {
+  width: 110px; /* Set a consistent width for dropdowns */
 }
 
-/* #requestdate:active{
-    background: rgb(0, 0, 0);
-  } */
-
-.wfhrequestsoverviewjack .fa.fa-filter {
-  padding-left: 5px;
-  color: #7a7a7a;
+.wfhrequestsoverviewjack .datefilter {
+  width: 100px; /* Ensure the date filter has a consistent width */
 }
-
-.wfhrequestsoverviewjack .filters #statusdropdown,
-.wfhrequestsoverviewjack #wfhtypedropdown,
-.wfhrequestsoverviewjack .departmentdropdown {
-  margin-right: 5px;
-}
-
-.wfhrequestsoverviewjack #applybtn {
+/* .wfhrequestsoverviewstaff .btn {
   background: #6941C6;
   color: white;
   border: none;
   padding: 10px 25px;
   border-radius: 10px;
-  margin-left: 5px;
+} */
+.wfhrequestsoverviewjack #clearfilters {
+  background: transparent; /* Give clear filters a different color */
+  color: black;
+  width: 100px; /* Set a consistent width for dropdowns */
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid #dadada;
+  margin-top: 25px;
+}
+.wfhrequestsoverviewjack .filters-container label {
+  display: block; /* Makes the label take the full width */
+  margin-bottom: 5px; /* Adds space between the label and input */
+  font-size: small;
 }
 
 /* Table Styles */
@@ -198,10 +214,17 @@
   border-collapse: collapse;
 }
 
-.wfhrequestsoverviewjack th,
+.wfhrequestsoverviewjack th {
+  text-align: center;
+  vertical-align: middle;
+  padding-right: 15px ;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
 .wfhrequestsoverviewjack td {
+  /* text-align: center; */
   padding: 15px 10px;
-  text-align: left;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -414,9 +437,11 @@
 }
 
 /* Actions Bar Styles */
+/* Flexbox layout to place the searchbar and apply button on the same row */
 .wfhrequestsoverviewstaff .actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Ensure the searchbar and apply button are far apart */
+  align-items: center; /* Vertically align items */
   margin-bottom: 20px;
 }
 
@@ -425,34 +450,71 @@
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   width: 300px;
+  margin-right: 20px; /* Space between search bar and filters */
+}
+/* Flexbox layout for filters and buttons */
+.wfhrequestsoverviewstaff .filter-row {
+  display: flex;
+  align-items: center; /* Vertically center the items */
+  gap: 20px; /* Space between filters and buttons */
+  margin-top: 10px; /* Space above the filter row */
 }
 
-.wfhrequestsoverviewstaff .btn,
+.wfhrequestsoverviewstaff .filters-container {
+  display: flex; /* Maintain a horizontal layout for filters */
+  gap: 20px; /* Space between filters */
+}
+/* Styling for filters */
 .wfhrequestsoverviewstaff #statusdropdown,
-.wfhrequestsoverviewstaff #wfhtypedropdown {
+.wfhrequestsoverviewstaff #wfhtypedropdown,
+.wfhrequestsoverviewstaff .datefilter {
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
-
-}
-
-.wfhrequestsoverviewstaff #statusdropdown,
-.wfhrequestsoverviewstaff #requestdate,
-.wfhrequestsoverviewstaff #wfhtypedropdown {
   border: 1px solid #dadada;
   background: white;
-}
-
-
-.wfhrequestsoverviewstaff .fa.fa-filter {
-  padding-left: 5px;
-  color: #7a7a7a;
+  width: 150px; /* Consistent width for filters */
 }
 
 .wfhrequestsoverviewstaff #statusdropdown,
+.wfhrequestsoverviewstaff #wfhtypedropdown  {
+  width: 110px; /* Set a consistent width for dropdowns */
+}
+
+.wfhrequestsoverviewstaff .datefilter {
+  width: 100px; /* Ensure the date filter has a consistent width */
+}
+/* .wfhrequestsoverviewstaff .btn {
+  background: #6941C6;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+} */
+.wfhrequestsoverviewstaff #clearfilters {
+  background: transparent; /* Give clear filters a different color */
+  color: black;
+  width: 100px; /* Set a consistent width for dropdowns */
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid #dadada;
+  margin-top: 25px;
+}
+.wfhrequestsoverviewstaff .filters-container label {
+  display: block; /* Makes the label take the full width */
+  margin-bottom: 5px; /* Adds space between the label and input */
+  font-size: small;
+}
+
+/* .wfhrequestsoverviewstaff .fa.fa-filter {
+  padding-left: 5px;
+  color: #7a7a7a;
+} */
+
+/* .wfhrequestsoverviewstaff #statusdropdown,
 .wfhrequestsoverviewstaff #wfhtypedropdown {
   margin-right: 2px;
-}
+} */
 
 .wfhrequestsoverviewstaff #applybtn {
   background: #6941C6;
@@ -460,7 +522,8 @@
   border: none;
   padding: 10px 25px;
   border-radius: 10px;
-  margin-left: 5px;
+  margin-left: auto; /* Push Apply button all the way to the right */
+  cursor: pointer;
 }
 
 /* Pagination Styles */
@@ -1042,116 +1105,3 @@
   color: white;
   border-color: #6941C6;
 }
-
-
-/* Calendar Container Styles */
-#calendar {
-  max-width: 100%; /* Make the calendar responsive */
-  width: 100%; /* Ensure it takes full width */
-  height: 80vh; /* Set a fixed height to prevent scrolling */
-  overflow: hidden; /* Prevent scrolling */
-  background-color: #f8f3ff; /* Very pale purple background for the calendar */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  padding: 20px; /* Add padding around the calendar */
-}
-
-/* Specific Styles for Different Views */
-.fc-daygrid {
-  background-color: #e0c6f1; /* Lighter purple for month view */
-}
-
-.fc-timegrid {
-  background-color: #e0c6f1; /* Lighter purple for week/day view */
-}
-
-.fc-list-view {
-  background-color: #e0c6f1; /* Lighter purple for list view */
-}
-
-/* Event Styles */
-.fc-event {
-  border: 1px solid #fff; /* Add border for better visibility */
-  border-radius: 4px; /* Rounded corners */
-  color: #fff; /* White text color for events */
-  padding: 5px; /* Add padding inside events for better touch targets */
-  font-size: 14px; /* Default font size for events */
-  transition: transform 0.2s; /* Smooth transition for hover effect */
-  overflow: hidden; /* Prevent text overflow */
-  white-space: nowrap; /* Prevent text wrapping */
-  text-overflow: ellipsis; /* Show ellipsis if text overflows */
-}
-
-.fc-event:hover {
-  transform: scale(1.02); /* Slight zoom effect on hover */
-  white-space: normal; /* Allow text to wrap on hover */
-}
-
-/* Specific Event Types */
-.fc-timegrid-event {
-  background-color: #6941C6; /* Purple for time grid events */
-}
-
-.fc-daygrid-event {
-  background-color: #6941C6; /* Purple for day grid events */
-}
-
-/* List View Event Styles */
-.fc-list-event {
-  color: #000; /* Black color for events in list view */
-}
-
-/* Style for Day Cells (Date Background) */
-.fc-daygrid-day {
-  background-color: #f3e8ff; /* Pale purple for date background */
-}
-
-.fc-daygrid-day-number {
-  text-align: left; /* Align text to the left */
-  padding-left: 10px; /* Add padding for better visibility */
-  width: 100%; /* Make sure it takes full width */
-}
-
-/* Toolbar Styles */
-.fc-toolbar {
-  background-color: #5a31b0; /* Slightly darker purple for toolbar */
-  color: #fff; /* Toolbar text color */
-  padding: 10px; /* Padding for toolbar */
-  border-radius: 8px; /* Rounded corners for toolbar */
-  margin-bottom: 15px; /* Space below the toolbar */
-}
-
-/* Toolbar Button Styles */
-.fc-toolbar button {
-  background-color: #5a31b0; /* Button background color */
-  color: #fff; /* Button text color */
-  border: none; /* Remove border */
-  border-radius: 4px; /* Rounded corners for buttons */
-  padding: 5px 10px; /* Padding for buttons */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.2s; /* Smooth transition for hover effect */
-}
-
-.fc-toolbar button:hover {
-  background-color: #46249d; /* Darker color on hover */
-}
-
-/* Media Query for Toolbar on Smaller Screens */
-@media (max-width: 768px) {
-  #calendar {
-      height: 300px; /* Adjust height for smaller screens */
-  }
-
-  .fc-toolbar {
-      flex-direction: column; /* Stack toolbar elements */
-      align-items: center; /* Center align toolbar elements */
-  }
-
-  .fc-daygrid-event {
-      font-size: 12px; /* Adjust font size for smaller screens */
-  }
-}
-
-
-
-

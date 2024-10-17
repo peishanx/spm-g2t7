@@ -15,7 +15,35 @@ function navigateTo(page) {
 }
 
 //for logout and clear session storage
-function logout(page){
-    sessionStorage.clear();
-    window.location.href = page; 
+
+// Create the log out confirmation modal and append it to the document body
+document.addEventListener('DOMContentLoaded', function () {
+    const modalHTML = `
+    <div id="logoutModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+        <div style="background:white; padding:20px; border-radius:8px; text-align:center;">
+            <h2>Confirm Logout</h2>
+            <p>Are you sure you want to log out?</p>
+            <button id="confirmLogout">Yes</button>
+            <button id="cancelLogout">No</button>
+        </div>
+    </div>
+    `;
+    // Insert the modal into the body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Attach event listeners for the buttons
+    document.getElementById('confirmLogout').addEventListener('click', function() {
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+    });
+
+    document.getElementById('cancelLogout').addEventListener('click', function() {
+        document.getElementById('logoutModal').style.display = 'none';
+    });
+});
+
+// Function to trigger logout with the modal
+function logout(page) {
+    // Show the modal
+    document.getElementById('logoutModal').style.display = 'flex';
 }

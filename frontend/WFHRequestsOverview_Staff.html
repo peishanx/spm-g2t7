@@ -34,7 +34,11 @@
       // get id and replace with data value
       document.getElementById('staffNameDisplay').textContent = staffName;
       document.getElementById('position').textContent = position;
+
+      // Call the function to display the sidebar and apply role-based logic
+      displaysidebar();
     });
+
   </script>
 
 </head>
@@ -43,58 +47,8 @@
 
   <div class="wfhrequestsoverviewstaff">
     <div class="main-container">
+      <div id="sidebar"></div>
 
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <div class="logo">
-          <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
-          <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
-        </div>
-        <nav class="nav-menu">
-          <a href="#" class="nav-item" onclick="navigateTo('dashboard.html')">
-            <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
-            <span>Dashboard</span>
-          </a>
-
-          <!-- Requests Dropdown -->
-          <div class="dropdown">
-            <button class="dropbtn" onclick="toggleDropdown('requestsDropdown', 'requestsArrow')">
-              <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
-              <span>Requests</span>
-              <img alt="Arrow" class="icon-arrow" id="requestsArrow"
-                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-            </button>
-            <div class="dropdown-content" id="requestsDropdown">
-              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestForm.html')">Apply</a>
-              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_Staff.html')">My
-                Requests</a>
-              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_ManagerDirector.html')">Team
-                Requests</a>
-            </div>
-          </div>
-
-          <!-- Schedules Dropdown -->
-          <div class="dropdown">
-            <button class="dropbtn" onclick="toggleDropdown('schedulesDropdown', 'schedulesArrow')">
-              <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
-              <span>Schedules</span>
-              <img alt="Arrow" class="icon-arrow" id="schedulesArrow"
-                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-            </button>
-            <div class="dropdown-content" id="schedulesDropdown">
-              <a href="#" class="nav-subitem" onclick="navigateTo('WFHCalendarStaff.html')">Calendars</a>
-              <a href="#" class="nav-subitem"
-                onclick="navigateTo('WFHRequestsSchedules_Organization.html')">Organization</a>
-              <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsSchedules_SHRJack.html')">Team</a>
-            </div>
-          </div>
-
-          <a href="#" class="nav-item" onclick="logout('login.html')">
-            <i class="fa-solid fa-arrow-right-from-bracket" id="logouticon"></i>
-            <span>Log Out</span>
-          </a>
-        </nav>
-      </aside>
 
       <!-- Main Content -->
       <main class="main-content">
@@ -102,7 +56,7 @@
         <header class="header">
           <div class="header-content">
             <h1>Requests</h1>
-            <p>All WFH Applications</p>
+            <p>All My WFH Applications</p>
           </div>
           <div class="header-actions">
             <button class="notification-btn">
@@ -114,7 +68,7 @@
                 <h3 id="staffNameDisplay"></h3>
                 <p id="position"></p>
               </div>
-              <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt="" class="dropdown-icon">
+              <!-- <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt="" class="dropdown-icon"> -->
             </div>
           </div>
         </header>
@@ -122,109 +76,92 @@
         <div class="content">
           <div class="actions">
             <input class="searchbar" type="search" placeholder="Search">
-            <div class="filters">
-              <select class="dropdown" id="wfhtypedropdown">
-                <option>AM</option>
-                <option>PM</option>
-                <option>Full Day</option>
-              </select>
-              <select class="dropdown" id="statusdropdown">
-                <option>Pending</option>
-                <option>Approved</option>
-                <option>Rejected</option>
-                <option>Withdraw</option>
-              </select>
-              <button type="button" class="btn" id="requestdate" src="">Request Date<i
-                  class="fa fa-filter"></i></button>
-              <button type="button" class="btn" id="applybtn" onclick="navigateTo('WFHRequestForm.html')">Apply</button>
+          </div>
+          <div class="filter-row">
+            <div class="filters-container">
+              <div>
+                <label for="wfhtypedropdown">WFH Type</label>
+                <select class="dropdown" id="wfhtypedropdown">
+                  <option value="">All</option>
+                  <option>AM</option>
+                  <option>PM</option>
+                  <option>Full Day</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="statusdropdown">Status</label>
+                <select class="dropdown" id="statusdropdown">
+                  <option value="">All</option>
+                  <option>Pending</option>
+                  <option>Approved</option>
+                  <option>Rejected</option>
+                  <option>Withdrawn</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="requestdate">Request Date</label>
+                <input type="date" class="datefilter" id="requestdate" />
+              </div>
             </div>
+            <button type="button" class="btn" id="clearfilters">Clear Filters</button>
+
+            <button type="button" class="btn" id="applybtn" onclick="navigateTo('WFHRequestForm.html')">Apply</button>
+
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Request Date</th>
-                <th>Reason</th>
-                <th>WHF Type</th>
-                <th>Approved WFH</th>
-                <th>Approved By</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>01/07/2023</td>
-                <td>05 May 2023</td>
-                <td>On Course</td>
-                <td>AM</td>
-                <td>1/2</td>
-                <td>Jane Lim</td>
-                <td><span class="status pending">Pending</span></td>
-              </tr>
-
-              <tr>
-                <td>01/07/2023</td>
-                <td>05 May 2023</td>
-                <td>On Course</td>
-                <td>AM</td>
-                <td>1/2</td>
-                <td>Jane Lim</td>
-                <td><span class="status approved">Approved</span></td>
-              </tr>
-
-              <tr>
-                <td>01/07/2023</td>
-                <td>05 May 2023</td>
-                <td>On Course</td>
-                <td>AM</td>
-                <td>1/2</td>
-                <td>Jane Lim</td>
-                <td><span class="status rejected">Rejected</span></td>
-              </tr>
-
-              <tr>
-                <td>01/07/2023</td>
-                <td>05 May 2023</td>
-                <td>On Course</td>
-                <td>AM</td>
-                <td>1/2</td>
-                <td>Jane Lim</td>
-                <td><span class="status withdraw">Withdraw</span></td>
-              </tr>
-              <!-- Repeat similar rows -->
-            </tbody>
-          </table>
-
-          <div class="pagination">
-            <div class="per-page">
-              <span>Showing</span>
-              <select>
-                <option>10</option>
-              </select>
-            </div>
-            <p>Showing 1 to 10 out of 60 records</p>
-            <div class="page-numbers">
-              <button>&lt;</button>
-              <button class="active" type="button">1</button>
-              <button type="button">2</button>
-              <button type="button">3</button>
-              <button type="button">4</button>
-              <button>&gt;</button>
-            </div>
-          </div>
-          <!--Testing session storage-->
-          <!-- <h1>Welcome to WFH Requests Overview</h1>
-          <p>Name: <span id="staffNameDisplay"></span></p>
-          <p>Department: <span id="deptDisplay"></span></p>
-          <p>Role: <span id="roleDisplay"></span></p> -->
         </div>
-      </main>
+
+
+        <!-- Table for WFH Requests -->
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Request Date</th>
+              <th>Reason</th>
+              <th>WFH Type</th>
+              <th>Approved WFH</th>
+              <th>Approved By</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="wfhRequestTableBody">
+            <!-- This section will be dynamically populated using JavaScript -->
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <div class="per-page">
+            <span>Showing</span>
+            <select>
+              <option>10</option>
+            </select>
+          </div>
+          <p>Showing 1 to 10 out of 60 records</p>
+          <div class="page-numbers">
+            <button>&lt;</button>
+            <button class="active" type="button">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">4</button>
+            <button>&gt;</button>
+          </div>
+        </div>
     </div>
+    </main>
+  </div>
   </div>
 
-  <!--Routing for different pages and clickable dropdown menu-->
+  <!-- Routing for different pages and clickable dropdown menu -->
   <script src="js/MenuRoute.js"></script>
+
+  <!--Sidebar js functions-->
+  <script src="js/sidebar.js"></script>
+  
+  <!-- Fetching requests for individual staff -->
+  <script src="js/WFHRequestsPerStaff.js"></script>
 </body>
 
 </html>

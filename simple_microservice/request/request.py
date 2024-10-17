@@ -8,6 +8,7 @@ import sys
 import math
 import pytz
 from werkzeug.utils import secure_filename
+import requests
 
 
 app = Flask(__name__)
@@ -56,6 +57,9 @@ class Request(db.Model):
             "rid": self.rid,
             "sid": self.sid,
             "wfh_type": self.wfh_type,
+            "reason": self.reason,
+            "approved_by": self.approved_by,
+            "approved_wfh": self.approved_wfh,
             "request_date": self.request_date.isoformat(),
             "status": self.status,
             "createdAt": self.createdAt
@@ -290,6 +294,49 @@ def auto_reject_old_pending_requests():
             "code": 500,
             "message": "An error occurred while rejecting the old pending requests. " + str(e)
         }), 500
+
+# Endpoint to get team requests
+@app.route("/request/team/<int:manager_id>", methods=["GET"])
+def get_team_requests(manager_id):
+    try:
+        # Step 1: Get employees who report to this manager
+        employee_service_url = f"http://localhost:5100/employee/reporting_manager/{manager_id}"
+        response = requests.get(employee_service_url)
+        if response.status_code != 200:
+            return jsonify({"code": 500, "message": "Error fetching employees under manager."}), 500
+        
+        employee_data = response.json()
+        if employee_data["code"] != 200:
+            return jsonify({"code": 404, "message": "No employees found under this manager."}), 404
+        
+        # Extract staff IDs from the employee data
+        employees = employee_data["data"]
+        staff_ids = [emp["Staff_ID"] for emp in employees]
+
+        # Step 2: Fetch WFH requests for these staff IDs
+        team_requests = Request.query.filter(Request.sid.in_(staff_ids)).all()
+        if not team_requests:
+            return jsonify({"code": 404, "message": "No WFH requests found for this team."}), 404
+
+        # Step 3: Create a dictionary of employee positions by Staff_ID
+        employee_positions = {emp["Staff_ID"]: emp["Position"] for emp in employees}
+        employee_dept = {emp["Staff_ID"]: emp["Dept"] for emp in employees}
+
+        # Step 4: Include the position in the returned WFH request data
+        data = []
+        for request in team_requests:
+            req_json = request.json()
+            # Add the employee's position to each request
+            req_json["position"] = employee_positions.get(request.sid, "Unknown")
+            req_json["department"] = employee_dept.get(request.sid, "Unknown")
+
+            data.append(req_json)
+
+        return jsonify({"code": 200, "data": data}), 200
+
+    except Exception as e:
+        return jsonify({"code": 500, "message": f"An error occurred: {str(e)}"}), 500
+
 
 
 

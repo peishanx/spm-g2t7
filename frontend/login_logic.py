@@ -4,11 +4,7 @@ import mysql.connector
 import bcrypt  # For password hashing verification
 from mysql.connector import Error
 import os
-from flask import Flask
-from flask_cors import CORS
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
 # Function to retrieve a user by email from the MySQL database
 def get_user_by_email(email):
     try:
@@ -39,7 +35,7 @@ def get_user_by_email(email):
 
 # Class to handle HTTP requests for the login process
 class RequestHandler(http.server.SimpleHTTPRequestHandler):
-
+    
     # Serve HTML files and other static content
     def do_GET(self):
         if self.path == "/":
@@ -51,15 +47,21 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         if self.path == '/login':
             content_length = int(self.headers['Content-Length'])
             body = self.rfile.read(content_length).decode('utf-8')
+            print(f"Request body: {body}")  # Debugging log
             data = json.loads(body)
 
             email = data.get('email')
             password = data.get('password')
+            print(f"Email: {email}, Password: {password}")  # Debug log
+            
 
             # Retrieve user from the database based on email
             user = get_user_by_email(email)
+            print(f"Retrieved user: {user}")  # Debugging user data
 
             if user and bcrypt.checkpw(password.encode('utf-8'), user['Password'].encode('utf-8')):
+                print(f"Hashed password from DB: {user['Password']}")  # This prints the hashed password from the database
+                print(f"Password provided: {password}")  # This should show the plain-text password entered by Derek
                 # Password matches, respond with success and user role
                 response_data = {
                     'success': True,
@@ -80,6 +82,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps(response_data).encode())
             else:
+                print("Password does not match")  # Debug log
                 # Authentication failed, respond with error
                 self.send_response(401)
                 self.send_header('Content-type', 'application/json')
@@ -97,4 +100,4 @@ if __name__ == '__main__':
     server_address = ('', PORT)
     httpd = http.server.HTTPServer(server_address, RequestHandler)
     print(f'Server running on http://localhost:{PORT}')
-    httpd.serve_forever()    
+    httpd.serve_forever()

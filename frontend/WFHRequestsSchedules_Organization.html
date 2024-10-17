@@ -13,81 +13,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-            <!--Session storage after the login-->
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const staffId = sessionStorage.getItem('staff_id');
-                    const staffName = sessionStorage.getItem('staff_name');
-                    const staffFname = sessionStorage.getItem('staff_fname');
-                    const staffLname = sessionStorage.getItem('staff_lname')
-                    const dept = sessionStorage.getItem('dept');
-                    const role = sessionStorage.getItem('rolenum');
-                    const position = sessionStorage.getItem('position');
-                    const country = sessionStorage.getItem('country');
-                    const email = sessionStorage.getItem('email');
-                    const reportingmanager = sessionStorage.getItem('reportingmanager')
-        
-                    // Console log test
-                    console.log(`Staff ID: ${staffId}, Name: ${staffName}, Dept: ${dept}, Role: ${role}, Position: ${position}, Country: ${country}, Email:${email},Reportin Manager: ${reportingmanager}`);
-       
-                });
-            </script>
+    <!--Session storage after the login-->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const staffId = sessionStorage.getItem('staff_id');
+            const staffName = sessionStorage.getItem('staff_name');
+            const staffFname = sessionStorage.getItem('staff_fname');
+            const staffLname = sessionStorage.getItem('staff_lname')
+            const dept = sessionStorage.getItem('dept');
+            const role = sessionStorage.getItem('rolenum');
+            const position = sessionStorage.getItem('position');
+            const country = sessionStorage.getItem('country');
+            const email = sessionStorage.getItem('email');
+            const reportingmanager = sessionStorage.getItem('reportingmanager')
+
+            // Console log test
+            console.log(`Staff ID: ${staffId}, Name: ${staffName}, Dept: ${dept}, Role: ${role}, Position: ${position}, Country: ${country}, Email:${email},Reportin Manager: ${reportingmanager}`);
+
+            // get id and replace with data value
+            document.getElementById('staffNameDisplay').textContent = staffName;
+            document.getElementById('position').textContent = position;
+
+            // Call the function to display the sidebar and apply role-based logic
+            displaysidebar();
+        });
+
+    </script>
 </head>
 
 <body>
     <div class="organizationschedules">
         <div class="main-container">
             <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="logo">
-                    <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
-                    <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
-                </div>
-                <nav class="nav-menu">
-                    <a href="#" class="nav-item" onclick="navigateTo('dashboard.html')">
-                        <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
-                        <span>Dashboard</span>
-                    </a>
-
-                    <!-- Requests Dropdown -->
-                    <div class="dropdown">
-                        <button class="dropbtn" onclick="toggleDropdown('requestsDropdown', 'requestsArrow')">
-                            <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
-                            <span>Requests</span>
-                            <img alt="Arrow" class="icon-arrow" id="requestsArrow"
-                                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-                        </button>
-                        <div class="dropdown-content" id="requestsDropdown">
-                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestForm.html')">Apply</a>
-                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_Staff.html')">My
-                                Requests</a>
-                            <a href="#" class="nav-subitem"
-                                onclick="navigateTo('WFHRequestsOverview_ManagerDirector.html')">Team Requests</a>
-                        </div>
-                    </div>
-
-                    <!-- Schedules Dropdown -->
-                    <div class="dropdown">
-                        <button class="dropbtn" onclick="toggleDropdown('schedulesDropdown', 'schedulesArrow')">
-                            <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
-                            <span>Schedules</span>
-                            <img alt="Arrow" class="icon-arrow" id="schedulesArrow"
-                                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-                        </button>
-                        <div class="dropdown-content" id="schedulesDropdown">
-                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHCalendarStaff.html')">Calendars</a>
-                            <a href="#" class="nav-subitem"
-                                onclick="navigateTo('WFHRequestsSchedules_Organization.html')">Organization</a>
-                            <a href="#" class="nav-subitem"
-                                onclick="navigateTo('WFHRequestsSchedules_SHRJack.html')">Team</a>
-                        </div>
-                    </div>
-                    <a href="#" class="nav-item" onclick="logout('login.html')">
-                        <i class="fa-solid fa-arrow-right-from-bracket" id="logouticon"></i>
-                        <span>Log Out</span>
-                    </a>
-                </nav>
-            </aside>
+            <div id="sidebar"></div>
 
             <!-- Main Content -->
             <main class="main-content">
@@ -104,11 +62,11 @@
                         <div class="user-profile">
                             <img src="img/rectangle-3463281.png" alt="Profile" class="profile-img">
                             <div class="user-info">
-                                <h3>Robert Allen</h3>
-                                <p>HR Manager</p>
+                                <h3 id="staffNameDisplay"></h3>
+                                <p id="position"></p>
                             </div>
-                            <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
-                                class="dropdown-icon">
+                            <!-- <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
+                                class="dropdown-icon"> -->
                         </div>
                     </div>
                 </header>
@@ -226,8 +184,10 @@
                 </div>
             </main>
         </div>
-        <!--Routing for different pages and clickable dropdown menu-->
+        <!-- Routing for different pages and clickable dropdown menu -->
         <script src="js/MenuRoute.js"></script>
-    </body>
+        <!--Sidebar js functions-->
+        <script src="js/sidebar.js"></script>
+</body>
 
 </html>

@@ -131,7 +131,13 @@ def filter_by_dept_and_role(dept, role, comparison):
             "message": "An error occurred while fetching the employees. " + str(e)
         }), 500
 
+@app.route("/employee/reporting_manager/<int:manager_id>", methods=["GET"])
+def get_employees_by_manager(manager_id):
+    employees = Employee.query.filter_by(Reporting_Manager=manager_id).all()
+    if not employees:
+        return jsonify({"code": 404, "message": "No employees found for this manager."}), 404
 
+    return jsonify({"code": 200, "data": [employee.json() for employee in employees]}), 200
 
 if __name__ == "__main__": 
     app.run(host="0.0.0.0", port = 5100, debug =True)

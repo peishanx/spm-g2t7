@@ -44,7 +44,12 @@
 
             document.getElementById('deptDisplay').textContent = dept;
             document.getElementById('positionDisplay').textContent = position;
+
+
+            // Call the function to display the sidebar and apply role-based logic
+            displaysidebar();
         });
+
     </script>
 </head>
 
@@ -52,57 +57,7 @@
     <div class="wfhrequestformdetails">
         <div class="main-container">
             <!-- Sidebar -->
-            <aside class="sidebar">
-                <div class="logo">
-                    <img src="img/frame-37-2.svg" alt="Logo" class="logo-icon">
-                    <img src="img/hrms-2.svg" alt="HRMS" class="logo-text">
-                </div>
-                <nav class="nav-menu">
-                    <a href="#" class="nav-item" onclick="navigateTo('dashboard.html')">
-                        <img src="img/huge-icon-menu-outline-apps-rectangle-1.svg" alt="" class="nav-icon">
-                        <span>Dashboard</span>
-                    </a>
-
-                    <!-- Requests Dropdown -->
-                    <div class="dropdown">
-                        <button class="dropbtn" onclick="toggleDropdown('requestsDropdown', 'requestsArrow')">
-                            <img src="img/huge-icon-interface-outline-notepad.svg" alt="" class="nav-icon">
-                            <span>Requests</span>
-                            <img alt="Arrow" class="icon-arrow" id="requestsArrow"
-                                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-                        </button>
-                        <div class="dropdown-content" id="requestsDropdown">
-                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestForm.html')">Apply</a>
-                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHRequestsOverview_Staff.html')">My
-                                Requests</a>
-                            <a href="#" class="nav-subitem"
-                                onclick="navigateTo('WFHRequestsOverview_ManagerDirector.html')">Team Requests</a>
-                        </div>
-                    </div>
-
-                    <!-- Schedules Dropdown -->
-                    <div class="dropdown">
-                        <button class="dropbtn" onclick="toggleDropdown('schedulesDropdown', 'schedulesArrow')">
-                            <img src="img/huge-icon-interface-outline-calendar.svg" alt="" class="nav-icon">
-                            <span>Schedules</span>
-                            <img alt="Arrow" class="icon-arrow" id="schedulesArrow"
-                                src="img/huge-icon-arrows-outline-direction-down-01-1.svg" />
-                        </button>
-                        <div class="dropdown-content" id="schedulesDropdown">
-                            <a href="#" class="nav-subitem" onclick="navigateTo('WFHCalendarStaff.html')">Calendars</a>
-                            <a href="#" class="nav-subitem"
-                                onclick="navigateTo('WFHRequestsSchedules_Organization.html')">Organization</a>
-                            <a href="#" class="nav-subitem"
-                                onclick="navigateTo('WFHRequestsSchedules_SHRJack.html')">Team</a>
-                        </div>
-                    </div>
-
-                    <a href="#" class="nav-item" onclick="logout('login.html')">
-                        <i class="fa-solid fa-arrow-right-from-bracket" id="logouticon"></i>
-                        <span>Log Out</span>
-                    </a>
-                </nav>
-            </aside>
+            <div id="sidebar"></div>
 
             <!-- Main Content -->
             <main class="main-content">
@@ -123,8 +78,8 @@
                                 <h3 class="staffNameDisplay"></h3>
                                 <p id="positionDisplay"></p>
                             </div>
-                            <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
-                                class="dropdown-icon">
+                            <!-- <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
+                                class="dropdown-icon"> -->
                         </div>
                     </div>
                 </header>
@@ -216,8 +171,10 @@
             </main>
         </div>
     </div>
-    <!--Routing for different pages and clickable dropdown menu-->
+    <!-- Routing for different pages and clickable dropdown menu -->
     <script src="js/MenuRoute.js"></script>
+    <!--Sidebar js functions-->
+    <script src="js/sidebar.js"></script>
 </body>
 
 </html>

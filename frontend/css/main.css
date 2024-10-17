@@ -34,7 +34,7 @@ body {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 280px;
+  width: 200px;
   background-color: var(--gray-5);
   border-radius: 20px;
   padding: 30px;
@@ -187,9 +187,10 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 5px;
+  padding: 10px;
   border: 1px solid var(--gray-20);
   border-radius: 8px;
+  margin: 10px;
 }
 
 .profile-img {
