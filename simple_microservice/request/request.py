@@ -1,8 +1,8 @@
-from datetime import datetime, timedelta, timezone
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
-from flask_cors import CORS
+from datetime import datetime, timedelta, timezone
 import os
 import sys
 import math
@@ -11,6 +11,8 @@ from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
+CORS(app, resources={r"/request/*": {"origins": "http://localhost:8000"}})
+
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     environ.get("dbURL") or "mysql+mysqlconnector://root:@localhost:3306/request"
 )
@@ -48,7 +50,7 @@ class Request(db.Model):
         self.status = status
         self.attachment = attachment  # Set attachment
 
-    
+
     def json(self):
         return {
             "rid": self.rid,
@@ -69,7 +71,7 @@ def get_requests_by_sid(sid):
                 "code": 404,
                 "message": f"No requests found for employee with sid {sid}."
             }), 404
-        
+
         request_list = [r.json() for r in requests]
 
         return jsonify({
@@ -267,7 +269,7 @@ def withdraw_request(rid, sid):
 def auto_reject_old_pending_requests():
     try:
         now = datetime.now(tz=timezone.utc)
-        
+
         pending_requests = Request.query.filter_by(status="Pending").all()
 
         for req in pending_requests:
@@ -295,5 +297,4 @@ if __name__ == "__main__":
        # Ensure upload folder exists
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
-        
-    app.run(host="0.0.0.0", port = 5200, debug = True)
+    app.run(port=5200, debug=True)

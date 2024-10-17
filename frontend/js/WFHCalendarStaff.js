@@ -1,169 +1,116 @@
-let tokenClient;
-let accessToken = null;
+import { createApp } from 'https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.js';
+const { Calendar } = FullCalendar;
 
-// Check for employee ID and redirect to login if missing
-function getEmployeeId() {
-    const sid = sessionStorage.getItem('staff_id');
-    if (!sid) {
-      console.error('Employee ID not found in session storage. Redirecting to login page.');
-      window.location.href = 'login.html';
-    } else {
-      console.log('Employee ID found:', sid); // Debugging: Check if ID is found before redirection
-    }
-    return sid;
-  }
-
-function initializeGoogleCalendar() {
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: '', // replace with actual client id 
-    scope: 'https://www.googleapis.com/auth/calendar.events',
-    callback: (tokenResponse) => {
-      accessToken = tokenResponse.access_token;
-      fetchApprovedRequests(); // Automatically fetch approved requests after obtaining the access token
+createApp({
+    data() {
+        return {
+            events: [],
+            filterType: 'all',
+            calendar: null,
+        };
     },
-  });
-}
+    mounted() {
+        this.fetchCalendarData();
+    },
+    methods: {
+        fetchCalendarData() {
+            const staffId = sessionStorage.getItem('staff_id');
+            fetch(`http://localhost:5201/request/employee/${staffId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('API Response:', data);
+                    if (data.code === 200 && Array.isArray(data.data)) {
+                        this.events = data.data.map(event => {
+                            let backgroundColor = ''; // Initialize background color variable
 
-function requestAccessToken() {
-  if (!accessToken) {
-    tokenClient.requestAccessToken(); // Automatically request the access token
-  } else {
-    fetchApprovedRequests(); // If access token is already available, fetch data immediately
-  }
-}
+                            // Set background color based on event title
+                            switch (event.title) {
+                                case 'WFH (AM)':
+                                case 'WFH (PM)':
+                                case 'WFH (Full Day)':
+                                    backgroundColor = '#6941C6'; // Purple for WFH
+                                    break;
+                                case 'In Office (AM)':
+                                case 'In Office (PM)':
+                                case 'In Office (Full Day)':
+                                    backgroundColor = '#B3B3FF'; // Light purple for In Office
+                                    break;
+                                default:
+                                    backgroundColor = '#B3B3FF'; // Default to light purple
+                            }
 
-function refreshCalendarIframe() {
-    const calendarIframe = document.getElementById("calendarIframe");
-    if (calendarIframe) {
-        // Reload the iframe by updating its src attribute
-        const src = calendarIframe.src;
-        calendarIframe.src = src;
-        console.log("Calendar iframe refreshed");
-    } else {
-        console.error("Calendar iframe not found");
-    }
-}
+                            console.log(`Mapped Event: Title: ${event.title}, Start: ${event.start}, End: ${event.end}, Background Color: ${backgroundColor}`);
 
-function addEventToCalendar(requestDate, type, rid) {
-    let processedRequests = JSON.parse(localStorage.getItem('processedRequests') || '[]');
-    
-    if (processedRequests.includes(rid)) {
-        console.log(`Event for request ID ${rid} already created, skipping.`);
-        return;
-    }
+                            return {
+                                title: event.title,
+                                start: event.start,
+                                end: event.end,
+                                backgroundColor: backgroundColor // Add background color for events
+                            };
+                        });
 
-    processedRequests.push(rid);
-    localStorage.setItem('processedRequests', JSON.stringify(processedRequests));
+                        this.initCalendar(); // Initialize the calendar after fetching data
+                        this.updateCalendarEvents(); // Update the calendar with the new events
+                    } else {
+                        console.error('Invalid API response format or code:', data);
+                    }
+                })
+                .catch(error => console.error('Error fetching calendar data:', error));
+        },
 
-    let startTime, endTime,summary;
-
-    if (type === "AM") {
-        startTime = "09:00:00";
-        endTime = "12:00:00";
-        summary = 'WFH (AM)';
-    } else if (type === "PM") {
-        startTime = "13:00:00";
-        endTime = "17:00:00";
-        summary = 'WFH (PM)';
-    } else { // Full Day
-        startTime = "09:00:00";
-        endTime = "17:00:00";
-        summary = 'WFH (Full Day)';
-    }
-
-    const startDateTime = `${requestDate}T${startTime}`;
-    const endDateTime = `${requestDate}T${endTime}`;
-
-    const event = {
-        summary: summary,
-        start: { dateTime: startDateTime, timeZone: 'Asia/Singapore' },
-        end: { dateTime: endDateTime, timeZone: 'Asia/Singapore' }
-    };
-
-    const queryStartTime = new Date(`${requestDate}T00:00:00`).toISOString();
-    const queryEndTime = new Date(`${requestDate}T23:59:59`).toISOString();
-
-    fetch(`https://www.googleapis.com/calendar/v3/calendars/d6c62e38d0acc337129c40e729e598c02515e1ea326722ca0b5ad5f2f2078214@group.calendar.google.com/events?timeMin=${queryStartTime}&timeMax=${queryEndTime}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        const existingEvent = data.items.find(item => item.summary === event.summary && item.start.dateTime === startDateTime);
-
-        if (existingEvent) {
-            console.log(`Event already exists on ${requestDate} for request ID ${rid}, skipping.`);
-            return;
-        } else {
-            return fetch('https://www.googleapis.com/calendar/v3/calendars/d6c62e38d0acc337129c40e729e598c02515e1ea326722ca0b5ad5f2f2078214@group.calendar.google.com/events', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
+        initCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            this.calendar = new Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listYear'
                 },
-                body: JSON.stringify(event)
+                events: this.events, // Set the events directly from the mapped data
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                },
+                eventDidMount: (info) => {
+                    // Assign colors to event backgrounds
+                    info.el.style.backgroundColor = info.event.backgroundColor; 
+                }
             });
-        }
-    })
-    .then(response => {
-        if (response && !response.ok) {
-            return response.json().then(error => Promise.reject(error));
-        }
-        return response ? response.json() : null;
-    })
-    .then(data => {
-        if (data) {
-            console.log('Event created:', data.htmlLink);
-            refreshCalendarIframe();
-        }
-    })
-    .catch(error => {
-        console.error('Error creating event:', error);
-        
-        // Rollback in case of error
-        processedRequests = processedRequests.filter(id => id !== rid);
-        localStorage.setItem('processedRequests', JSON.stringify(processedRequests));
-    });
-}
+            this.calendar.render(); // Render the calendar
+            console.log('Calendar initialized with events:', this.events); // Log initialized events
+        },
 
-function fetchApprovedRequests() {
-    const sid = getEmployeeId();
-    if (!sid) return;
+        updateCalendarEvents() {
+            const filteredEvents = this.getFilteredEvents();
+            console.log('Filtered Events:', filteredEvents);
+            this.calendar.removeAllEvents();
+            this.calendar.addEventSource(filteredEvents);
+        },
 
-    const processedRequests = JSON.parse(localStorage.getItem('processedRequests') || '[]');
-    console.log('Currently processed requests:', processedRequests);
-
-    fetch(`http://127.0.0.1:5200/request/employee/${sid}`, { method: 'GET' })
-    .then(response => response.json())
-        .then(data => {
-            if (data.code === 200) {
-                const approvedRequests = data.data.filter(request => request.status === 'Approved');
-                console.log('Approved requests:', approvedRequests);
-
-                const unprocessedRequests = approvedRequests.filter(request => !processedRequests.includes(request.rid));
-                console.log('Unprocessed requests:', unprocessedRequests);
-
-                unprocessedRequests.forEach(request => {
-                    const { request_date, wfh_type, rid } = request;
-                    addEventToCalendar(request_date, wfh_type, rid); // Pass rid to avoid duplicate creation
-                });
-            } else {
-                console.error('No approved requests found:', data.message);
+        getFilteredEvents() {
+            if (this.filterType === 'all') {
+                return this.events;
             }
-        })
-        .catch(error => {
-            console.error('Error fetching requests:', error);
-        });
-}
 
+            // Create a mapping of filter type to title
+            const titleMapping = {
+                'wfh_am': 'WFH (AM)',
+                'wfh_pm': 'WFH (PM)',
+                'wfh_full_day': 'WFH (Full Day)',
+                'in_office_am': 'In Office (AM)',
+                'in_office_pm': 'In Office (PM)',
+                'in_office_full_day': 'In Office (Full Day)'
+            };
 
-// Initialize Google Calendar client and check login status on page load
-window.onload = function() {
-  const sid = getEmployeeId();
-  if (sid) {
-    initializeGoogleCalendar();
-    requestAccessToken();
-  }
-};
+            const filterTitle = titleMapping[this.filterType];
+            return this.events.filter(event => event.title === filterTitle);
+        }
+    },
+    watch: {
+        filterType() {
+            this.updateCalendarEvents();
+        }
+    }
+}).mount('#app');

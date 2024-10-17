@@ -12,17 +12,10 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <link href='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.min.css' rel='stylesheet' />
     
-    <!-- External JS scripts -->
-    <script src='https://fullcalendar.io/releases/fullcalendar/3.9.0/lib/jquery.min.js'></script>
-    <script src='https://fullcalendar.io/releases/fullcalendar/3.9.0/lib/moment.min.js'></script>
-    <script src='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.min.js'></script>
-    <script src="https://apis.google.com/js/api.js"></script> <!-- Load gapi client -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-    
+     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js'></script>
+    <script src="https://unpkg.com/vue@next"></script>
 
 
 <!--Session storage after the login-->
@@ -49,7 +42,7 @@
 </head>
 
 <body>
-    <div class="calendarstaff">
+    <div class="calendarstaff" id="app">
         <div class="main-container">
 
             <!-- Sidebar -->
@@ -129,20 +122,23 @@
                     </div>
                 </header>
 
-                <div class="calendarcontentfilter" id="calendarFilter">
-                    <select id="filterType" onchange="filterCalendarEvents()">
-                        <option value="">All</option>
-                        <option value="WFH (Full Day)">WFH (Full Day)</option>
-                        <option value="WFH (AM)">WFH (AM)</option>
-                        <option value="WFH (PM)">WFH (PM)</option>
+                <div class="calendarContentFilter">
+                    <label for="filterType">Filter by Type:</label>
+                    <select id="filterType" v-model="filterType" class="form-select">
+                        <option value="all">All</option>
+                        <option value="wfh_am">WFH (AM)</option>
+                        <option value="wfh_pm">WFH (PM)</option>
+                        <option value="wfh_full_day">WFH (Full Day)</option>
+                        <option value="in_office_am">In Office (AM)</option>
+                        <option value="in_office_pm">In Office (PM)</option>
+                        <option value="in_office_full_day">In Office (Full Day)</option>
                     </select>
-                    <button onclick="applyFilter()">Apply Filter</button>
                 </div>
+    
+                <!-- Calendar Display -->
+                <div id="calendar"></div>
+            </div>
                 
-                <div class="calendarcontent" id="calendar">
-                    <!-- Embed Google Calendar below -->
-                    <iframe id="calendarIframe" src="https://calendar.google.com/calendar/embed?src=d6c62e38d0acc337129c40e729e598c02515e1ea326722ca0b5ad5f2f2078214%40group.calendar.google.com&ctz=Asia%2FSingapore" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-                </div>
             </main>
         </div>
     </div>
@@ -150,7 +146,9 @@
     <script src="js/MenuRoute.js"></script>
  
      <!-- Link to external JavaScript -->
-     <script src="./js/WFHCalendarStaff.js"></script>
+     <script type ="module" src="./js/WFHCalendarStaff.js"></script>
+
+     <!-- <script src="/static/app.js"></script> -->
       
 </body>
 

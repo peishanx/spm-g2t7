@@ -39,7 +39,7 @@ def get_user_by_email(email):
 
 # Class to handle HTTP requests for the login process
 class RequestHandler(http.server.SimpleHTTPRequestHandler):
-    
+
     # Serve HTML files and other static content
     def do_GET(self):
         if self.path == "/":
@@ -97,4 +97,4 @@ if __name__ == '__main__':
     server_address = ('', PORT)
     httpd = http.server.HTTPServer(server_address, RequestHandler)
     print(f'Server running on http://localhost:{PORT}')
-    httpd.serve_forever()
+    httpd.serve_forever()    
