@@ -38,6 +38,7 @@ body {
   background-color: var(--gray-5);
   border-radius: 20px;
   padding: 30px;
+  height:1000px;
 }
 
 .nav-menu {
@@ -49,7 +50,7 @@ body {
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   padding: 13px 16px;
   text-decoration: none;
   color: var(--gray-80);

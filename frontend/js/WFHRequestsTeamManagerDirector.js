@@ -29,10 +29,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Call the function to populate the position dropdown with unique positions
             populatePositionDropdown(allRequests);
 
-            // Add event listener to dropdown for filtering
-            document.getElementById('teamdropdown').addEventListener('change', () => {
-                filterRequestsByPosition(allRequests);
-            });
+            document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
+            document.getElementById('teamdropdown').addEventListener('change', () => filterRequests(allRequests));
+            document.getElementById('requestdate').addEventListener('change', () => filterRequests(allRequests)); // 'change' for date picker
+            document.getElementById('clearfilters').addEventListener('click', () => clearFilters(allRequests));
+            document.getElementById('wfhtypedropdown').addEventListener('change', () => filterRequests(allRequests));
 
         } else {
             const errorData = await response.json();
@@ -46,12 +47,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// Helper function to format dates (YYYY-MM-DD format)
+// Function to format the date
 function formatDate(dateString) {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const date = new Date(dateString);
+    const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/, '');
+    const timeString = date.toLocaleTimeString('en-GB');
+    return `${formattedDate}, ${timeString}`;
 }
-
+// Helper function to truncate reason to a maximum of 50 words
+function truncateReason(reason) {
+    const words = reason.split(' ');
+    return words.length > 10 ? words.slice(0, 10).join(' ') + '...' : reason;
+}
 // Function to populate the WFH requests table
 function populateWFHTable(requests) {
     const tableBody = document.getElementById('wfhRequestTableBody');
@@ -60,9 +68,10 @@ function populateWFHTable(requests) {
     // Loop through the requests and create table rows
     requests.forEach(request => {
         const row = document.createElement('tr');
-
+        // Concatenate first name and last name
+        const fullName = `${request.fname} ${request.lname}`;
         row.innerHTML = `
-            <td>${request.sid}</td>
+            <td>${fullName}</td>
             <td>${request.position}</td>
             <td>${formatDate(request.createdAt)}</td>
             <td>${formatDate(request.request_date)}</td>
@@ -84,7 +93,7 @@ function populatePositionDropdown(requests) {
     const positionDropdown = document.getElementById('teamdropdown');
     const uniquePositions = new Set(); // Set to store unique positions
 
-    // Loop through the requests to extract unique positions
+    // Loop through the requests to extract unique departments
     requests.forEach(request => {
         uniquePositions.add(request.position);
     });
@@ -92,7 +101,12 @@ function populatePositionDropdown(requests) {
     // Clear the current dropdown options
     positionDropdown.innerHTML = '';
 
-    // Populate the dropdown with unique positions
+    //add a "all" option
+    const alloption = document.createElement('option');
+    alloption.textContent = "All";
+    positionDropdown.appendChild(alloption);
+
+    // Populate the dropdown with unique departments
     uniquePositions.forEach(position => {
         const option = document.createElement('option');
         option.textContent = position;
@@ -100,18 +114,39 @@ function populatePositionDropdown(requests) {
     });
 }
 
-// Function to filter WFH requests by the selected position
-function filterRequestsByPosition(allRequests) {
-    const selectedPosition = document.getElementById('teamdropdown').value;
 
-    // Filter the requests by selected position
-    const filteredRequests = allRequests.filter(request => request.position === selectedPosition);
+// Filtering: Apply all filters together (department, status, WFH type, and request date)
+function filterRequests(allRequests) {
+    const selectedTeam = document.getElementById('teamdropdown').value;
+    const statusFilter = document.getElementById('statusdropdown').value;
+    const requestDateFilter = document.getElementById('requestdate').value; // Assuming it's a date picker input
+    const wfhTypeFilter = document.getElementById('wfhtypedropdown').value;
 
-    // Repopulate the table with the filtered requests
+    // Filter the requests based on selected filters
+    const filteredRequests = allRequests.filter(request => {
+        const matchesPosition = selectedTeam === "All" || selectedTeam === '' || request.position === selectedTeam;
+        const matchesStatus = statusFilter === '' || request.status === statusFilter;
+        const matchesWfhType = wfhTypeFilter === '' || request.wfh_type === wfhTypeFilter;
+
+        // Extract only the date part from request.request_date
+        const requestDateOnly = request.request_date.split('T')[0]; // Get the date part (YYYY-MM-DD) from ISO format
+        const matchesRequestDate = requestDateFilter === '' || requestDateOnly === requestDateFilter; // Compare only the date
+
+        // Return true if all conditions match (no priority for any filter)
+        return matchesPosition && matchesStatus && matchesWfhType && matchesRequestDate;
+    });
+
+    // Repopulate the table with filtered results
     populateWFHTable(filteredRequests);
 }
-// Helper function to truncate reason to a maximum of 50 words
-function truncateReason(reason) {
-    const words = reason.split(' ');
-    return words.length > 10 ? words.slice(0, 10).join(' ') + '...' : reason;
+
+// Clear filters: Reset all filter inputs and show all requests
+function clearFilters(allRequests) {
+    document.getElementById('statusdropdown').value = ''; // Reset status to "All"
+    document.getElementById('wfhtypedropdown').value = ''; // Reset WFH type to "All"
+    document.getElementById('requestdate').value = ''; // Clear date filter
+    document.getElementById('teamdropdown').value = 'All'; // Set department to "All"
+
+    // Reapply filters with cleared values (which should show all requests)
+    populateWFHTable(allRequests);
 }

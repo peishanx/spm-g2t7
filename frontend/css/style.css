@@ -278,12 +278,10 @@
 
 
 /*Page: WFH Request Overview (Manager/Director View)*/
-
-/* Actions Bar Styles */
-.wfhrequestsoverviewmanagerdirector .actions,
-.wfhrequestsoverviewmanagerdirector.teamdropdown {
+.wfhrequestsoverviewmanagerdirector .actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Ensure the searchbar and apply button are far apart */
+  align-items: center; /* Vertically align items */
   margin-bottom: 20px;
 }
 
@@ -292,38 +290,63 @@
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   width: 300px;
+  margin-right: 20px; /* Space between search bar and filters */
+}
+/* Flexbox layout for filters and buttons */
+.wfhrequestsoverviewmanagerdirector .filter-row {
+  display: flex;
+  align-items: center; /* Vertically center the items */
+  gap: 20px; /* Space between filters and buttons */
+  margin-top: 10px; /* Space above the filter row */
+  padding-bottom: 10px;
 }
 
-.wfhrequestsoverviewmanagerdirector .teamdropdown {
+.wfhrequestsoverviewmanagerdirector .filters-container {
+  display: flex; /* Maintain a horizontal layout for filters */
+  gap: 20px; /* Space between filters */
+}
+/* Styling for filters */
+.wfhrequestsoverviewmanagerdirector #teamdropdown{
   padding: 10px;
-  border: 1px solid #e0e0e0;
   border-radius: 10px;
-  width: 250px;
+  font-size: 14px;
+  border: 1px solid #dadada;
+  background: white;
+  width: 180px; /* Consistent width for filters */
 }
-
-.wfhrequestsoverviewmanagerdirector .btn,
 .wfhrequestsoverviewmanagerdirector #statusdropdown,
+.wfhrequestsoverviewmanagerdirector .datefilter,
 .wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
-  /* cursor: pointer; */
+  border: 1px solid #dadada;
+  background: white;
+  width: 150px; /* Consistent width for filters */
 }
 
 .wfhrequestsoverviewmanagerdirector #statusdropdown,
-.wfhrequestsoverviewmanagerdirector #requestdate,
-.wfhrequestsoverviewmanagerdirector #wfhtypedropdown {
+.wfhrequestsoverviewmanagerdirector #wfhtypedropdown  {
+  width: 110px; /* Set a consistent width for dropdowns */
+}
+
+.wfhrequestsoverviewmanagerdirector .datefilter {
+  width: 100px; /* Ensure the date filter has a consistent width */
+}
+
+.wfhrequestsoverviewmanagerdirector #clearfilters {
+  background: transparent; /* Give clear filters a different color */
+  color: black;
+  width: 100px; /* Set a consistent width for dropdowns */
+  padding: 10px 10px;
+  border-radius: 10px;
   border: 1px solid #dadada;
-  background: white;
+  margin-top: 25px;
 }
-
-.wfhrequestsoverviewmanagerdirector .teamfilterlabel {
-  padding-bottom: 10px;
-}
-
-.wfhrequestsoverviewmanagerdirector .fa.fa-filter {
-  padding-left: 5px;
-  color: #7a7a7a;
+.wfhrequestsoverviewmanagerdirector .filters-container label {
+  display: block; /* Makes the label take the full width */
+  margin-bottom: 5px; /* Adds space between the label and input */
+  font-size: small;
 }
 
 .wfhrequestsoverviewmanagerdirector #applybtn {
@@ -332,7 +355,8 @@
   border: none;
   padding: 10px 25px;
   border-radius: 10px;
-  margin-left: 5px;
+  margin-left: auto; /* Push Apply button all the way to the right */
+  cursor: pointer;
 }
 
 /* Table Styles */
@@ -505,16 +529,6 @@
   margin-bottom: 5px; /* Adds space between the label and input */
   font-size: small;
 }
-
-/* .wfhrequestsoverviewstaff .fa.fa-filter {
-  padding-left: 5px;
-  color: #7a7a7a;
-} */
-
-/* .wfhrequestsoverviewstaff #statusdropdown,
-.wfhrequestsoverviewstaff #wfhtypedropdown {
-  margin-right: 2px;
-} */
 
 .wfhrequestsoverviewstaff #applybtn {
   background: #6941C6;

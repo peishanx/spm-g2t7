@@ -74,9 +74,11 @@ function populateWFHTable(requests) {
     // Loop through the requests and create table rows
     requests.forEach(request => {
         const row = document.createElement('tr');
-
+        // Concatenate first name and last name
+        const fullName = `${request.fname} ${request.lname}`;
+        
         row.innerHTML = `
-            <td>${request.sid}</td>
+            <td>${fullName}</td>
             <td>${request.department}</td>
             <td>${formatDate(request.createdAt)}</td>
             <td>${formatDate(request.request_date)}</td>

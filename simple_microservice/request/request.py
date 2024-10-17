@@ -321,6 +321,8 @@ def get_team_requests(manager_id):
         # Step 3: Create a dictionary of employee positions by Staff_ID
         employee_positions = {emp["Staff_ID"]: emp["Position"] for emp in employees}
         employee_dept = {emp["Staff_ID"]: emp["Dept"] for emp in employees}
+        employee_lname = {emp["Staff_ID"]: emp["Staff_LName"] for emp in employees}
+        employee_fname = {emp["Staff_ID"]: emp["Staff_FName"] for emp in employees}
 
         # Step 4: Include the position in the returned WFH request data
         data = []
@@ -329,6 +331,8 @@ def get_team_requests(manager_id):
             # Add the employee's position to each request
             req_json["position"] = employee_positions.get(request.sid, "Unknown")
             req_json["department"] = employee_dept.get(request.sid, "Unknown")
+            req_json["fname"] = employee_fname.get(request.sid, "Unknown")
+            req_json["lname"] = employee_lname.get(request.sid, "Unknown")
 
             data.append(req_json)
 

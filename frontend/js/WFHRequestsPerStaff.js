@@ -94,9 +94,9 @@ function populateWFHTable(requests) {
     }
 
     requests.forEach(request => {
-        if (request.approved_by === null) {
-            request.approved_by = "Not approved by any reporting manager yet";
-        }
+        // if (request.approved_by === null) {
+        //     request.approved_by = "Not approved by any reporting manager yet";
+        // }
 
         const formattedCreatedAt = formatDate(request.createdAt);
         const formattedRequestDate = formatDate(request.request_date);
@@ -109,7 +109,7 @@ function populateWFHTable(requests) {
             <td>${truncatedReason}</td>
             <td>${request.wfh_type}</td>
             <td>${request.approved_wfh}</td>
-            <td>${request.approved_by}</td>
+            <td>${request.approved_by ? request.approved_by : 'N/A'}</td>
             <td>${request.status}</td>
         `;
         tableBody.appendChild(row);
