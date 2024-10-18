@@ -1119,3 +1119,95 @@
   color: white;
   border-color: #6941C6;
 }
+
+/* Calendar Container Styles */
+#calendar {
+  max-width: 100%; /* Make the calendar responsive */
+  width: 100%; /* Ensure it takes full width */
+  height: 80vh; /* Set a fixed height to prevent scrolling */
+  overflow: hidden; /* Prevent scrolling */
+  background-color: #f8f3ff; /* Very pale purple background for the calendar */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px; /* Add padding around the calendar */
+}
+/* Specific Styles for Different Views */
+.fc-daygrid {
+  background-color: #e0c6f1; /* Lighter purple for month view */
+}
+.fc-timegrid {
+  background-color: #e0c6f1; /* Lighter purple for week/day view */
+}
+.fc-list-view {
+  background-color: #e0c6f1; /* Lighter purple for list view */
+}
+/* Event Styles */
+.fc-event {
+  border: 1px solid #fff; /* Add border for better visibility */
+  border-radius: 4px; /* Rounded corners */
+  color: #fff; /* White text color for events */
+  padding: 5px; /* Add padding inside events for better touch targets */
+  font-size: 14px; /* Default font size for events */
+  transition: transform 0.2s; /* Smooth transition for hover effect */
+  overflow: hidden; /* Prevent text overflow */
+  white-space: nowrap; /* Prevent text wrapping */
+  text-overflow: ellipsis; /* Show ellipsis if text overflows */
+}
+.fc-event:hover {
+  transform: scale(1.02); /* Slight zoom effect on hover */
+  white-space: normal; /* Allow text to wrap on hover */
+}
+/* Specific Event Types */
+.fc-timegrid-event {
+  background-color: #6941C6; /* Purple for time grid events */
+}
+.fc-daygrid-event {
+  background-color: #6941C6; /* Purple for day grid events */
+}
+/* List View Event Styles */
+.fc-list-event {
+  color: #000; /* Black color for events in list view */
+}
+/* Style for Day Cells (Date Background) */
+.fc-daygrid-day {
+  background-color: #f3e8ff; /* Pale purple for date background */
+}
+.fc-daygrid-day-number {
+  text-align: left; /* Align text to the left */
+  padding-left: 10px; /* Add padding for better visibility */
+  width: 100%; /* Make sure it takes full width */
+}
+/* Toolbar Styles */
+.fc-toolbar {
+  background-color: #5a31b0; /* Slightly darker purple for toolbar */
+  color: #fff; /* Toolbar text color */
+  padding: 10px; /* Padding for toolbar */
+  border-radius: 8px; /* Rounded corners for toolbar */
+  margin-bottom: 15px; /* Space below the toolbar */
+}
+/* Toolbar Button Styles */
+.fc-toolbar button {
+  background-color: #5a31b0; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Rounded corners for buttons */
+  padding: 5px 10px; /* Padding for buttons */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+.fc-toolbar button:hover {
+  background-color: #46249d; /* Darker color on hover */
+}
+/* Media Query for Toolbar on Smaller Screens */
+@media (max-width: 768px) {
+  #calendar {
+      height: 300px; /* Adjust height for smaller screens */
+  }
+  .fc-toolbar {
+      flex-direction: column; /* Stack toolbar elements */
+      align-items: center; /* Center align toolbar elements */
+  }
+  .fc-daygrid-event {
+      font-size: 12px; /* Adjust font size for smaller screens */
+  }
+}

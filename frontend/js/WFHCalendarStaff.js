@@ -62,6 +62,7 @@ createApp({
             const calendarEl = document.getElementById('calendar');
             this.calendar = new Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                initialDate: new Date(), // Set the initial date to today
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',

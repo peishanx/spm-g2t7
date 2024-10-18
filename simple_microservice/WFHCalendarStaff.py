@@ -28,65 +28,76 @@ class Request(db.Model):
 @app.route("/request/employee/<int:sid>", methods=["GET"])
 def get_wfh_calendar(sid):
     try:
-        # Get all approved requests for the specific employee
-        requests = db.session.query(Request).filter_by(sid=sid, status="Approved").all()
-        
-        # Extract all unique request dates
-        request_dates = {req.request_date for req in requests}
-        
-        # Create a list for events
-        events = []
+        # Get the date range: past 30 days to upcoming 30 days
+        today = datetime.now().date()
+        past_30_days = today - timedelta(days=30)
+        future_30_days = today + timedelta(days=30)
 
-        # Define the number of days you want to show. For example, let's show the next 30 days.
-        start_date = datetime.now().date()
-        end_date = start_date + timedelta(days=30)
-        
-        # Loop through each day in the defined date range
-        current_date = start_date
-        while current_date <= end_date:
-            # Check if there's a WFH request for that date
-            if current_date in request_dates:
-                # Add the WFH events based on the type
-                for req in requests:
-                    if req.request_date == current_date:
-                        if req.wfh_type == "AM":
-                            events.append({
-                                "title": "WFH (AM)",
-                                "start": f"{current_date}T09:00:00",
-                                "end": f"{current_date}T12:00:00"
-                            })
-                            events.append({
-                                "title": "In Office (PM)",
-                                "start": f"{current_date}T13:00:00",
-                                "end": f"{current_date}T17:00:00"
-                            })
-                        elif req.wfh_type == "PM":
-                            events.append({
-                                "title": "WFH (PM)",
-                                "start": f"{current_date}T13:00:00",
-                                "end": f"{current_date}T17:00:00"
-                            })
-                            events.append({
-                                "title": "In Office (AM)",
-                                "start": f"{current_date}T09:00:00",
-                                "end": f"{current_date}T12:00:00"
-                            })
-                        elif req.wfh_type == "Full Day":
-                            events.append({
-                                "title": "WFH (Full Day)",
-                                "start": f"{current_date}T09:00:00",
-                                "end": f"{current_date}T17:00:00"
-                            })
-            else:
-                # If no WFH requests, add In Office Full Day event
+        # Fetch all approved requests within the date range for this employee
+        requests = db.session.query(Request).filter(
+            Request.sid == sid,
+            Request.status == "Approved",
+            Request.request_date.between(past_30_days, future_30_days)
+        ).all()
+
+        # Debug: Print the retrieved requests
+        print(f"Retrieved requests for SID {sid}: {[req.request_date for req in requests]}")
+
+        events = []
+        current_date = past_30_days  # Start from 30 days before today
+
+        # Loop through past 30 days to future 30 days
+        while current_date <= future_30_days:
+            has_wfh = False
+
+            for req in requests:
+                if req.request_date == current_date:
+                    has_wfh = True
+                    print(f"Found WFH request for {current_date}: {req.wfh_type}")  # Debug
+
+                    # Correctly handle different WFH types
+                    if req.wfh_type == "AM":
+                        events.append({
+                            "title": "WFH (AM)",
+                            "start": f"{current_date}T09:00:00",
+                            "end": f"{current_date}T12:00:00"
+                        })
+                        events.append({
+                            "title": "In Office (PM)",
+                            "start": f"{current_date}T13:00:00",
+                            "end": f"{current_date}T17:00:00"
+                        })
+                    elif req.wfh_type == "PM":
+                        events.append({
+                            "title": "WFH (PM)",
+                            "start": f"{current_date}T13:00:00",
+                            "end": f"{current_date}T17:00:00"
+                        })
+                        events.append({
+                            "title": "In Office (AM)",
+                            "start": f"{current_date}T09:00:00",
+                            "end": f"{current_date}T12:00:00"
+                        })
+                    elif req.wfh_type == "Full Day":
+                        events.append({
+                            "title": "WFH (Full Day)",
+                            "start": f"{current_date}T09:00:00",
+                            "end": f"{current_date}T17:00:00"
+                        })
+                    break  # Exit the loop after processing the request
+
+            # If no WFH request for this date and it's a weekday, add an "In Office" event
+            if not has_wfh and current_date.weekday() < 5:
                 events.append({
                     "title": "In Office (Full Day)",
                     "start": f"{current_date}T09:00:00",
                     "end": f"{current_date}T17:00:00"
                 })
 
-            # Move to the next day
             current_date += timedelta(days=1)
+
+        # Debug: Print events being returned
+        print("Events being returned:", events)
 
         return jsonify({"code": 200, "data": events}), 200
 
@@ -95,6 +106,7 @@ def get_wfh_calendar(sid):
             "code": 500,
             "message": "An error occurred while retrieving the WFH calendar. " + str(e)
         }), 500
+
 
 if __name__ == "__main__":
     app.run(port=5201, debug=True)
