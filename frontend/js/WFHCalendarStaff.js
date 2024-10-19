@@ -131,7 +131,7 @@ createApp({
                 'in_office_am': 'In Office (AM)',
                 'in_office_pm': 'In Office (PM)',
                 'in_office_full_day': 'In Office (Full Day)',
-                'leave': 'Leave' // You can add this to filter specifically for leave events if needed
+                'leave': 'Leave'
             };
 
             const filterTitle = titleMapping[this.filterType];

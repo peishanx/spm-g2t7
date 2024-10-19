@@ -47,14 +47,22 @@ function renderWFHData(data) {
             const positionData = departmentData[position];
             const employeeCount = positionData.employee_count || 0; 
             const totalWFH = positionData.total || 0; 
-            const inOffice = employeeCount - totalWFH; 
+            const leaves = positionData.leaves || 0; // Add leaves count
+            
+            let inOffice, adjustedWFH;
+
+            // Set WFH and In Office counts to 0 if there are any leaves
+            if (leaves > 0) {
+                adjustedWFH = 0; // No WFH if on leave
+                inOffice = 0; // No in-office presence if on leave
+            } else {
+                adjustedWFH = totalWFH; // Use original WFH count
+                inOffice = employeeCount - adjustedWFH; // Calculate in-office presence
+            }
 
             const wfhAM = positionData.am || 0;
             const wfhPM = positionData.pm || 0;
             const wfhFullDay = positionData.full_day || 0;
-
-            // Add the leaves count to the position data
-            const leaves = positionData.leaves || 0; // Add leaves count
 
             // Each position card with a front and back side (flipping)
             htmlContent += `
@@ -62,7 +70,7 @@ function renderWFHData(data) {
                     <div class="card">
                         <div class="card-front">
                             <h4 class="position-name">${position}</h4>
-                            <p>WFH: ${totalWFH}/${employeeCount}</p>
+                            <p>WFH: ${adjustedWFH}/${employeeCount}</p>
                             <p>In Office: ${inOffice}</p>
                             <p>On Leave: ${leaves}</p> <!-- Display leaves count -->
                         </div>
@@ -81,3 +89,4 @@ function renderWFHData(data) {
 
     container.innerHTML = htmlContent; // Inject the generated HTML
 }
+
