@@ -341,9 +341,6 @@ def get_team_requests(manager_id):
     except Exception as e:
         return jsonify({"code": 500, "message": f"An error occurred: {str(e)}"}), 500
 
-
-
-
 if __name__ == "__main__":
        # Ensure upload folder exists
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
