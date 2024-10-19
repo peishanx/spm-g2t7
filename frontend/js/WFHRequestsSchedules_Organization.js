@@ -53,6 +53,9 @@ function renderWFHData(data) {
             const wfhPM = positionData.pm || 0;
             const wfhFullDay = positionData.full_day || 0;
 
+            // Add the leaves count to the position data
+            const leaves = positionData.leaves || 0; // Add leaves count
+
             // Each position card with a front and back side (flipping)
             htmlContent += `
                 <div class="position-box" onclick="this.querySelector('.card').classList.toggle('flipped')">
@@ -61,6 +64,7 @@ function renderWFHData(data) {
                             <h4 class="position-name">${position}</h4>
                             <p>WFH: ${totalWFH}/${employeeCount}</p>
                             <p>In Office: ${inOffice}</p>
+                            <p>On Leave: ${leaves}</p> <!-- Display leaves count -->
                         </div>
                         <div class="card-back">
                             <p>WFH AM: ${wfhAM}</p>

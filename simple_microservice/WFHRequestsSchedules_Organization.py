@@ -9,7 +9,9 @@ CORS(app)
 # Set up the MySQL database connections
 app.config['SQLALCHEMY_BINDS'] = {
     'employee': 'mysql://root:@localhost/employee',
-    'request': 'mysql://root:@localhost/request'
+    'request': 'mysql://root:@localhost/request',
+    'employee_leaves': 'mysql://root:@localhost/employee_leaves'
+
 }
 
 db = SQLAlchemy(app)
@@ -34,6 +36,14 @@ class Request(db.Model):
     wfh_type = db.Column(db.String(50))
     status = db.Column(db.String(50), default='Pending')
 
+class EmployeeLeave(db.Model):
+    __bind_key__ = 'employee_leaves'  # Specify the bind key for this model
+    __tablename__ = 'employee_leave'
+
+    Staff_ID = db.Column(db.Integer, db.ForeignKey('employee.Staff_ID'), primary_key=True)
+    Leave_Date = db.Column(db.Date, nullable=False)
+
+
 @app.route('/employee/wfh/counts', methods=['GET'])
 def count_wfh():
     try:
@@ -42,7 +52,7 @@ def count_wfh():
 
         # Get all departments and positions regardless of WFH requests
         with db.get_engine(app, bind='employee').connect() as conn:
-            employee_query = text("""
+            employee_query = text(""" 
                 SELECT Dept, Position, COUNT(*) AS employee_count
                 FROM employee.employee
                 GROUP BY Dept, Position
@@ -60,12 +70,13 @@ def count_wfh():
                 "am": 0,
                 "pm": 0,
                 "full_day": 0,
-                "total": 0
+                "total": 0,
+                "leaves": 0  # Add a new field for leaves
             }
 
         # Fetch WFH requests for the selected date
         with db.get_engine(app, bind='request').connect() as conn:
-            request_query = text("""
+            request_query = text(""" 
                 SELECT e.Dept, e.Position, r.wfh_type, COUNT(*) AS approved_request_count
                 FROM request.request AS r
                 JOIN employee.employee AS e ON r.sid = e.Staff_ID
@@ -92,11 +103,32 @@ def count_wfh():
 
                 counts[dept][position]["total"] += approved_count
 
+        # Fetch leave counts for the selected date
+        with db.get_engine(app, bind='employee_leaves').connect() as conn:
+            leave_query = text(""" 
+                SELECT e.Dept, e.Position, COUNT(*) AS leave_count
+                FROM employee_leaves.employee_leave AS el
+                JOIN employee.employee AS e ON el.Staff_ID = e.Staff_ID
+                WHERE el.Leave_Date = :selected_date
+                GROUP BY e.Dept, e.Position
+            """)
+            leave_counts = conn.execute(leave_query, {'selected_date': selected_date}).fetchall()
+
+        # Update leave counts for departments and positions that have leave requests
+        for leave_row in leave_counts:
+            dept = leave_row.Dept
+            position = leave_row.Position
+            leave_count = leave_row.leave_count
+
+            if dept in counts and position in counts[dept]:
+                counts[dept][position]["leaves"] += leave_count  # Add leave counts
+
         return jsonify(counts)
 
     except Exception as e:
         print(f"Error: {e}")
         return {'error': str(e)}
+
 
 
 if __name__ == '__main__':
