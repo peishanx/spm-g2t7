@@ -30,12 +30,25 @@ createApp({
         
                 if (wfhData.code === 200 && Array.isArray(wfhData.data)) {
                     // Map WFH events
-                    const wfhEvents = wfhData.data.map(event => ({
-                        title: event.title,
-                        start: event.start,
-                        end: event.end,
-                        backgroundColor: event.title === 'WFH (Full Day)' ? '#6941C6' : '#B3B3FF' // Full Day WFH in purple, others in light purple
-                    }));
+                    const wfhEvents = wfhData.data.map(event => {
+                        let backgroundColor;
+        
+                        // Set colors based on event type
+                        if (event.title === 'WFH') {
+                            backgroundColor = '#4B0082'; // Dark purple for Full Day WFH
+                        } else if (event.title.startsWith('In Office')) {
+                            backgroundColor = '#B3B3FF'; // Light purple for In Office
+                        } else {
+                            backgroundColor = '#6941C6'; // Default for other WFH types
+                        }
+        
+                        return {
+                            title: event.title,
+                            start: event.start,
+                            end: event.end,
+                            backgroundColor: backgroundColor
+                        };
+                    });
         
                     // Map and filter Leave events for the logged-in user
                     const leaveEvents = leaveData.data
@@ -67,7 +80,7 @@ createApp({
             } catch (error) {
                 console.error('Error fetching calendar data:', error);
             }
-        },
+        },        
 
         initCalendar() {
             const calendarEl = document.getElementById('calendar');
