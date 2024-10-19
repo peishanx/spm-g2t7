@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const staffId = sessionStorage.getItem('staff_id');
-    
+
 
     let allRequests = [];
 
@@ -51,13 +51,13 @@ document.addEventListener('DOMContentLoaded', function () {
         populateWFHTable(filteredRequests);
     }
 
-        // Function to clear all filters and show all requests
-        function clearFilters() {
-            document.getElementById('statusdropdown').value = ''; // Reset to "All"
-            document.getElementById('wfhtypedropdown').value = ''; // Reset to "All"
-            document.getElementById('requestdate').value = ''; // Clear date filter
-            populateWFHTable(allRequests); // Show all requests again
-        }
+    // Function to clear all filters and show all requests
+    function clearFilters() {
+        document.getElementById('statusdropdown').value = ''; // Reset to "All"
+        document.getElementById('wfhtypedropdown').value = ''; // Reset to "All"
+        document.getElementById('requestdate').value = ''; // Clear date filter
+        populateWFHTable(allRequests); // Show all requests again
+    }
 });
 
 // Function to format the date
@@ -83,7 +83,7 @@ function populateWFHTable(requests) {
     const applybtn = document.getElementById('applybtn');
     const staffId = sessionStorage.getItem('staff_id');
     const dept = sessionStorage.getItem('dept');
-    if (staffId == "130002" &&  dept == "CEO"){
+    if (staffId == "130002" && dept == "CEO") {
         applybtn.style.display = 'none';
     }
     tableBody.innerHTML = ''; // Clear the table before adding new rows
@@ -94,24 +94,41 @@ function populateWFHTable(requests) {
     }
 
     requests.forEach(request => {
-        // if (request.approved_by === null) {
-        //     request.approved_by = "Not approved by any reporting manager yet";
-        // }
 
         const formattedCreatedAt = formatDate(request.createdAt);
         const formattedRequestDate = formatDate(request.request_date);
         const truncatedReason = truncateString(request.reason, 50);
 
         const row = document.createElement('tr');
+        row.id = "requestdetails";
         row.innerHTML = `
             <td>${formattedCreatedAt}</td>
             <td>${formattedRequestDate}</td>
             <td>${truncatedReason}</td>
             <td>${request.wfh_type}</td>
-            <td>${request.approved_wfh}</td>
-            <td>${request.approved_by ? request.approved_by : 'N/A'}</td>
+            <td>${request.approval_count}</td>
+            <td>${request.updated_by ? request.updated_by : 'N/A'}</td>
             <td>${request.status}</td>
+            <td><i class="fa-solid fa-ellipsis"></i></td>
+
         `;
+
+        // Add event listener to the row or icon for click navigation
+        row.addEventListener('click', () => {
+            sessionStorage.setItem('selectedRequestId', request.rid);
+            console.log(request.sid)
+            navigateTo('WFHRequestDetails.html');
+        });
+
+        // Optional: You can also add a separate listener for the ellipsis icon
+        const ellipsisIcon = row.querySelector('.fa-ellipsis');
+        ellipsisIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent the row click from firing
+            sessionStorage.setItem('selectedRequestId', request.rid);
+            console.log(request.sid)
+            navigateTo('WFHRequestDetails.html');
+        });
+
         tableBody.appendChild(row);
     });
 }

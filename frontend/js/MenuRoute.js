@@ -9,9 +9,15 @@ function toggleDropdown(dropdownId, arrowId) {
     dropdownContainer.classList.toggle('show'); // Toggle the dropdown visibility
 }
 
-//for page navigation in the nav bar
+//for page navigation in the nav bar or other pages.
 function navigateTo(page) {
     window.location.href = page; // The session storage data will remain intact
+}
+
+// for page navigations esp the back button to go back to the previous page they were at
+function backTo() {
+    window.history.back();
+    window.location.reload();
 }
 
 //for logout and clear session storage
@@ -32,12 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 
     // Attach event listeners for the buttons
-    document.getElementById('confirmLogout').addEventListener('click', function() {
+    document.getElementById('confirmLogout').addEventListener('click', function () {
         sessionStorage.clear();
         window.location.href = 'login.html';
     });
 
-    document.getElementById('cancelLogout').addEventListener('click', function() {
+    document.getElementById('cancelLogout').addEventListener('click', function () {
         document.getElementById('logoutModal').style.display = 'none';
     });
 });

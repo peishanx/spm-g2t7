@@ -70,7 +70,10 @@ function formatDate(dateString) {
 function populateWFHTable(requests) {
     const tableBody = document.getElementById('wfhRequestTableBody');
     tableBody.innerHTML = ''; // Clear the existing table content
-
+    if (requests.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7">No requests found</td></tr>';
+        return;
+    }
     // Loop through the requests and create table rows
     requests.forEach(request => {
         const row = document.createElement('tr');
@@ -84,8 +87,8 @@ function populateWFHTable(requests) {
             <td>${formatDate(request.request_date)}</td>
             <td>${truncateReason(request.reason)}</td>
             <td>${request.wfh_type}</td>
-            <td>${request.approved_wfh}</td>
-            <td>${request.approved_by ? request.approved_by : 'N/A'}</td>
+            <td>${request.approval_count}</td>
+            <td>${request.updated_by ? request.updated_by : 'N/A'}</td>
             <td>${request.status}</td>
             
 
