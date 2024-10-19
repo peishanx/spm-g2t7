@@ -9,7 +9,6 @@ import math
 import pytz
 from werkzeug.utils import secure_filename
 import requests
-from request import RequestLogs
 
 #Request db
 app = Flask(__name__)
