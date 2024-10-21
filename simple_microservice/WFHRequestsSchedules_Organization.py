@@ -48,9 +48,12 @@ class EmployeeLeave(db.Model):
 def count_wfh():
     try:
         selected_date = request.args.get('date', default=None)
+        if not selected_date:  # Check if date is provided
+            return jsonify({'error': 'Date parameter is required'}), 400
+        
         counts = {}
 
-        # Get all departments and positions regardless of WFH requests
+        # Fetch employees and their details
         with db.get_engine(app, bind='employee').connect() as conn:
             employee_query = text(""" 
                 SELECT Dept, Position, COUNT(*) AS employee_count
@@ -59,7 +62,7 @@ def count_wfh():
             """)
             employee_counts = conn.execute(employee_query).fetchall()
 
-        # Initialize counts with 0 WFH for each department and position
+        # Initialize counts
         for emp_row in employee_counts:
             dept = emp_row.Dept
             position = emp_row.Position
@@ -71,22 +74,21 @@ def count_wfh():
                 "pm": 0,
                 "full_day": 0,
                 "total": 0,
-                "leaves": 0  # Add a new field for leaves
+                "leaves": 0  # Leave count initialized
             }
 
-        # Fetch WFH requests for the selected date
+        # Fetch approved WFH requests for the selected date
         with db.get_engine(app, bind='request').connect() as conn:
             request_query = text(""" 
                 SELECT e.Dept, e.Position, r.wfh_type, COUNT(*) AS approved_request_count
                 FROM request.request AS r
                 JOIN employee.employee AS e ON r.sid = e.Staff_ID
-                WHERE r.status = 'Approved'
-                AND r.request_date = :selected_date
+                WHERE r.status = 'Approved' AND r.request_date = :selected_date
                 GROUP BY e.Dept, e.Position, r.wfh_type
             """)
             approved_counts = conn.execute(request_query, {'selected_date': selected_date}).fetchall()
 
-        # Update WFH counts for departments and positions that have approved WFH requests
+        # Update WFH counts
         for req_row in approved_counts:
             dept = req_row.Dept
             position = req_row.Position
@@ -114,20 +116,20 @@ def count_wfh():
             """)
             leave_counts = conn.execute(leave_query, {'selected_date': selected_date}).fetchall()
 
-        # Update leave counts for departments and positions that have leave requests
+        # Update leave counts
         for leave_row in leave_counts:
             dept = leave_row.Dept
             position = leave_row.Position
             leave_count = leave_row.leave_count
 
             if dept in counts and position in counts[dept]:
-                counts[dept][position]["leaves"] += leave_count  # Add leave counts
+                counts[dept][position]["leaves"] += leave_count
 
-        return jsonify(counts)
+        return jsonify({'code': 200, 'data': counts})  # Adjust the response structure if necessary
 
     except Exception as e:
         print(f"Error: {e}")
-        return {'error': str(e)}
+        return jsonify({'error': str(e)}), 500  # Return error with status code
 
 
 
