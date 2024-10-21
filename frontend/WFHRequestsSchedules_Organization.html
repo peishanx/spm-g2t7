@@ -13,22 +13,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- Corrected script tag to load external JS -->
-    <script src="js/WFHRequestsSchedules_Organization.js"></script>
-
     <!--Session storage after the login-->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const staffId = sessionStorage.getItem('staff_id');
             const staffName = sessionStorage.getItem('staff_name');
             const staffFname = sessionStorage.getItem('staff_fname');
-            const staffLname = sessionStorage.getItem('staff_lname');
+            const staffLname = sessionStorage.getItem('staff_lname')
             const dept = sessionStorage.getItem('dept');
             const role = sessionStorage.getItem('rolenum');
             const position = sessionStorage.getItem('position');
             const country = sessionStorage.getItem('country');
             const email = sessionStorage.getItem('email');
-            const reportingmanager = sessionStorage.getItem('reportingmanager');
+            const reportingmanager = sessionStorage.getItem('reportingmanager')
 
             // Console log test
             console.log(`Staff ID: ${staffId}, Name: ${staffName}, Dept: ${dept}, Role: ${role}, Position: ${position}, Country: ${country}, Email:${email},Reportin Manager: ${reportingmanager}`);
@@ -39,10 +36,8 @@
 
             // Call the function to display the sidebar and apply role-based logic
             displaysidebar();
-
-            fetchWFHCounts();
-
         });
+
     </script>
 </head>
 
@@ -70,6 +65,8 @@
                                 <h3 id="staffNameDisplay"></h3>
                                 <p id="position"></p>
                             </div>
+                            <!-- <img src="img/huge-icon-arrows-outline-direction-down-01-4.svg" alt=""
+                                class="dropdown-icon"> -->
                         </div>
                     </div>
                 </header>
@@ -79,14 +76,111 @@
                         <img src="img/huge-icon-user-solid-user.svg" alt="" class="organizationoverviewicon">
                         <h2 class="contenttitle">Overview</h2>
                     </div>
-                    <div class="calendar-container">
-                        <label for="requestdate">Select Date:</label>
-                        <input type="date" class="datefilter" id="requestdate" />
+                    <div class="departmenttypes">
+
+                        <div class="salesdepartment">
+                            <h2 class="salesdepartmenttitle">Sales</h2>
+                            <div class="salesteams">
+                                <div class="salesmanagers">
+                                    <h3>Sales Managers</h3>
+                                    <p>WFH: 2/5<br>In Office: 3/5</p>
+                                </div>
+                                <div class="accountmanagers">
+                                    <h3>Account Managers</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="consultancydepartment">
+                            <h2 class="consultancydepartmenttitle">Consultancy</h2>
+                            <div class="consultancyteams">
+                                <div class="consultants">
+                                    <h3>Consultants</h3>
+                                    <p>WFH: 2/5<br>In Office: 3/5</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="systemsolutioningdepartment">
+                            <h2 class="systemsolutioningdepartmenttitle">System Solutioning</h2>
+                            <div class="systemsolutioningteams">
+                                <div class="developers">
+                                    <h3>Developers</h3>
+                                    <p>WFH: 2/5<br>In Office: 3/5</p>
+                                </div>
+                                <div class="support">
+                                    <h3>Support Team</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="engineeringoperationdepartment">
+                            <h2 class="engineeringoperationdepartmenttitle">Engineering Operation</h2>
+                            <div class="engineeringoperationteams">
+                                <div class="seniorengineer">
+                                    <h3>Senior Engineers</h3>
+                                    <p>WFH: 2/5<br>In Office: 3/5</p>
+                                </div>
+                                <div class="juniorengineer">
+                                    <h3>Junior Engineers</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                                <div class="callcentre">
+                                    <h3>Call Centre</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                                <div class="operationplanning">
+                                    <h3>Operation Planning</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hradmindepartment">
+                            <h2 class="hradmindepartmenttitle">Hr and Admin</h2>
+                            <div class="hradmindteams">
+                                <div class="HR">
+                                    <h3>HR Team</h3>
+                                    <p>WFH: 2/5<br>In Office: 3/5</p>
+                                </div>
+                                <div class="ld">
+                                    <h3>L&D Team</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                                <div class="admin">
+                                    <h3>Admin Team</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="financedepartment">
+                            <h2 class="financedepartmenttitle">Finance</h2>
+                            <div class="financeteams">
+                                <div class="financemanagers">
+                                    <h3>Finance Managers</h3>
+                                    <p>WFH: 2/5<br>In Office: 3/5</p>
+                                </div>
+                                <div class="financeexective">
+                                    <h3>Finance Exective</h3>
+                                    <p>WFH: 20/60<br>In Office: 40/60</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="itdepartment">
+                            <h2 class="itdepartmenttitle">IT</h2>
+                            <div class="itteams">
+                                <div class="it">
+                                    <h3>IT Team</h3>
+                                    <p>WFH: 2/5<br>In Office: 3/5</p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="departments-grid">
-                        <!-- Content will be injected here by WFHRequestsSchedules_Organization.js -->
-                    </div>
-                    
                 </div>
             </main>
         </div>
@@ -94,9 +188,6 @@
         <script src="js/MenuRoute.js"></script>
         <!--Sidebar js functions-->
         <script src="js/sidebar.js"></script>
-
-      
-    </div>
 </body>
 
 </html>

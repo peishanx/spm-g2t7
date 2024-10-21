@@ -227,7 +227,16 @@
   padding: 15px 10px;
   border-bottom: 1px solid #f0f0f0;
 }
+.wfhrequestsoverviewjack table:hover,  .wfhrequestsoverviewjack tbody:hover, .wfhrequestsoverviewjack tr:hover {
+  background-color: #f0f0f0; /* Change the background color on hover */
+}
 
+/* Style the ellipsis icon */
+.wfhrequestsoverviewjack .fa-ellipsis {
+  font-size: 18px;
+  color: #333; /* Adjust the color as per your theme */
+  cursor: pointer;
+}
 .wfhrequestsoverviewjack .status {
   padding: 5px 10px;
   border-radius: 4px;
@@ -372,6 +381,17 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
+.wfhrequestsoverviewmanagerdirector tr:hover {
+  background-color: #f0f0f0; /* Change the background color on hover */
+}
+
+/* Style the ellipsis icon */
+.wfhrequestsoverviewmanagerdirector .fa-ellipsis {
+  font-size: 18px;
+  color: #333; /* Adjust the color as per your theme */
+  cursor: pointer;
+}
+
 .wfhrequestsoverviewmanagerdirector .status {
   padding: 5px 10px;
   border-radius: 4px;
@@ -432,6 +452,17 @@
   padding: 15px 10px;
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
+}
+
+.wfhrequestsoverviewstaff tr:hover {
+  background-color: #fdfbfb; /* Change the background color on hover */
+}
+
+/* Style the ellipsis icon */
+.wfhrequestsoverviewstaff .fa-ellipsis {
+  font-size: 18px;
+  color: #333; /* Adjust the color as per your theme */
+  cursor: pointer;
 }
 
 .wfhrequestsoverviewstaff .status {
@@ -842,6 +873,16 @@
   padding-bottom: 16px;
 }
 
+.wfhrequestformdetails textarea.invalid {
+  border: 2px solid red; /* Red outline for invalid textarea */
+}
+
+.wfhrequestformdetail .error-message {
+  color: red; /* Color for error message */
+  font-size: 0.9em; /* Slightly smaller text */
+  margin-left: 10px; /* Space between label and message */
+}
+
 .wfhrequestformdetails input,
 .wfhrequestformdetails textarea,
 .wfhrequestformdetails #additionalreason {
@@ -866,13 +907,13 @@
   cursor: pointer;
 }
 
-.wfhrequestformdetails .btn-secondary {
+.wfhrequestformdetails #Backbtn{
   background-color: transparent;
   border: 1px solid var(--gray-20);
   color: var(--gray-80);
 }
 
-.wfhrequestformdetails .btn-primary {
+.wfhrequestformdetails #Withdrawbtn, .wfhrequestformdetails #Approvebtn, .wfhrequestformdetails #Rejectbtn, .wfhrequestformdetails #Revokebtn{
   background-color: var(--primary-500);
   border: none;
   color:
@@ -1118,190 +1159,4 @@
   background: #6941C6;
   color: white;
   border-color: #6941C6;
-}
-
-/* Calendar Container Styles */
-#calendar {
-  max-width: 100%; /* Make the calendar responsive */
-  width: 100%; /* Ensure it takes full width */
-  height: 80vh; /* Set a fixed height to prevent scrolling */
-  overflow: hidden; /* Prevent scrolling */
-  background-color: #f8f3ff; /* Very pale purple background for the calendar */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  padding: 20px; /* Add padding around the calendar */
-}
-
-.full-calendar {
-  height: 100% /* Make sure the FullCalendar takes full height */
-}
-
-/* Specific Styles for Different Views */
-.fc-daygrid {
-  background-color: #e0c6f1; /* Lighter purple for month view */
-}
-.fc-timegrid {
-  background-color: #e0c6f1; /* Lighter purple for week/day view */
-}
-.fc-list-view {
-  background-color: #e0c6f1; /* Lighter purple for list view */
-}
-/* Event Styles */
-.fc-event {
-  border: 1px solid #fff; /* Add border for better visibility */
-  border-radius: 4px; /* Rounded corners */
-  color: #fff; /* White text color for events */
-  padding: 5px; /* Add padding inside events for better touch targets */
-  font-size: 14px; /* Default font size for events */
-  transition: transform 0.2s; /* Smooth transition for hover effect */
-  overflow: hidden; /* Prevent text overflow */
-  white-space: nowrap; /* Prevent text wrapping */
-  text-overflow: ellipsis; /* Show ellipsis if text overflows */
-}
-.fc-event:hover {
-  transform: scale(1.02); /* Slight zoom effect on hover */
-  white-space: normal; /* Allow text to wrap on hover */
-}
-/* Specific Event Types */
-.fc-timegrid-event {
-  background-color: #6941C6; /* Purple for time grid events */
-}
-.fc-daygrid-event {
-  background-color: #6941C6; /* Purple for day grid events */
-}
-/* List View Event Styles */
-.fc-list-event {
-  color: #000; /* Black color for events in list view */
-}
-/* Style for Day Cells (Date Background) */
-.fc-daygrid-day {
-  background-color: #f3e8ff; /* Pale purple for date background */
-}
-.fc-daygrid-day-number {
-  text-align: left; /* Align text to the left */
-  padding-left: 10px; /* Add padding for better visibility */
-  width: 100%; /* Make sure it takes full width */
-}
-/* Toolbar Styles */
-.fc-toolbar {
-  background-color: #5a31b0; /* Slightly darker purple for toolbar */
-  color: #fff; /* Toolbar text color */
-  padding: 10px; /* Padding for toolbar */
-  border-radius: 8px; /* Rounded corners for toolbar */
-  margin-bottom: 15px; /* Space below the toolbar */
-}
-/* Toolbar Button Styles */
-.fc-toolbar button {
-  background-color: #5a31b0; /* Button background color */
-  color: #fff; /* Button text color */
-  border: none; /* Remove border */
-  border-radius: 4px; /* Rounded corners for buttons */
-  padding: 5px 10px; /* Padding for buttons */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.2s; /* Smooth transition for hover effect */
-}
-.fc-toolbar button:hover {
-  background-color: #46249d; /* Darker color on hover */
-}
-/* Media Query for Toolbar on Smaller Screens */
-@media (max-width: 768px) {
-  #calendar {
-      height: 300px; /* Adjust height for smaller screens */
-  }
-  .fc-toolbar {
-      flex-direction: column; /* Stack toolbar elements */
-      align-items: center; /* Center align toolbar elements */
-  }
-  .fc-daygrid-event {
-      font-size: 12px; /* Adjust font size for smaller screens */
-  }
-}
-
-
-/* Overview of schedules styles */
-body {
-  font-family: 'Lexend', sans-serif;
-}
-
-.departments-grid {
-  display: flex;
-  flex-direction: column; /* Make each department take full width */
-}
-
-.department {
-  margin-bottom: 20px; /* Space below each department */
-}
-
-.department-name {
-  font-size: 1.5rem;
-  color: #5B57D4; /* Purple color for department titles */
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.positions-grid {
-  display: flex; /* Enable horizontal layout for positions */
-  flex-wrap: wrap; /* Allow positions to wrap into a new line if needed */
-  gap: 20px; /* Space between position cards */
-  justify-content: flex-start; /* Align items to the start */
-}
-
-.position-box {
-  perspective: 1000px; /* Create a 3D effect */
-  flex: 1 0 45%; /* Allow two cards per row */
-  max-width: 200px; /* Set a max-width to keep cards small */
-  margin: 10px; /* Space between each position box */
-}
-
-.card {
-  width: 100%; /* Full width of the parent */
-  height: 150px; /* Set a fixed height for the card */
-  transition: transform 0.6s; /* Animation effect for flip */
-  transform-style: preserve-3d; /* Preserve 3D space */
-  position: relative; /* Positioning context for child elements */
-  border-radius: 5px;
-  border: 3px solid #ccc; /* Light grey border */
-}
-
-.card-front, .card-back {
-  position: absolute; /* Stack cards on top of each other */
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden; /* Hide the back side when not flipped */
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center-align content vertically */
-  align-items: center; /* Center-align content horizontally */
-  padding: 0; /* Remove padding for no space */
-}
-
-.card-front {
-  background: #f9f9f9; /* Front side background */
-}
-
-.card-back {
-  background: #fff; /* Back side background */
-  transform: rotateY(180deg); /* Rotate the back side */
-}
-
-.card-front p, .card-back p {
-  margin: 2px 0; /* Adjust margin for smaller gap */
-  text-align: center; /* Center align the text */
-}
-
-.position-name {
-  color: #5B57D4; /* Purple color for position titles */
-  margin: 0; /* Remove margin to eliminate gap */
-  text-align: center; /* Center align the position title */
-}
-
-.card.flipped {
-  transform: rotateY(180deg); /* Flip the card when clicked */
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .position-box {
-      flex: 1 0 100%; /* Full width on small screens */
-  }
 }

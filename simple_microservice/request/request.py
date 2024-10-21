@@ -10,7 +10,7 @@ import pytz
 from werkzeug.utils import secure_filename
 import requests
 
-
+#Request db
 app = Flask(__name__)
 CORS(app, resources={r"/request/*": {"origins": "http://localhost:8000"}})
 
@@ -26,31 +26,33 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
+#Request table
 class Request(db.Model):
     __tablename__ = "request"
 
     rid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     sid = db.Column(db.Integer, nullable=False)
+    createdAt = db.Column(db.TIMESTAMP(timezone=True), default=db.func.current_timestamp(), nullable=False)
     request_date = db.Column(db.Date, nullable=False)
     wfh_type = db.Column(db.String(50))
     reason = db.Column(db.String(255), nullable=True) 
-    approved_wfh = db.Column(db.Integer, default=0)
-    approved_by = db.Column(db.String(100), nullable=True)
-    status = db.Column(db.String(50), default="Pending")
-    createdAt = db.Column(db.TIMESTAMP(timezone=True), default=db.func.current_timestamp(), nullable=False)
     attachment = db.Column(db.String(255), nullable=True)  # Add attachment field
+    status = db.Column(db.String(50), default="Pending")
+    updated_by = db.Column(db.String(100), nullable=True)
+    last_updated = db.Column(db.TIMESTAMP(timezone=True), default=db.func.current_timestamp(), nullable=False)
+    additional_reason = db.Column(db.String(255), nullable=True) 
+    approval_count = db.Column(db.Integer, default=0)
 
-
-    def __init__(self, sid, request_date, wfh_type, reason=None, approved_wfh=0, approved_by=None, status="Pending", attachment=None):
+    def __init__(self, sid, request_date, wfh_type, reason=None, approval_count=0, status="Pending", attachment=None, updated_by=None,additional_reason=None):
         self.sid = sid
         self.request_date = request_date
         self.wfh_type = wfh_type
-        self.reason = reason 
-        self.approved_wfh = approved_wfh
-        self.approved_by = approved_by
+        self.reason = reason
+        self.approval_count = approval_count
+        self.updated_by = updated_by
         self.status = status
-        self.attachment = attachment  # Set attachment
-
+        self.attachment = attachment
+        self.additional_reason = additional_reason
 
     def json(self):
         return {
@@ -58,12 +60,68 @@ class Request(db.Model):
             "sid": self.sid,
             "wfh_type": self.wfh_type,
             "reason": self.reason,
-            "approved_by": self.approved_by,
-            "approved_wfh": self.approved_wfh,
+            "updated_by": self.updated_by,
+            "approval_count": self.approval_count,
             "request_date": self.request_date.isoformat(),
             "status": self.status,
-            "createdAt": self.createdAt
+            "createdAt": self.createdAt,
+            "attachment":self.attachment,
+            "additionalreason":self.additional_reason,
+            "lastupdated":self.last_updated
         }
+    
+#RequestLogs:
+class RequestLogs(db.Model):
+    __tablename__ = "requestlogs"
+
+    log_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    rid = db.Column(db.Integer, db.ForeignKey('request.rid', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
+    status = db.Column(db.Enum('Pending', 'Approved', 'Rejected', 'Withdrawn'), nullable=False)
+    updated_by = db.Column(db.Integer, db.ForeignKey('employee.employee.Staff_ID', ondelete='SET NULL', onupdate='CASCADE'), nullable=True)
+    additional_reason = db.Column(db.String(255), nullable=True)
+    status_changedAt = db.Column(db.TIMESTAMP(timezone=True), default=db.func.current_timestamp(), nullable=False)
+
+    def __init__(self, rid, status, updated_by, additional_reason=None):
+        self.rid = rid
+        self.status = status
+        self.updated_by = updated_by
+        self.additional_reason = additional_reason
+
+    def json(self):
+        return {
+            "log_id": self.log_id,
+            "rid": self.rid,
+            "status": self.status,
+            "updated_by": self.updated_by,
+            "additional_reason": self.additional_reason,
+            "status_changedAt": self.status_changedAt
+        }
+
+#Request table functions
+@app.route("/request/employee/rid/<int:rid>", methods=["GET"])
+def get_requests_by_rid(rid):
+    try:
+        requests = db.session.query(Request).filter_by(rid=rid).all()
+        print(f"Fetching request with rid: {rid}")  # Debug log
+
+        if not requests:
+            return jsonify({
+                "code": 404,
+                "message": f"No requests with this rid found {rid}."
+            }), 404
+
+        request_list = [r.json() for r in requests]
+
+        return jsonify({
+            "code": 200,
+            "data": request_list
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred while retrieving the requests. " + str(e)
+        }), 500
 
 @app.route("/request/employee/<int:sid>", methods=["GET"])
 def get_requests_by_sid(sid):
@@ -189,9 +247,6 @@ def approve_request(rid, sid):
                 "message": f"Request {rid} for employee {sid} cannot be approved as its status is '{request_entry.status}'."
             }), 400
 
-        request_entry.status = "Approved"
-        db.session.commit()
-
         return jsonify({
             "code": 200,
             "message": f"Request {rid} for employee {sid} has been approved."
@@ -221,8 +276,17 @@ def reject_request(rid, sid):
                 "message": f"Request {rid} for employee {sid} cannot be rejected as its status is '{request_entry.status}'."
             }), 400
 
+        additional_reason = request.form.get('additional_reason')
+        # Update the request status
         request_entry.status = "Rejected"
+        request_entry.updated_by = sid
+        request_entry.additional_reason = additional_reason  # Store additional reason for rejection
         db.session.commit()
+
+        # Log the status change
+        new_log = RequestLogs(rid=rid, status="Rejected", updated_by=sid, additional_reason=additional_reason)
+        db.session.add(new_log)
+        db.session.commit() 
 
         return jsonify({
             "code": 200,
@@ -340,6 +404,9 @@ def get_team_requests(manager_id):
 
     except Exception as e:
         return jsonify({"code": 500, "message": f"An error occurred: {str(e)}"}), 500
+
+
+
 
 if __name__ == "__main__":
        # Ensure upload folder exists
