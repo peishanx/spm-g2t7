@@ -54,7 +54,7 @@
                 <header class="header">
                     <div class="header-content">
                         <h1>Requests</h1>
-                        <p>All WFH Applications</p>
+                        <p>Team WFH Applications</p>
                     </div>
                     <div class="header-actions">
                         <button class="notification-btn">
@@ -118,23 +118,23 @@
                             </div>
                         </div>
                         <button type="button" class="btn" id="clearfilters">Clear Filters</button>
-                        <button type="button" class="btn" id="applybtn"
-                            onclick="navigateTo('WFHRequestForm.html')">Apply</button>
+                        <!-- <button type="button" class="btn" id="applybtn"
+                            onclick="navigateTo('WFHRequestForm.html')">Apply</button> -->
                     </div>
 
 
 
                     <table>
                         <thead>
-                            <tr>
+                            <tr id = "tableTitle">
                                 <th>Employee Name</th>
-                                <th>Position</th>
+                                <th>Team</th>
                                 <th>Date</th>
-                                <th>Request Date</th>
+                                <th>Requested Date</th>
                                 <th>Reason</th>
                                 <th>WFH Type</th>
-                                <th>Approved WFH</th>
-                                <th>Approved By</th>
+                                <th>Total Approved WFH</th>
+                                <th>Updated By</th>
                                 <th>Status</th>
                             </tr>
                         </thead>

@@ -197,9 +197,15 @@
           sessionStorage.setItem('country', data.country);
           sessionStorage.setItem('email', data.email);
           sessionStorage.setItem('reportingmanager', data.reportingmanager);
+          if (data.staff_id == 130002) {
+            //Jack does not have to apply for leaves so he dont have this page.
+            window.location.href = 'WFHRequestsOverview_Jack.html';
+          }
+          else {
+            // Redirect to the overview page
+            window.location.href = 'WFHRequestsOverview_Staff.html';
+          }
 
-          // Redirect to the overview page
-          window.location.href = 'WFHRequestsOverview_Staff.html';
         } else {
           alert('Invalid email or password');
         }

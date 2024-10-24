@@ -99,11 +99,11 @@
                             <span class="status" id="requeststatus">Approved</span>
                         </div>
                         <div class="approvedbygroup">
-                            <span class="reportingmanagerlabel">Approved by:</span>
+                            <span id="reportingmanagerlabel">Approved by:</span>
                             <span id="reportingmanager">Jane Lim</span>
                         </div>
                         <div class="approvaldategroup">
-                            <span class="approvaldatetimelabel">Date and Time of Approval:</span>
+                            <span id="approvaldatetimelabel">Date and Time of Approval:</span>
                             <span id="approvaldatetime">03/07/2024 9:00:56AM</span>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="requestdate">Request Date:</label>
+                                <label for="requestdate">Requested Date:</label>
                                 <p id="requestdate">05/07/2024</p>
                             </div>
                             <div class="form-group">
@@ -155,7 +155,8 @@
 
                         <div class="form-row">
                             <div class="form-group full-width">
-                                <label for="reason">Reasons for Withdrawal</label><span class="error-message" id="error-message" style="display: none;"> * This field is required.</span></label>
+                                <label for="reason">Additional Reasons:</label><span class="error-message" id="error-message" style="display: none; color:red; padding-left: 5px;"> *** This field is required.***</span></label>
+                                <p id="statusadditionalreason"></p>
                                 <textarea id="additionalreason" placeholder="Reason"></textarea>
                             </div>
                         </div>

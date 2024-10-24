@@ -43,6 +43,7 @@ function controlSidebarBasedOnRole() {
     // Apply role-based visibility and routing
     if (role === '1'  && position === 'MD') {
         document.getElementById('applyOption').style.display = 'none';  // Hide Apply option for Role 1 and MD (Jack)
+        document.getElementById('myrequestoption').style.display = 'none';
         // document.getElementById('applybtn').style.display = 'none';
     } else if (role === '2') {
         document.getElementById('teamRequestsOption').style.display = 'none';  // Hide Team Requests for Role 2

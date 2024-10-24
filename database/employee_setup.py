@@ -55,6 +55,7 @@ try:
     Reporting_Manager INT,
     Role VARCHAR(50),
     Password VARCHAR(255),
+    approval_count INT DEFAULT 0,
     PRIMARY KEY (Staff_ID),
     FOREIGN KEY (Reporting_Manager) REFERENCES employee(Staff_ID)
     ON DELETE SET NULL ON UPDATE CASCADE
@@ -69,11 +70,11 @@ try:
         hashed_password = hash_password(password)
         values = (
             row['Staff_ID'], row['Staff_FName'], row['Staff_LName'], row['Dept'],
-            row['Position'], row['Country'], row['Email'], None, row['Role'],
-            hashed_password.decode('utf-8')
+            row['Position'], row['Country'], row['Email'], None, row['Role'], 
+            hashed_password.decode('utf-8'),row['approval_count']
         )
         cursor.execute("""
-        INSERT INTO employee (Staff_ID, Staff_FName, Staff_LName, Dept, Position, Country, Email, Reporting_Manager, Role, Password)
+        INSERT INTO employee (Staff_ID, Staff_FName, Staff_LName, Dept, Position, Country, Email, Reporting_Manager, Role, Password,approval_count)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, values)
 
@@ -86,7 +87,8 @@ try:
             'Country': row['Country'],
             'Email': row['Email'],
             'Role': row['Role'],
-            'Unhashed_Password': password
+            'Unhashed_Password': password,
+            'approval_count':row['approval_count']
         })
 
     # Insert remaining employees with Reporting_Manager
@@ -107,10 +109,10 @@ try:
                     values = (
                         row['Staff_ID'], row['Staff_FName'], row['Staff_LName'], row['Dept'],
                         row['Position'], row['Country'], row['Email'], row['Reporting_Manager'], row['Role'],
-                        hashed_password.decode('utf-8')
+                        hashed_password.decode('utf-8'),row['approval_count']
                     )
                     cursor.execute("""
-                    INSERT INTO employee (Staff_ID, Staff_FName, Staff_LName, Dept, Position, Country, Email, Reporting_Manager, Role, Password)
+                    INSERT INTO employee (Staff_ID, Staff_FName, Staff_LName, Dept, Position, Country, Email, Reporting_Manager, Role, Password,approval_count)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, values)
 
@@ -124,7 +126,8 @@ try:
                         'Email': row['Email'],
                         'Reporting_Manager': row['Reporting_Manager'],
                         'Role': row['Role'],
-                        'Unhashed_Password': password
+                        'Unhashed_Password': password,
+                        'approval_count':row['approval_count']
                     })
 
                     # Drop the inserted row from the remaining_rows dataframe

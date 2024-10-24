@@ -18,6 +18,7 @@ CREATE TABLE employee (
     Email varchar(50) NOT NULL UNIQUE,     -- Unique Email Address
     Reporting_Manager int,                 -- Foreign Key for Reporting Manager
     Role int NOT NULL CHECK (Role IN (1, 2, 3)),  -- Role: HR(1), Staff(2), Manager(3)
+    approval_count INT DEFAULT 0,          -- Count of approved WFH requests
     PRIMARY KEY (Staff_ID),                -- Primary Key on Staff_ID
     CONSTRAINT fk_reporting_manager FOREIGN KEY (Reporting_Manager) 
         REFERENCES employee(Staff_ID) ON DELETE SET NULL ON UPDATE CASCADE

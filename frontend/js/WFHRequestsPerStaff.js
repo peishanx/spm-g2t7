@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.code === 200) {
                 allRequests = data.data; // Store all requests for filtering
+                console.log(allRequests);
                 populateWFHTable(allRequests); // Initial render of all requests
             } else {
                 console.error('Error fetching requests:', data.message);
@@ -61,16 +62,25 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Function to format the date
-function formatDate(dateString) {
+function formatDate(dateString,requestdate) {
     const date = new Date(dateString);
+    const requesteddate = new Date(requestdate);
     const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
-    const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/, '');
-    const timeString = date.toLocaleTimeString('en-GB');
-    return `${formattedDate}, ${timeString}`;
-}
+    if (dateString == null){
+        const formattedDate = requesteddate.toLocaleDateString('en-GB', options).replace(/,/, '');
+        console.log(formattedDate);
+        return `${formattedDate}`;
+    }
+    else if (requestdate == null){
+        const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/, '');
+        const timeString = date.toLocaleTimeString('en-GB');
+        return `${formattedDate}, ${timeString}`;
+    }
 
+}
 // Function to truncate strings
-function truncateString(str, maxLength = 50) {
+function truncateString(str) {
+    const maxLength = 50
     if (str.length > maxLength) {
         return str.slice(0, maxLength) + '...';
     }
@@ -94,41 +104,95 @@ function populateWFHTable(requests) {
     }
 
     requests.forEach(request => {
+        // Concatenate first name and last name
+        const fullName = `${request.fname} ${request.lname}`;
+        sessionStorage.setItem('requestStaffname',fullName);
 
-        const formattedCreatedAt = formatDate(request.createdAt);
-        const formattedRequestDate = formatDate(request.request_date);
-        const truncatedReason = truncateString(request.reason, 50);
-
+        
+        const formattedCreatedAt = formatDate(request.createdAt,null);
+        const formattedRequestDate = formatDate(null,request.request_date);
+        const truncatedReason = truncateString(request.reason);
+        console.log(request)
         const row = document.createElement('tr');
         row.id = "requestdetails";
-        row.innerHTML = `
+        // const managername;
+        if (request.updated_by != null) {
+            fetch(`http://localhost:5100/employee/${request.updated_by}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        const managerdata = data.data; // Store all requests for filtering
+                        console.log(managerdata);
+                        const managername = managerdata["Staff_FName"] + " " + managerdata["Staff_LName"];
+                        sessionStorage.setItem('managername',managername);
+                        console.log(request.approvalcount)
+                        row.innerHTML = `
+                            <td>${formattedCreatedAt}</td>
+                            <td>${formattedRequestDate}</td>
+                            <td>${truncatedReason}</td>
+                            <td>${request.wfh_type}</td>
+                            <td>${request.approvalcount}</td>
+                            <td>${managername}</td>
+                            <td>${request.status}</td>
+                            <td><i class="fa-solid fa-ellipsis"></i></td>
+                
+                        `;
+                        // Add event listener to the row or icon for click navigation
+                        row.addEventListener('click', () => {
+                            sessionStorage.setItem('selectedRequestId', request.rid);
+                            console.log(request.sid)
+                            navigateTo('WFHRequestDetails.html');
+                        });
+
+                        // Optional: You can also add a separate listener for the ellipsis icon
+                        const ellipsisIcon = row.querySelector('.fa-ellipsis');
+                        ellipsisIcon.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Prevent the row click from firing
+                            sessionStorage.setItem('selectedRequestId', request.rid);
+                            console.log(request.sid)
+                            navigateTo('WFHRequestDetails.html');
+                        });
+                        row.id = "requestdetails";
+                        tableBody.appendChild(row);
+                    } else {
+                        console.error('Error fetching requests:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during the fetch operation:', error);
+                });
+
+
+        }
+        else {
+            row.innerHTML = `
             <td>${formattedCreatedAt}</td>
             <td>${formattedRequestDate}</td>
             <td>${truncatedReason}</td>
             <td>${request.wfh_type}</td>
-            <td>${request.approval_count}</td>
+            <td>${request.approvalcount}</td>
             <td>${request.updated_by ? request.updated_by : 'N/A'}</td>
             <td>${request.status}</td>
             <td><i class="fa-solid fa-ellipsis"></i></td>
 
         `;
+            // Add event listener to the row or icon for click navigation
+            row.addEventListener('click', () => {
+                sessionStorage.setItem('selectedRequestId', request.rid);
+                console.log(request.sid)
+                navigateTo('WFHRequestDetails.html');
+            });
 
-        // Add event listener to the row or icon for click navigation
-        row.addEventListener('click', () => {
-            sessionStorage.setItem('selectedRequestId', request.rid);
-            console.log(request.sid)
-            navigateTo('WFHRequestDetails.html');
-        });
-
-        // Optional: You can also add a separate listener for the ellipsis icon
-        const ellipsisIcon = row.querySelector('.fa-ellipsis');
-        ellipsisIcon.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent the row click from firing
-            sessionStorage.setItem('selectedRequestId', request.rid);
-            console.log(request.sid)
-            navigateTo('WFHRequestDetails.html');
-        });
-
-        tableBody.appendChild(row);
+            // Optional: You can also add a separate listener for the ellipsis icon
+            const ellipsisIcon = row.querySelector('.fa-ellipsis');
+            ellipsisIcon.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent the row click from firing
+                sessionStorage.setItem('selectedRequestId', request.rid);
+                console.log(request.sid)
+                navigateTo('WFHRequestDetails.html');
+            });
+            row.id = "requestdetails";
+            tableBody.appendChild(row);
+        }
     });
 }

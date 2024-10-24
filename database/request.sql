@@ -1,4 +1,8 @@
+-- Drop the database if it exists to start fresh
+DROP DATABASE IF EXISTS request;
+
 CREATE DATABASE IF NOT EXISTS request;
+
 USE request;
 
 CREATE TABLE IF NOT EXISTS request (
@@ -13,7 +17,6 @@ CREATE TABLE IF NOT EXISTS request (
     updated_by int,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     additional_reason TEXT,
-    approval_count INT DEFAULT 0,  -- counting approvals
     PRIMARY KEY (rid),
     CONSTRAINT fk_employee_sid FOREIGN KEY (sid) REFERENCES employee.employee (Staff_ID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_updated_by FOREIGN KEY (updated_by) REFERENCES employee.employee (Staff_ID) ON DELETE SET NULL ON UPDATE CASCADE

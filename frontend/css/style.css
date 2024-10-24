@@ -227,10 +227,14 @@
   padding: 15px 10px;
   border-bottom: 1px solid #f0f0f0;
 }
-.wfhrequestsoverviewjack table:hover,  .wfhrequestsoverviewjack tbody:hover, .wfhrequestsoverviewjack tr:hover {
-  background-color: #f0f0f0; /* Change the background color on hover */
+.wfhrequestsoverviewjack table thead tr#tableTitle{
+  font-size: 15px;
+  text-align: center;
 }
-
+.wfhrequestsoverviewjack table tbody tr#requestdetails:hover {
+  background-color: #f0f0f0; /* Change the background color on hover */
+  cursor: pointer;
+}
 /* Style the ellipsis icon */
 .wfhrequestsoverviewjack .fa-ellipsis {
   font-size: 18px;
@@ -380,9 +384,13 @@
   text-align: left;
   border-bottom: 1px solid #f0f0f0;
 }
-
-.wfhrequestsoverviewmanagerdirector tr:hover {
+.wfhrequestsoverviewmanagerdirector table thead tr#tableTitle{
+  font-size: 15px;
+  text-align: center;
+}
+.wfhrequestsoverviewmanagerdirector table tbody tr#requestdetails:hover {
   background-color: #f0f0f0; /* Change the background color on hover */
+  cursor: pointer;
 }
 
 /* Style the ellipsis icon */
@@ -454,8 +462,13 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
-.wfhrequestsoverviewstaff tr:hover {
-  background-color: #fdfbfb; /* Change the background color on hover */
+.wfhrequestsoverviewstaff table thead tr#tableTitle{
+  font-size: 15px;
+  text-align: center;
+}
+.wfhrequestsoverviewstaff table tbody tr#requestdetails:hover {
+  background-color: #f0f0f0; /* Change the background color on hover */
+  cursor: pointer;
 }
 
 /* Style the ellipsis icon */
@@ -1159,92 +1172,4 @@
   background: #6941C6;
   color: white;
   border-color: #6941C6;
-}
-
-/* Overview of schedules styles */
-body {
-  font-family: 'Lexend', sans-serif;
-}
-
-.departments-grid {
-  display: flex;
-  flex-direction: column; /* Make each department take full width */
-}
-
-.department {
-  margin-bottom: 20px; /* Space below each department */
-}
-
-.department-name {
-  font-size: 1.5rem;
-  color: #5B57D4; /* Purple color for department titles */
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.positions-grid {
-  display: flex; /* Enable horizontal layout for positions */
-  flex-wrap: wrap; /* Allow positions to wrap into a new line if needed */
-  gap: 20px; /* Space between position cards */
-  justify-content: flex-start; /* Align items to the start */
-}
-
-.position-box {
-  perspective: 1000px; /* Create a 3D effect */
-  flex: 1 0 45%; /* Allow two cards per row */
-  max-width: 200px; /* Set a max-width to keep cards small */
-  margin: 10px; /* Space between each position box */
-}
-
-.card {
-  width: 100%; /* Full width of the parent */
-  height: 150px; /* Set a fixed height for the card */
-  transition: transform 0.6s; /* Animation effect for flip */
-  transform-style: preserve-3d; /* Preserve 3D space */
-  position: relative; /* Positioning context for child elements */
-  border-radius: 5px;
-  border: 3px solid #ccc; /* Light grey border */
-}
-
-.card-front, .card-back {
-  position: absolute; /* Stack cards on top of each other */
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden; /* Hide the back side when not flipped */
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center-align content vertically */
-  align-items: center; /* Center-align content horizontally */
-  padding: 0; /* Remove padding for no space */
-}
-
-.card-front {
-  background: #f9f9f9; /* Front side background */
-}
-
-.card-back {
-  background: #fff; /* Back side background */
-  transform: rotateY(180deg); /* Rotate the back side */
-}
-
-.card-front p, .card-back p {
-  margin: 2px 0; /* Adjust margin for smaller gap */
-  text-align: center; /* Center align the text */
-}
-
-.position-name {
-  color: #5B57D4; /* Purple color for position titles */
-  margin: 0; /* Remove margin to eliminate gap */
-  text-align: center; /* Center align the position title */
-}
-
-.card.flipped {
-  transform: rotateY(180deg); /* Flip the card when clicked */
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .position-box {
-      flex: 1 0 100%; /* Full width on small screens */
-  }
 }

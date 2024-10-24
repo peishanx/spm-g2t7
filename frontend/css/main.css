@@ -34,7 +34,7 @@ body {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 200px;
+  width: 180px;
   background-color: var(--gray-5);
   border-radius: 20px;
   padding: 30px;
@@ -88,7 +88,7 @@ body {
   flex-direction: column;
   background-color: var(--gray-5);
   padding-left: 60px;
-  width: 100%;
+  /* width: 100%; */
   /* Ensures the dropdown takes full width under the nav item */
   border-radius: 10px;
   /* Optional: Adds rounding to dropdown */

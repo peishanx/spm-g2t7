@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const requestId = sessionStorage.getItem('selectedRequestId');
     const loggedInStaffId = sessionStorage.getItem('staff_id');
+    const managername = sessionStorage.getItem('managername');
+    const requesterstaffname = sessionStorage.getItem('requestStaffname');
+    console.log(requesterstaffname);
+    console.log(managername);
 
     if (!requestId) {
         console.error('No requestId found in sessionStorage.');
@@ -13,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             if (data.code === 200) {
                 const requestDetails = data.data[0];
+                console.log(requestDetails);
                 const requestStatus = requestDetails.status;
                 submitterStaffId = requestDetails.sid; // Store submitter's staff ID here
                 sessionStorage.setItem('submitterStaffId', submitterStaffId); // Store in sessionStorage                console.log(submitterStaffId);
@@ -20,9 +25,38 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById('requestdate').textContent = formatDate(requestDetails.request_date);
                 document.getElementById('wfhtype').textContent = requestDetails.wfh_type;
                 document.getElementById('reason').textContent = requestDetails.reason;
-                document.getElementById('reportingmanager').textContent = requestDetails.approved_by;
-                document.getElementById('requeststatus').textContent = requestStatus;
+                if (requestStatus == "Pending"){
+                    document.getElementById('reportingmanager').style.display = 'none';
+                    document.getElementById('reportingmanagerlabel').style.display='none';
+                    document.getElementById('approvaldatetimelabel').style.display='none';
+                    document.getElementById('approvaldatetime').style.display='none';
 
+                }
+                else if (requestStatus == "Withdrawn"){
+                    document.getElementById('reportingmanager').textContent = requesterstaffname;
+                    document.getElementById('reportingmanagerlabel').textContent= requestStatus + " by : " ;
+                    
+                    document.getElementById('approvaldatetimelabel').textContent= "Date and Time of (" +  requestStatus + ") :";
+                    document.getElementById('approvaldatetime').textContent=requestDetails.lastupdated;
+
+                }
+                else{
+                    document.getElementById('reportingmanager').textContent = managername;
+                    document.getElementById('reportingmanagerlabel').textContent= requestStatus + " by : " ;
+                    
+                    document.getElementById('approvaldatetimelabel').textContent= "Date and Time of (" +  requestStatus + ") :";
+                    document.getElementById('approvaldatetime').textContent=requestDetails.lastupdated;
+                    // console.log(requestDetails.lastupdated);
+                }
+
+                if (requestStatus == "Rejected" || requestStatus == "Withdrawn"){
+                    document.getElementById('statusadditionalreason').textContent = requestDetails.additionalreason;
+                    document.getElementById('additionalreason').style.display='none';
+                }
+
+                console.log(requestDetails.updated_by);
+                document.getElementById('requeststatus').textContent = requestStatus;
+                
                 // Display the attachments if present
                 document.getElementById('attachments').textContent = requestDetails.attachment || "There are no attachments";
 
@@ -42,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         createButton("Approve", approveRequest);
                         createButton("Reject", rejectRequest);
                     } else if (requestStatus === 'Approved') {
-                        createButton("Revoke", rejectRequest);
+                        createButton("Revoke", revokeRequest);
                     }
                 }
                 // Fetch employee details using the sid from requestDetails
@@ -51,6 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(employeeData => {
                         if (employeeData.code === 200) {
                             const employeeDetails = employeeData.data;
+                            console.log(employeeDetails);
 
                             // Populate the employee data
                             document.getElementById('firstname').textContent = employeeDetails.Staff_FName;
@@ -103,7 +138,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 });
-
+// Function to format the date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/, '');
+    return `${formattedDate}`;
+}
 // Function to show the notification
 function showNotification(code, message) {
     document.getElementById('notificationMessage').textContent = message;
@@ -119,19 +160,18 @@ function showNotification(code, message) {
 function withdrawRequest(event) {
     event.preventDefault(); // Prevent form submission or page reload
 
-    // const additionalReason = document.getElementById('additionalreason').value.trim(); // Get value from textarea
-    // const errorMessage = document.getElementById('error-message'); // Get error message element
-    // const textarea = document.getElementById('additionalreason'); // Get the textarea
+    const additionalReason = document.getElementById('additionalreason').value.trim();
+    const errorMessage = document.getElementById('error-message');
+    const textarea = document.getElementById('additionalreason');
 
-    // // Reset error state
-    // textarea.classList.remove('invalid'); // Remove invalid class
-    // errorMessage.style.display = 'none'; // Hide error message
+    textarea.classList.remove('invalid'); 
+    errorMessage.style.display = 'none';
 
-    // if (!additionalReason) {
-    //     textarea.classList.add('invalid'); // Add invalid class for red outline
-    //     errorMessage.style.display = 'inline'; // Show error message
-    //     return; // Exit the function if no reason is provided
-    // }
+    if (!additionalReason) {
+        textarea.classList.add('invalid'); 
+        errorMessage.style.display = 'inline'; 
+        return;
+    }
 
     const requestId = sessionStorage.getItem('selectedRequestId');
     const staffId = sessionStorage.getItem('staff_id');
@@ -139,12 +179,12 @@ function withdrawRequest(event) {
     console.log(staffId);
     console.log(submitterStaffId); // Debug to ensure submitterStaffId is correct
 
-    fetch(`http://localhost:5200/request/${requestId}/employee/${submitterStaffId}/withdraw`, {
+    fetch(`http://localhost:5200/request/${requestId}/employee/${submitterStaffId}/reporting/${staffId}/withdraw`, {
         method: "PUT",
-        // headers: {
-        //     'Content-Type': 'application/json'
-        // },
-        // body: JSON.stringify({ reason: additionalReason }) // Send reason in request body
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ additional_reason: additionalReason }) // Send reason in request body
     })
         .then(response => response.json())
         .then(data => {
@@ -160,13 +200,13 @@ function withdrawRequest(event) {
 function approveRequest(event) {
     event.preventDefault(); // Prevent form submission or page reload
 
-    const requestId = sessionStorage.getItem('selectedRequestId');
-    const staffId = sessionStorage.getItem('staff_id');
-    const submitterStaffId = sessionStorage.getItem('submitterStaffId'); // Retrieve from sessionStorage
+    const requestId = parseInt(sessionStorage.getItem('selectedRequestId'), 10);  // Convert to integer
+    const staffId = parseInt(sessionStorage.getItem('staff_id'), 10);  // Convert to integer
+    const submitterStaffId = parseInt(sessionStorage.getItem('submitterStaffId'), 10);  // Convert to integer
 
-    console.log(requestId,staffId);
+    console.log(requestId, staffId, submitterStaffId);
 
-    fetch(`http://localhost:5200/request/${requestId}/employee/${submitterStaffId}/approve`, { method: "PUT" })
+    fetch(`http://localhost:5200/request/${requestId}/employee/${submitterStaffId}/reporting/${staffId}/approve`, { method: "PUT"})
         .then(response => response.json())
         .then(data => {
             if (data.code === 200) {
@@ -185,11 +225,32 @@ function approveRequest(event) {
 function rejectRequest(event) {
     event.preventDefault(); // Prevent form submission or page reload
 
+    
+    const additionalReason = document.getElementById('additionalreason').value.trim();
+    const errorMessage = document.getElementById('error-message');
+    const textarea = document.getElementById('additionalreason');
+
+    textarea.classList.remove('invalid'); 
+    errorMessage.style.display = 'none';
+
+    if (!additionalReason) {
+        textarea.classList.add('invalid'); 
+        errorMessage.style.display = 'inline'; 
+        return;
+    }
+
+
     const requestId = sessionStorage.getItem('selectedRequestId');
     const staffId = sessionStorage.getItem('staff_id');
     const submitterStaffId = sessionStorage.getItem('submitterStaffId'); // Retrieve from sessionStorage
 
-    fetch(`http://localhost:5200/request/${requestId}/employee/${submitterStaffId}/reject`, { method: "PUT" })
+    fetch(`http://localhost:5200/request/${requestId}/employee/${submitterStaffId}/reporting/${staffId}/reject`, { 
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ additional_reason: additionalReason }) // Send reason in request body
+    })
         .then(response => response.json())
         .then(data => {
             if (data.code === 200) {
@@ -204,14 +265,51 @@ function rejectRequest(event) {
         });
 }
 
-// Function to format the date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
-    const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/, '');
-    const timeString = date.toLocaleTimeString('en-GB');
-    return `${formattedDate}, ${timeString}`;
+//Revoke request
+function revokeRequest(event) {
+    event.preventDefault(); // Prevent form submission or page reload
+
+    
+    const additionalReason = document.getElementById('additionalreason').value.trim();
+    const errorMessage = document.getElementById('error-message');
+    const textarea = document.getElementById('additionalreason');
+
+    textarea.classList.remove('invalid'); 
+    errorMessage.style.display = 'none';
+
+    if (!additionalReason) {
+        textarea.classList.add('invalid'); 
+        errorMessage.style.display = 'inline'; 
+        return;
+    }
+
+
+    const requestId = sessionStorage.getItem('selectedRequestId');
+    const staffId = sessionStorage.getItem('staff_id');
+    const submitterStaffId = sessionStorage.getItem('submitterStaffId'); // Retrieve from sessionStorage
+
+    fetch(`http://localhost:5200/request/${requestId}/employee/${submitterStaffId}/reporting/${staffId}/revoke`, {        
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ additional_reason: additionalReason }) // Send reason in request body
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.code === 200) {
+                showNotification(data.code, data.message);
+            } else {
+                showNotification(data.code, data.message);
+            }
+        })
+        .catch(error => {
+            showNotification(data.code, data.message);
+            console.error('Error during reject operation:', error);
+        });
 }
+
+
 //create button
 function createButton(label, actionFunction) {
     const button = document.createElement('button');

@@ -18,9 +18,10 @@ db = SQLAlchemy(app)
 CORS(app)
 
 class Employee(db.Model):
+    # __bind_key__ = 'employee'  # This tells SQLAlchemy to use the 'employee' database
     __tablename__ = "employee"
 
-    Staff_ID = db.Column(db.Integer, primary_key = True)
+    Staff_ID = db.Column(db.Integer, primary_key=True)
     Staff_FName = db.Column(db.String(50), nullable=False)
     Staff_LName = db.Column(db.String(50), nullable=False)
     Dept = db.Column(db.String(50), nullable=False)
@@ -29,8 +30,9 @@ class Employee(db.Model):
     Email = db.Column(db.String(50), nullable=False)
     Reporting_Manager = db.Column(db.Integer)
     Role = db.Column(db.Integer, nullable=False)
+    approval_count = db.Column(db.Integer, default=0)  # Added approval_count
 
-    def __init__(self, Staff_ID, Staff_FName, Staff_LName, Dept, Position, Country, Email, Reporting_Manager, Role):
+    def __init__(self, Staff_ID, Staff_FName, Staff_LName, Dept, Position, Country, Email, Reporting_Manager, Role, approval_count=0):
         self.Staff_ID = Staff_ID
         self.Staff_FName = Staff_FName
         self.Staff_LName = Staff_LName
@@ -40,6 +42,7 @@ class Employee(db.Model):
         self.Email = Email
         self.Reporting_Manager = Reporting_Manager
         self.Role = Role
+        self.approval_count = approval_count  # Initialize approval_count
 
     def json(self):
         return {
@@ -51,7 +54,8 @@ class Employee(db.Model):
             "Country": self.Country,
             "Email": self.Email,
             "Reporting_Manager": self.Reporting_Manager,
-            "Role": self.Role
+            "Role": self.Role,
+            "approval_count": self.approval_count  # Added approval_count to JSON output
         }
 
 @app.route("/employee/<int:Staff_ID>")
@@ -138,6 +142,25 @@ def get_employees_by_manager(manager_id):
         return jsonify({"code": 404, "message": "No employees found for this manager."}), 404
 
     return jsonify({"code": 200, "data": [employee.json() for employee in employees]}), 200
+
+@app.route("/employee/<int:sid>/update_approval_count", methods=["PUT"])
+def update_approval_count(sid):
+    try:
+        data = request.get_json()
+        approval_count = data.get("approval_count")
+
+        employee = Employee.query.filter_by(Staff_ID=sid).first()
+        if not employee:
+            return jsonify({"code": 404, "message": "Employee not found"}), 404
+
+        employee.approval_count = approval_count
+        db.session.commit()
+
+        return jsonify({"code": 200, "message": "Approval count updated successfully"}), 200
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"code": 500, "message": "Error updating approval count"}), 500
 
 if __name__ == "__main__": 
     app.run(host="0.0.0.0", port = 5100, debug =True)
