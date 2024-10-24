@@ -73,20 +73,28 @@
                 <div class="content">
                     <div class="actions">
                         <input class="searchbar" type="search" placeholder="Search">
+                    </div>
+                    
+                    <div class="filter-row">
+                        <div class="filters-container">
+                            <div>
+                                <label for="wfhtypedropdown">WFH Type</label>
+                                <select class="dropdown" id="wfhTypeSelect">
+                                    <option value="All">All</option>
+                                    <option value="WFH (AM)">WFH (AM)</option>
+                                    <option value="WFH (PM)">WFH (PM)</option>
+                                    <option value="WFH (Full Day)">WFH (Full Day)</option>
+                                </select>
+                            </div>
 
-                        <div class="filters">
-                            <select class="dropdown" id="statusdropdown">
-                                <option>In Office (Full Day)</option>
-                                <option>In Office (AM)</option>
-                                <option>In Office (PM)</option>
-                                <option>WFH (Full Day)</option>
-                                <option>WFH (AM)</option>
-                                <option>WFH (PM)</option>
-                                <option>On Leave</option>
-                            </select>
-                            <button type="button" class="btn" id="requestdate" src="">Request Date<i
-                                    class="fa fa-filter"></i></button>
+                            <div>
+                                <label for="requestdate">Request Date</label>
+                                <input type="date" class="datefilter" id="requestDate" />
+                            </div>
+
+                            <button type="button" id="filterButton">Apply Filters</button>
                         </div>
+                        
                     </div>
                     <div class="contentheader">
                         <h2 class="contenttitle">My Team Schedule</h2>
@@ -96,77 +104,14 @@
                             <tr>
                                 <th>Employee Name</th>
                                 <th>Department</th>
-                                <th>Team</th>
-                                <th>Month</th>
-                                <th>Date</th>
-                                <th>Request Type</th>
+                                <th>Position</th>
+                                <th>WFH Status</th>
+                                <th>In Office Status</th>
+                                <th>Leave Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>01/07/2023</td>
-                                <td>Darlene Robertson</td>
-                                <td>Design</td>
-                                <td>June</td>
-                                <td>05</td>
-                                <td><span class="status officefull">In Office(Full Day)</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>01/07/2023</td>
-                                <td>Darlene Robertson</td>
-                                <td>Design</td>
-                                <td>June</td>
-                                <td>05</td>
-                                <td><span class="status officeam">In Office(AM)</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>01/07/2023</td>
-                                <td>Darlene Robertson</td>
-                                <td>Design</td>
-                                <td>June</td>
-                                <td>05</td>
-                                <td><span class="status officepm">In Office(PM)</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>01/07/2023</td>
-                                <td>Darlene Robertson</td>
-                                <td>Design</td>
-                                <td>June</td>
-                                <td>05</td>
-                                <td><span class="status wfhfull">WFH (Full Day)</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>01/07/2023</td>
-                                <td>Darlene Robertson</td>
-                                <td>Design</td>
-                                <td>June</td>
-                                <td>05</td>
-                                <td><span class="status wfham">WFH (AM)</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>01/07/2023</td>
-                                <td>Darlene Robertson</td>
-                                <td>Design</td>
-                                <td>June</td>
-                                <td>05</td>
-                                <td><span class="status wfhpm">WFH (PM)</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>01/07/2023</td>
-                                <td>Darlene Robertson</td>
-                                <td>Design</td>
-                                <td>June</td>
-                                <td>05</td>
-                                <td><span class="status onleave">On Leave</span></td>
-                            </tr>
-                            <!-- More rows here -->
+                        <tbody id="teamScheduleTableBody">
+                            <!-- Dynamic rows will be populated here -->
                         </tbody>
                     </table>
 
@@ -195,6 +140,8 @@
     <script src="js/MenuRoute.js"></script>
     <!--Sidebar js functions-->
     <script src="js/sidebar.js"></script>
+    <!--Getting the staff and own team schedule-->
+    <script src="js/WFHRequestsSchedules_Staff.js"></script>
 </body>
 
 </html>
