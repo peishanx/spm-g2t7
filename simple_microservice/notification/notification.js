@@ -16,7 +16,7 @@ amqp.connect(process.env.RABBIT_URL, function(error0, connection) {
     }
     console.log('Channel created...');
     
-    const exchange = 'email';
+    var exchange = 'email';
 
     // Assert exchange for topic-based routing
     channel.assertExchange(exchange, 'topic', { durable: true });
@@ -37,11 +37,11 @@ amqp.connect(process.env.RABBIT_URL, function(error0, connection) {
       channel.consume(q.queue, async function(msg) {
         console.log("==Received message==");
 
-        const msgContent = JSON.parse(msg.content.toString());
+        let msgContent = JSON.parse(msg.content.toString());
         console.log('Request status change message:', msgContent);
 
         // Get the appropriate email template and fill it with request details
-        const filledEmail = await emailTemplates[msg.fields.routingKey](
+        let filledEmail = await emailTemplates[msg.fields.routingKey](
           msgContent["employee"], 
           msgContent["request"]
         );
@@ -61,19 +61,19 @@ amqp.connect(process.env.RABBIT_URL, function(error0, connection) {
       console.log(`Queue ${q.queue} created`);
 
       // Bind queue to listen for specific transitions like request approved/rejected
-      channel.bindQueue(q.queue, exchange, "*.*");
-      console.log(`Queue ${q.queue} binded to *.*...`);
+      channel.bindQueue(q.queue, exchange, "request.*");
+      console.log(`Queue ${q.queue} binded to request.*...`);
 
       // Consume messages related to transitions between request statuses
       channel.consume(q.queue, async function(msg) {
         if (msg.fields.routingKey != "request.done") {
           console.log("==Received transition message==");
 
-          const msgContent = JSON.parse(msg.content.toString());
+          let msgContent = JSON.parse(msg.content.toString());
           console.log('Transition message:', msgContent);
 
           // Get email template for the specific status transition
-          const filledEmail = await emailTemplates[msg.fields.routingKey.replace(".", "_")](
+          let filledEmail = await emailTemplates[msg.fields.routingKey.replace(".", "_")](
             msgContent["employee"],
             msgContent["request"]
           );
@@ -86,36 +86,36 @@ amqp.connect(process.env.RABBIT_URL, function(error0, connection) {
       }, { noAck: true });
     });
 
-    // Assert Queue for completed actions (e.g., request fully processed)
-    channel.assertQueue('request_completed', { exclusive: false }, function(error2, q) {
-      if (error2) {
-        throw error2;
-      }
-      console.log(`Queue ${q.queue} created`);
+    // // Assert Queue for completed actions (e.g., request fully processed)
+    // channel.assertQueue('request_completed', { exclusive: false }, function(error2, q) {
+    //   if (error2) {
+    //     throw error2;
+    //   }
+    //   console.log(`Queue ${q.queue} created`);
 
-      // Bind queue to listen for completed request actions
-      channel.bindQueue(q.queue, exchange, "request.done");
-      console.log(`Queue ${q.queue} binded to request.done...`);
+    //   // Bind queue to listen for completed request actions
+    //   channel.bindQueue(q.queue, exchange, "request.done");
+    //   console.log(`Queue ${q.queue} binded to request.done...`);
 
-      // Consume messages for fully completed requests
-      channel.consume(q.queue, async function(msg) {
-        console.log("==Received request completion message==");
+    //   // Consume messages for fully completed requests
+    //   channel.consume(q.queue, async function(msg) {
+    //     console.log("==Received request completion message==");
 
-        const msgContent = JSON.parse(msg.content.toString());
-        console.log('Completion message:', msgContent);
+    //     const msgContent = JSON.parse(msg.content.toString());
+    //     console.log('Completion message:', msgContent);
 
-        // Get email template for completed requests
-        const filledEmail = await emailTemplates[msg.fields.routingKey.replace(".", "_")](
-          msgContent["employee"],
-          msgContent["request"]
-        );
+    //     // Get email template for completed requests
+    //     const filledEmail = await emailTemplates[msg.fields.routingKey.replace(".", "_")](
+    //       msgContent["employee"],
+    //       msgContent["request"]
+    //     );
 
-        // Send email notification
-        await transporter.sendMail(filledEmail);
-        console.log("==Completion email sent==");
+    //     // Send email notification
+    //     await transporter.sendMail(filledEmail);
+    //     console.log("==Completion email sent==");
 
-      }, { noAck: true });
-    });
+    //   }, { noAck: true });
+    // });
   });
 });
 

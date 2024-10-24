@@ -4,11 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ
 from datetime import datetime, timedelta, timezone
 import os
-import sys
-import math
-import pytz
 from werkzeug.utils import secure_filename
 import requests
+import pika
+import json
+
+connection = pika.BlockingConnection(pika.ConnectionParameters(environ.get("RABBIT_URL"), heartbeat=0, blocked_connection_timeout=300))
+channel = connection.channel()
 
 #Request db
 app = Flask(__name__)
@@ -221,6 +223,22 @@ def create_request():
             db.session.add(new_request)
 
         db.session.commit()
+        exchange = 'email'
+        body = {
+            "employee": {
+                "email": new_request.Email,
+                "Staff_FName": new_request.Staff_FName
+            },
+            "request": {
+                "request_id": new_request.rid,
+                "request_type": new_request.type
+            }
+        }
+        channel.exchange_declare(exchange=exchange,
+                        exchange_type='topic', durable=True)
+        channel.basic_publish(exchange=exchange,
+                    routing_key='request',
+                    body=json.dumps(body))
         return jsonify({"code": 201, "message": f"Employee {sid} submitted request successfully."}), 201
     except Exception as e:
         db.session.rollback()
@@ -246,6 +264,27 @@ def approve_request(rid, sid):
                 "code": 400,
                 "message": f"Request {rid} for employee {sid} cannot be approved as its status is '{request_entry.status}'."
             }), 400
+
+        request_entry.status = "Approved"
+        db.session.commit()
+
+        exchange = 'email'
+        body = {
+            "employee": {
+                "email": request_entry.Email,
+                "Staff_FName": request_entry.Staff_FName
+            },
+            "request": {
+                "request_id": request_entry.rid,
+                "request_type": request_entry.type
+            }
+        }
+        channel.exchange_declare(exchange=exchange,
+                        exchange_type='topic', durable=True)
+        channel.basic_publish(exchange=exchange,
+                    routing_key='request.approve',
+                    body=json.dumps(body))
+        
 
         return jsonify({
             "code": 200,
@@ -288,6 +327,23 @@ def reject_request(rid, sid):
         db.session.add(new_log)
         db.session.commit() 
 
+        exchange = 'email'
+        body = {
+            "employee": {
+                "email": request_entry.Email,
+                "Staff_FName": request_entry.Staff_FName
+            },
+            "request": {
+                "request_id": request_entry.rid,
+                "request_type": request_entry.type
+            }
+        }
+        channel.exchange_declare(exchange=exchange,
+                        exchange_type='topic', durable=True)
+        channel.basic_publish(exchange=exchange,
+                    routing_key='request.reject',
+                    body=json.dumps(body))
+
         return jsonify({
             "code": 200,
             "message": f"Request {rid} for employee {sid} has been rejected."
@@ -319,6 +375,23 @@ def withdraw_request(rid, sid):
 
         request_entry.status = "Withdrawn"
         db.session.commit()
+
+        exchange = 'email'
+        body = {
+            "employee": {
+                "email": request_entry.Email,
+                "Staff_FName": request_entry.Staff_FName
+            },
+            "request": {
+                "request_id": request_entry.rid,
+                "request_type": request_entry.type
+            }
+        }
+        channel.exchange_declare(exchange=exchange,
+                        exchange_type='topic', durable=True)
+        channel.basic_publish(exchange=exchange,
+                    routing_key='request.withdraw',
+                    body=json.dumps(body))
 
         return jsonify({
             "code": 200,
