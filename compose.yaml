@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: example
     restart: always
     ports:
-      - '3307:3306'
+      - '3306:3306'
     expose:
       - 3306
     volumes:
@@ -20,6 +20,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+
+  ####################################
+  # Frontend service
+  ####################################
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    environment:
+      - MYSQL_HOST=database
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=example
+      - MYSQL_DB=employee
+    ports:
+      - "8000:8000" 
+    depends_on:
+      - database  # Consider if this is necessary
+    networks:
+      - default
 
   ####################################
   # Employee microservice

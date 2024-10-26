@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS request;
+
 USE request;
 
 CREATE TABLE IF NOT EXISTS requestlogs (
