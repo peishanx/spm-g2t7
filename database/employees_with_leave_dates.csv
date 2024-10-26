@@ -1,6 +1,7 @@
 Staff_ID,Staff_FName,Staff_LName,Leave_Date,Dept,Position,Role
 140001,Derek,Tan,2024-11-01,Sales,Director,1
-140002,Susan,Goh,2024-11-05,Engineering,Software Engineer,1
-140003,Janice,Chan,2024-11-10,HR,HR Manager,2
-140004,Mary,Teo,2024-11-15,Finance,Financial Analyst,2
-140005,David,Brown,2024-11-20,IT,IT Support,1
+140002,Susan,Goh,2024-11-05,Sales,Account Manager,2
+140003,Janice,Chan,2024-11-10,Sales,Account Manager,2
+140004,Mary,Teo,2024-11-15,Sales,Account Manager,2
+170166,David,Yap,2024-11-20,Finance,Director,1
+160135,Jaclyn Ong, 2024-10-25,HR,HR Team,1
