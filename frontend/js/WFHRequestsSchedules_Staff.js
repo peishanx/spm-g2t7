@@ -124,4 +124,3 @@ function populateTeamScheduleTable(schedules, requestDate, wfhType) {
         }
     });
 }
-

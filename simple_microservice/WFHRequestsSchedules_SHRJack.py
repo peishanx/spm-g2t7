@@ -5,6 +5,7 @@ from os import environ
 from sqlalchemy import text
 from flask import request
 from datetime import date
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -211,6 +212,82 @@ def get_team_schedules_for_director():
         print(f"Error fetching team schedules for Director: {e}")
         return jsonify({"code": 500, "message": "Internal server error"}), 500
 
+@app.route('/team_schedule/<int:staff_id>', methods=['GET'])
+def get_team_schedule(staff_id):
+    try:
+        # Get the requested date from query parameters, defaulting to today if not provided
+        requested_date_str = request.args.get('date', default=datetime.now().date().isoformat())
+        requested_date = datetime.strptime(requested_date_str, '%Y-%m-%d').date()
+
+        # Fetch the employee's position
+        employee_query = text("""
+            SELECT Position FROM employee.employee WHERE Staff_ID = :staff_id
+        """)
+        employee_result = db.session.execute(employee_query, {'staff_id': staff_id}).fetchone()
+
+        if not employee_result:
+            return jsonify({"code": 404, "message": "Employee not found."}), 404
+
+        position = employee_result.Position
+
+        # Fetch all team members with the same position, their request dates, and leave status
+        schedule_query = text("""
+            SELECT e.Staff_ID AS sid,
+                   e.Staff_FName AS employee_first_name,
+                   e.Staff_LName AS employee_last_name,
+                   e.Dept AS department,
+                   e.Position AS position,
+                   r.request_date AS request_date,
+                   r.wfh_type AS wfh_status,
+                   el.Leave_Date AS leave_date
+            FROM employee.employee AS e
+            LEFT JOIN request AS r ON e.Staff_ID = r.sid
+            LEFT JOIN employee_leaves.employee_leave AS el ON e.Staff_ID = el.Staff_ID AND el.Leave_Date = :requested_date
+            WHERE e.Position = :position
+        """)
+
+        result = db.session.execute(schedule_query, {'position': position, 'requested_date': requested_date})
+        schedules = result.fetchall()
+
+        # Convert to a list of dictionaries and calculate statuses
+        schedule_data = []
+        for row in schedules:
+            leave_status = "On Leave" if row.leave_date else "Not on Leave"
+
+            # Initialize WFH status and in-office status
+            wfh_status = row.wfh_status if row.wfh_status else 'N/A'
+            in_office_status = 'In Office (Full Day)'  # Default value
+
+            # Logic for setting statuses based on leave
+            if leave_status == "On Leave":
+                wfh_status = 'N/A'
+                in_office_status = 'N/A'
+            else:
+                # Handle WFH status and in-office status logic
+                if wfh_status == 'PM':
+                    in_office_status = 'In Office (AM)'
+                elif wfh_status == 'AM':
+                    in_office_status = 'In Office (PM)'
+                elif wfh_status == 'Full Day':
+                    in_office_status = 'N/A'  # No in-office if full day WFH
+
+            schedule_data.append({
+                "sid": row.sid,
+                "employee_first_name": row.employee_first_name,
+                "employee_last_name": row.employee_last_name,
+                "department": row.department,
+                "position": row.position,
+                "request_date": row.request_date.isoformat() if row.request_date else "N/A",
+                "wfh_status": wfh_status,
+                "in_office_status": in_office_status,
+                "leave_status": leave_status
+            })
+
+        return jsonify({"code": 200, "data": schedule_data})
+
+    except Exception as e:
+        print(f"Error fetching team schedule for Staff ID {staff_id}: {e}")
+        return jsonify({"code": 500, "message": "Internal server error"}), 500
 
 if __name__ == '__main__':
     app.run(port=5000)  # Ensure the port is set to 5000
