@@ -13,6 +13,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <style>
+        /* Styles for the department dropdown */
+        .departmentdropdown {
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            border: 1px solid #dadada;
+            background: white;
+            width: 180px; /* Consistent width for filters */
+        }
+
+        /* Change border color on focus */
+        .departmentdropdown:focus {
+            border-color: #007bff; /* Change to a blue border on focus */
+            outline: none; /* Remove outline */
+        }
+
+    </style>
+
     <!--Session storage after the login-->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -80,12 +99,25 @@
                     <div class="filter-row">
                         <div class="filters-container">
                             <div>
+                                <label>Department:</label>
+                                <select class="departmentdropdown" id="departmentdropdown">
+                                    <option value="All" id="all">All</option>
+                                    <option value="HR" id="hramin">HR and Admin</option>
+                                    <option value="Sales" id="sales">Sales</option>
+                                    <option value="Consultancy" id="consultancy">Consultancy</option>
+                                    <option value="Solutioning" id="systemsolutioning">System Solutioning</option>
+                                    <option value="Engineering" id="engineeringoperations">Engineering Operations</option>
+                                    <option value="Finance" id="finance">Finance</option>
+                                    <option value="IT" id="it">IT</option>
+                                </select>
+                            </div>                            
+                            <div>
                                 <label for="wfhtypedropdown">WFH Type</label>
                                 <select class="dropdown" id="wfhtypedropdown">
                                     <option value="All">All</option>
-                                    <option value="WFH (AM)">AM</option>
-                                    <option value="WFH (PM)">PM</option>
-                                    <option value="WFH (Full Day)">Full Day</option>
+                                    <option value="WFH (AM)">WFH (AM)</option>
+                                    <option value="WFH (PM)">WFH (PM)</option>
+                                    <option value="WFH (Full Day)">WFH (Full Day)</option>
                                 </select>
                             </div>
 
