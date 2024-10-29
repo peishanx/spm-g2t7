@@ -7,9 +7,14 @@ import sys
 from sqlalchemy import and_
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    environ.get("dbURL") or "mysql+mysqlconnector://root:@localhost:3306/employee"
-)
+# Primary database URI for the request microservice
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("employee_dbURL") or "mysql+mysqlconnector://root:example@database:3306/employee"
+
+# Additional databases
+app.config["SQLALCHEMY_BINDS"] = {
+    'request_db': environ.get("request_dbURL") or "mysql+mysqlconnector://root:example@database:3306/request"
+}
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 299}
 

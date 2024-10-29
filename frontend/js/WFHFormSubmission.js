@@ -9,6 +9,9 @@ document.getElementById('submitbtn').addEventListener('click', function (event) 
     const fileInput = document.getElementById('attachment');
     const file = fileInput.files[0];
     const sid = sessionStorage.getItem('staff_id');
+    const fname = sessionStorage.getItem('staff_fname');
+    const lname = sessionStorage.getItem('staff_lname');
+    const email = sessionStorage.getItem('email');
     console.log(`Staff ID: ${fromDate}, Name: ${toDate}, Dept: ${type}, Role: ${reason}, Position: ${fileInput}, Country: ${file}, Reportin Manager: ${sid}`);
 
     // Validate form
@@ -28,13 +31,23 @@ document.getElementById('submitbtn').addEventListener('click', function (event) 
     formData.append('type', type);
     formData.append('reason', reason);
     formData.append('attachment', file);
+    formData.append('fname',fname);
+    formData.append('lname',lname);
+    formData.append('email',email);
 
     requestDates.forEach(date => {
         formData.append('request_dates', date);
     });
+    const isDocker = window.location.hostname === 'request';
+    const fetchUrl = isDocker ? 'http://request:5200/request' : 'http://localhost:5200/request';
+    // Send form data using fetch API
 
     // Send form data using fetch API
-    fetch('http://127.0.0.1:5200/request', {
+    // fetch('http://request:5200/request', {
+    //     method: 'POST',
+    //     body: formData
+    // })
+    fetch(fetchUrl, {
         method: 'POST',
         body: formData
     })

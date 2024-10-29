@@ -18,5 +18,5 @@ CREATE TABLE employee_leave (
     Role INT NOT NULL CHECK (Role IN (1, 2, 3)), -- Role: Manager(1), Staff(2), HR(3)
     PRIMARY KEY (Staff_ID, Leave_Date),         -- Composite Primary Key on Staff_ID and Leave_Date
     CONSTRAINT fk_staff FOREIGN KEY (Staff_ID) 
-        REFERENCES employee(Staff_ID) ON DELETE CASCADE ON UPDATE CASCADE
+        REFERENCES employee.employee(Staff_ID) ON DELETE CASCADE ON UPDATE CASCADE
 );

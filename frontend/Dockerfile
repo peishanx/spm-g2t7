@@ -1,14 +1,21 @@
-FROM python:3-slim
+# Use the official Python image from the Docker Hub
+FROM python:3.9-slim
+
+# Set the working directory in the container
 WORKDIR /usr/src/app
+# Install curl
+RUN apt-get update && apt-get install -y curl && apt-get clean
+# Copy frontend's requirements.txt from the root context
+COPY requirements.txt . 
 
-COPY simple_microservice/employee/requirements.txt ./ 
-RUN python -m pip install --no-cache-dir -r requirements.txt 
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Correctly copy the setup script and CSV file
-COPY database/employee_setup.py ./ 
-COPY database/employeenew.csv ./ 
+# Copy all frontend contents
+COPY . .
 
-# Copy the employee script
-COPY simple_microservice/employee/employee.py . 
+# Expose the port that your frontend service runs on
+EXPOSE 8000
 
-CMD ["sh", "-c", "python employee_setup.py && python employee.py"]
+# Command to run your frontend script
+CMD ["python", "login_logic.py"]

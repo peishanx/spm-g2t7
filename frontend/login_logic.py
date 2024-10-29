@@ -5,15 +5,22 @@ import bcrypt  # For password hashing verification
 from mysql.connector import Error
 import os
 
+db_host = os.getenv('MYSQL_HOST', 'database')
+db_user = os.getenv('MYSQL_USERNAME', 'root')
+db_password = os.getenv('MYSQL_PASSWORD', 'example')
+db_name = 'employee'  # Use the correct database name for the user service
+
 # Function to retrieve a user by email from the MySQL database
 def get_user_by_email(email):
     try:
         # Establish a connection to the database
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",  # Your MySQL root password, update if needed
-            database="employee"  # The database you created with the employee table
+            host=db_host,
+            user=db_user,
+            password=db_password,
+            database=db_name,
+            port=3306  # Use Docker's default MySQL port
+
         )
         cursor = conn.cursor(dictionary=True)  # Fetch results as dictionaries
 
@@ -97,7 +104,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 # Main function to run the HTTP server
 if __name__ == '__main__':
     PORT = 8000  # The port to run the server on
-    server_address = ('', PORT)
+    server_address = ('0.0.0.0', PORT)  # Change this line to allow access from all interfaces
     httpd = http.server.HTTPServer(server_address, RequestHandler)
     print(f'Server running on http://localhost:{PORT}')
     httpd.serve_forever()

@@ -1,102 +1,127 @@
-version: '3.8'
+version: "3.8"
+
+volumes:
+  db:
+  rabbitmq_data:
+  pgdata:
+
+networks:
+  spm-net:
+    driver: bridge
+  default:  # Setting the default network
+    name: spm-net
+
 services:
-  ####################################
+  #######################################
   # MySQL Database  
-  ####################################
+  #######################################
   database:
+    container_name: spm-database
     image: mysql:8.0
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: example
-    restart: always
     ports:
-      - '3306:3306'
-    expose:
-      - 3306
-    volumes:
-      - db:/var/lib/mysql
-      - ./database/:/docker-entrypoint-initdb.d/
+      - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD']
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
+    volumes:
+      - db:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d  # Mount the entire directory
 
-  ####################################
-  # Frontend service
-  ####################################
+  #######################################
+  # Frontend Service
+  #######################################
   frontend:
+    container_name: spm-frontend
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
-    environment:
-      - MYSQL_HOST=database
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=example
-      - MYSQL_DB=employee
-    ports:
-      - "8000:8000" 
-    depends_on:
-      - database  # Consider if this is necessary
-    networks:
-      - default
-
-  ####################################
-  # Employee microservice
-  ####################################
-  user:
-    build:
-      context: ./simple_microservice/employee
+      context: ./frontend
       dockerfile: Dockerfile
     environment:
-      - MYSQL_HOST=database
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=example
-    ports:
-      - "5100:5100"
+      MYSQL_HOST: database
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: example
     depends_on:
       database:
-          condition: service_healthy
+        condition: service_healthy
+    ports:
+      - "8000:8000"
 
-  ####################################
-  # Request microservice  
-  ####################################
+  #######################################
+  # Employee Microservice
+  #######################################
+  employee:
+    container_name: spm-employee
+    build:
+      context: .
+      dockerfile: simple_microservice/employee/Dockerfile
+    environment:
+      MYSQL_HOST: database
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: example
+      employee_dbURL: mysql+mysqlconnector://root:example@database:3306/employee
+      CSV_PATH: /data/employeenew.csv
+      UNHASHED_PASSWORDS_PATH: /usr/src/app/unhashed_passwords.csv
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "5100:5100"
+    volumes:
+      - ./data:/data
 
+  #######################################
+  # Request Microservice  
+  #######################################
   request:
+    container_name: spm-request
     build:
       context: ./simple_microservice/request
       dockerfile: Dockerfile
     environment:
-      dbURL: mysql+mysqlconnector://root:example@database:3306/request
+      MYSQL_HOST: database
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: example
+      request_dbURL: mysql+mysqlconnector://root:example@database:3306/request
+      EMPLOYEE_URL: http://spm-employee:5100/employee  # URL for the employee microservice
       PYTHONUNBUFFERED: 1
-      RABBIT_URL: 'rabbitmq' 
-    ports:
-      - '5200:5200'
+      RABBIT_URL: 'rabbitmq'
     depends_on:
       database:
         condition: service_healthy
-      rabbitmq:  
+      rabbitmq:
         condition: service_healthy
+    ports:
+      - "5200:5200"
 
-
-  ####################################
-  # Notification microservice  
-  ####################################
+  #######################################
+  # Notification Microservice  
+  #######################################
   notification:
-    # restart: on-failure
+    container_name: spm-notification
     build:
       context: ./simple_microservice/notification
       dockerfile: Dockerfile
     environment:
-      RABBIT_URL : 'amqp://rabbitmq'
-      MAX_MINUTES_READY : 5
+      MYSQL_HOST: database
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: example
+      RABBIT_URL: 'amqp://rabbitmq'
+      MAX_MINUTES_READY: 5
     depends_on:
       rabbitmq:
         condition: service_healthy
 
-  ####################################
-  # RabbitMQ: The messaging broker   
-  ####################################
+  #######################################
+  # RabbitMQ: Messaging Broker  
+  #######################################
   rabbitmq:
+    container_name: spm-rabbitmq
     build: 
       context:  ./
       dockerfile: rabbit.Dockerfile
@@ -104,7 +129,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    volumes: 
+    volumes:
       - ./rabbitmq.config:/etc/rabbitmq/rabbitmq.config
       - ./rabbitmq_definitions.json:/etc/rabbitmq/rabbitmq_definitions.json
       - rabbitmq_data:/var/lib/rabbitmq
@@ -113,9 +138,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-volumes:
-  db:
-    driver: local
-  rabbitmq_data:
-  pgdata:

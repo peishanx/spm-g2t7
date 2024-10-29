@@ -5,8 +5,6 @@ from os import environ
 from datetime import datetime, timedelta, timezone, time
 import os
 import sys
-import math
-import pytz
 from werkzeug.utils import secure_filename
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -16,36 +14,28 @@ import json
 connection = pika.BlockingConnection(pika.ConnectionParameters(environ.get("RABBIT_URL"), heartbeat=0, blocked_connection_timeout=300))
 channel = connection.channel()
 
-# Add the path to the employee directory
-sys.path.insert(0, r'C:\wamp64\www\spm-g2t7\simple_microservice\employee')
-print(sys.path)
-
-# Now import Employee
-from employee import Employee  # Make sure this import works correctly
-
-os.environ['SQLALCHEMY_EMPLOYEE_DB_URI'] = "mysql+mysqlconnector://root:@localhost:3306/employee"
 
 #Request db
 app = Flask(__name__)
-CORS(app, resources={r"/request/*": {"origins": "http://localhost:8000"}})
+# CORS(app, resources={r"/request/*": {"origins": "http://spm-frontend:8000"}})
 
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    environ.get("dbURL") or "mysql+mysqlconnector://root:@localhost:3306/request"
-    
-)
-# app.config['SQLALCHEMY_BINDS'] = {
-#     'employee': "mysql+mysqlconnector://root:@localhost:3306/employee"
+# Primary database URI for the request microservice
+app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("request_dbURL") or "mysql+mysqlconnector://root:example@database:3306/request"
+# app.config["SQLALCHEMY_BINDS"] = {
+#     'employee_db': environ.get("employee_dbURL")
 # }
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 299}
 app.config['UPLOAD_FOLDER'] = 'uploads'  # Define where to store uploaded attachment files for form submission
-# print("Employee DB URI from env:", os.getenv('SQLALCHEMY_EMPLOYEE_DB_URI'))
 
 
 db = SQLAlchemy(app)
 
 CORS(app)
+
+# Correct the EMPLOYEE_URL to include the /employee endpoint
+EMPLOYEE_URL = os.environ.get("EMPLOYEE_URL") or "http://localhost:5100/employee"
 
 #Request table
 class Request(db.Model):
@@ -151,7 +141,7 @@ def get_requests_by_sid(sid):
                 "message": f"No requests found for employee with sid {sid}."
             }), 404
 
-        employee_service_url = f"http://localhost:5100/employee/{sid}"
+        employee_service_url = f"{EMPLOYEE_URL}/{sid}"  # Construct the correct URL
         response = requests.get(employee_service_url)
         if response.status_code != 200:
             return jsonify({"code": 500, "message": "Error fetching employee data."}), 500
@@ -182,57 +172,18 @@ def get_requests_by_sid(sid):
             "message": "An error occurred while retrieving the requests. " + str(e)
         }), 500
 
-@app.route("/request/employee/check", methods=["GET"])
-def get_requests_for_employees(employee_list):
-    return_list = []
-
-    if not employee_list or not isinstance(employee_list, list):
-        return {
-            "code": 400,
-            "message": "Invalid input. Expected a list of employee entries."
-        }
-
-    try:
-        for employee in employee_list:
-            staff_id = employee.get("Staff_ID")
-
-            if staff_id is None:
-                return {
-                    "code": 400,
-                    "message": f"Employee entry is missing 'Staff_ID'. Received: {employee}"
-                }
-
-            matching_requests = Request.query.filter_by(sid=staff_id).all()
-
-            if matching_requests:
-                for request_entry in matching_requests:
-                    return_list.append(request_entry.json())
-            else:
-                return {
-                    "code": 404,
-                    "message": f"No matching requests found for Staff_ID: {staff_id}"
-                }
-
-        return {
-            "code": 200,
-            "data": return_list
-        }
-
-    except Exception as e:
-        return {
-            "code": 500,
-            "message": f"An error occurred while processing the request. Error: {str(e)}"
-        }
-
 @app.route("/request", methods = ["POST"])
 def create_request():
     # Process the form data
     sid = request.form.get('sid')
     wfh_type = request.form.get('type')
     reason = request.form.get('reason')
+    email = request.form.get('email')  # Get email from form data
+    staff_fname = request.form.get('staff_fname')  # Get staff_fname from form data
+    staff_lname = request.form.get('staff_lname')  # Get staff_lname from form data
 
     # Log values for debugging
-    app.logger.info(f"SID: {sid}, wfh_type: {wfh_type}, Reason: {reason}")
+    app.logger.info(f"SID: {sid}, wfh_type: {wfh_type}, Reason: {reason}, Email: {email}, Staff FName: {staff_fname},StaffLName: {staff_lname}")
 
     # Handle file upload
     if 'attachment' not in request.files:
@@ -259,12 +210,13 @@ def create_request():
         exchange = 'email'
         body = {
             "employee": {
-                "email": new_request.Email,
-                "Staff_FName": new_request.Staff_FName
+                "email": email,
+                "Staff_FName": staff_fname,
+                "Staff_LName": staff_lname
             },
             "request": {
                 "request_id": new_request.rid,
-                "request_type": new_request.type
+                "request_type": new_request.wfh_type
             }
         }
         channel.exchange_declare(exchange=exchange,
@@ -307,7 +259,7 @@ def approve_request(rid, sid, reportingID):
         db.session.commit()
 
         # Step 1: Get the employee data
-        employee_service_url = f"http://localhost:5100/employee/{sid}"
+        employee_service_url = f"{EMPLOYEE_URL}/{sid}"
         response = requests.get(employee_service_url)
 
         if response.status_code != 200:
@@ -330,7 +282,7 @@ def approve_request(rid, sid, reportingID):
             db.session.commit()
 
             # Step 3: Update the approval count in the employee service
-            update_employee_url = f"http://localhost:5100/employee/{sid}/update_approval_count"
+            update_employee_url = f"{EMPLOYEE_URL}/{sid}/update_approval_count"
             update_data = {"approval_count": approvalcount}
             update_response = requests.put(update_employee_url, json=update_data)
 
@@ -473,7 +425,7 @@ def withdraw_request(rid, sid,reportingID):
         db.session.commit()        
 
         # Step 1: Get the employee data
-        employee_service_url = f"http://localhost:5100/employee/{sid}"
+        employee_service_url = f"{EMPLOYEE_URL}/{sid}"
         response = requests.get(employee_service_url)
 
         if response.status_code != 200:
@@ -500,7 +452,7 @@ def withdraw_request(rid, sid,reportingID):
                 db.session.commit()
 
                 # Step 3: Update the approval count in the employee service
-                update_employee_url = f"http://localhost:5100/employee/{sid}/update_approval_count"
+                update_employee_url = f"{EMPLOYEE_URL}/{sid}/update_approval_count"
                 update_data = {"approval_count": approvalcount}
                 update_response = requests.put(update_employee_url, json=update_data)
 
@@ -578,7 +530,7 @@ def revoke_request(rid, sid,reportingID):
         db.session.commit()        
 
         # Step 1: Get the employee data
-        employee_service_url = f"http://localhost:5100/employee/{sid}"
+        employee_service_url = f"{EMPLOYEE_URL}/{sid}"
         response = requests.get(employee_service_url)
 
         if response.status_code != 200:
@@ -605,7 +557,7 @@ def revoke_request(rid, sid,reportingID):
             db.session.commit()
 
             # Step 3: Update the approval count in the employee service
-            update_employee_url = f"http://localhost:5100/employee/{sid}/update_approval_count"
+            update_employee_url = f"{EMPLOYEE_URL}/{sid}/update_approval_count"
             update_data = {"approval_count": approvalcount}
             update_response = requests.put(update_employee_url, json=update_data)
 
@@ -714,39 +666,14 @@ def start_scheduler():
     # Schedule the auto-reject function to run every hour
     scheduler.add_job(auto_reject_old_pending_requests, 'interval', hours=5)
     scheduler.start()
-# @app.route("/request/auto-reject", methods=["PUT"])
-# def auto_reject_old_pending_requests():
-#     try:
-#         now = datetime.now(tz=timezone.utc)
 
-#         pending_requests = Request.query.filter_by(status="Pending").all()
-
-#         for req in pending_requests:
-#             time_difference = now - req.createdAt
-
-#             if time_difference > timedelta(hours=24):
-#                 req.status = "Rejected"
-#                 req.additional_reason = "All pending requests older than 24 hours have been rejected by the system."  # Store the additional reason
-#         db.session.commit()
-
-#         return jsonify({
-#             "code": 200,
-#             "message": "All pending requests older than 24 hours have been rejected by the system."
-#         }), 200
-
-#     except Exception as e:
-#         db.session.rollback()
-#         return jsonify({
-#             "code": 500,
-#             "message": "An error occurred while rejecting the old pending requests. " + str(e)
-#         }), 500
 
 # Get team requests
 @app.route("/request/team/<int:manager_id>", methods=["GET"])
 def get_team_requests(manager_id):
     try:
         # Step 1: Get employees who report to this manager
-        employee_service_url = f"http://localhost:5100/employee/reporting_manager/{manager_id}"
+        employee_service_url = f"{EMPLOYEE_URL}/reporting_manager/{manager_id}"
         response = requests.get(employee_service_url)
         if response.status_code != 200:
             return jsonify({"code": 500, "message": "Error fetching employees under manager."}), 500
@@ -796,7 +723,7 @@ def get_team_requests(manager_id):
 
 
 if __name__ == "__main__":
-       # Ensure upload folder exists
+    # Ensure upload folder exists
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
-    app.run(port=5200, debug=True)
+    app.run(host='0.0.0.0', port=5200, debug=True)
