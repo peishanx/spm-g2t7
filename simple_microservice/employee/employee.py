@@ -63,6 +63,42 @@ class Employee(db.Model):
             "approval_count": self.approval_count  # Added approval_count to JSON output
         }
 
+@app.route("/employees", methods=["GET"])
+def get_all_employees():
+    try:
+        employees = Employee.query.all()
+        
+        employee_list = [
+            {
+                "Staff_ID": emp.Staff_ID,
+                "Staff_FName": emp.Staff_FName,
+                "Staff_LName": emp.Staff_LName,
+                "Dept": emp.Dept,
+                "Position": emp.Position,
+                "Country": emp.Country,
+                "Email": emp.Email,
+                "Reporting_Manager": emp.Reporting_Manager,
+                "Role": emp.Role,
+                "approval_count": emp.approval_count
+                
+            } 
+            for emp in employees
+        ]
+
+        # Return response with employee list
+        return jsonify({
+            "code": 200,
+            "data": employee_list
+        }), 200
+
+    except Exception as e:
+        # Handle any errors and rollback if necessary
+        db.session.rollback()
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred while fetching employees. " + str(e)
+        }), 500
+
 @app.route("/employee/<int:Staff_ID>")
 def find_by_Staff_ID(Staff_ID):
     staff_entry = db.session.scalars(db.select(Employee).filter_by(Staff_ID=Staff_ID).limit(1)).first()
