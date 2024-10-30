@@ -34,13 +34,13 @@ try:
         host=os.getenv('MYSQL_HOST', 'database'),  # Use 'database' as the host
         user=os.getenv('MYSQL_USERNAME', 'root'),  # Use environment variable for username
         password=os.getenv('MYSQL_PASSWORD', 'example'),  # Use environment variable for password
-        # database = 'employee'
+        database = 'employee'
     )
     
+    # conn.database = 'employee'  # Now select the database
 
     cursor = conn.cursor()
     # Create the database if it does not exist
-    conn.database = 'employee'  # Now select the database
 
     # Create the employee table if it doesn't exist
     cursor.execute(""" 
