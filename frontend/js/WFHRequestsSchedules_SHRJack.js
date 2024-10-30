@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Determine the appropriate URL based on position and department
         if (position === 'MD' && dept === 'CEO') {
-            url = `http://localhost:5000/ceo/director_schedules?date=${date}`;
+            url = `http://localhost:5200/ceo/director_schedules?date=${date}`;
         } else if (position.includes('Director')) {
-            url = `http://localhost:5000/director/team_schedules?staff_id=${staffId}&date=${date}&department=${dept}`;
+            url = `http://localhost:5200/director/team_schedules?staff_id=${staffId}&date=${date}&department=${dept}`;
         } else {
             console.error('Unauthorized position for viewing schedules.');
             return; // Exit if unauthorized
