@@ -75,6 +75,7 @@ services:
     volumes:
       - ./data:/data
 
+
   #######################################
   # Request Microservice  
   #######################################
@@ -100,7 +101,7 @@ services:
       - "5200:5200"
 
   #######################################
-  # Employee Leaves Microservice  
+  # Request Microservice  
   #######################################
   employeeleaves:
     container_name: spm-employee_leaves
@@ -123,6 +124,7 @@ services:
     ports:
       - "5300:5300"
 
+
   #######################################
   # Notification Microservice  
   #######################################
@@ -137,6 +139,10 @@ services:
       MYSQL_PASSWORD: example
       RABBIT_URL: 'amqp://rabbitmq'
       MAX_MINUTES_READY: 5
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: testspmg2t7@gmail.com
+      SMTP_PASS: abcdefghijk2024
     depends_on:
       rabbitmq:
         condition: service_healthy
