@@ -20,7 +20,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: "example"
     ports:
       - "3306:3306"
     healthcheck:
@@ -100,7 +100,7 @@ services:
       - "5200:5200"
 
   #######################################
-  # Request Microservice  
+  # Employee Leaves Microservice  
   #######################################
   employeeleaves:
     container_name: spm-employee_leaves
