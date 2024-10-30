@@ -15,7 +15,9 @@ createApp({
     methods: {
         fetchCalendarData() {
             const staffId = sessionStorage.getItem('staff_id');
-            fetch(`http://localhost:5201/request/employee/${staffId}`)
+            const isDocker = window.location.hostname === "request";
+            const fetchUrl = isDocker ? 'http://request:5200/request' : 'http://localhost:5200/request';
+            fetch(`${fetchUrl}/schedules/employee/${staffId}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log('API Response:', data);

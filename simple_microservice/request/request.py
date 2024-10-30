@@ -11,6 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import pika
 import json
 from sqlalchemy import text
+from datetime import date
 
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(environ.get("RABBIT_URL"), heartbeat=0, blocked_connection_timeout=300))
@@ -723,7 +724,7 @@ def get_team_requests(manager_id):
 
 
 #Get approved wfh requests by sid for wfh calendar
-@app.route("/request/employee/<int:sid>", methods=["GET"])
+@app.route("/request/schedules/employee/<int:sid>", methods=["GET"])
 def get_wfh_calendar(sid):
     try:
         # Get the date range: past 30 days to upcoming 30 days
