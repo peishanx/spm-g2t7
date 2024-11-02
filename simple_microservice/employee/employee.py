@@ -64,7 +64,7 @@ class Employee(db.Model):
             "approval_count": self.approval_count  # Added approval_count to JSON output
         }
 
-@app.route("/employees", methods=["GET"])
+@app.route("/employee/getallemployees", methods=["GET"])
 def get_all_employees():
     try:
         employees = Employee.query.all()
@@ -204,92 +204,7 @@ def update_approval_count(sid):
         db.session.rollback()
         return jsonify({"code": 500, "message": "Error updating approval count"}), 500
     
-# get employee wfh counts 
 
-@app.route('/employee/wfh/counts', methods=['GET'])
-def count_wfh():
-    try:
-        selected_date = request.args.get('date', default=None)
-        counts = {}
-
-        # Get all departments and positions regardless of WFH requests
-        with db.get_engine(app, bind='employee').connect() as conn:
-            employee_query = text(""" 
-                SELECT Dept, Position, COUNT(*) AS employee_count
-                FROM employee.employee
-                GROUP BY Dept, Position
-            """)
-            employee_counts = conn.execute(employee_query).fetchall()
-
-        # Initialize counts with 0 WFH for each department and position
-        for emp_row in employee_counts:
-            dept = emp_row.Dept
-            position = emp_row.Position
-            if dept not in counts:
-                counts[dept] = {}
-            counts[dept][position] = {
-                "employee_count": emp_row.employee_count,
-                "am": 0,
-                "pm": 0,
-                "full_day": 0,
-                "total": 0,
-                "leaves": 0  # Add a new field for leaves
-            }
-
-        # Fetch WFH requests for the selected date
-        with db.get_engine(app, bind='request').connect() as conn:
-            request_query = text(""" 
-                SELECT e.Dept, e.Position, r.wfh_type, COUNT(*) AS approved_request_count
-                FROM request.request AS r
-                JOIN employee.employee AS e ON r.sid = e.Staff_ID
-                WHERE r.status = 'Approved'
-                AND r.request_date = :selected_date
-                GROUP BY e.Dept, e.Position, r.wfh_type
-            """)
-            approved_counts = conn.execute(request_query, {'selected_date': selected_date}).fetchall()
-
-        # Update WFH counts for departments and positions that have approved WFH requests
-        for req_row in approved_counts:
-            dept = req_row.Dept
-            position = req_row.Position
-            wfh_type = req_row.wfh_type
-            approved_count = req_row.approved_request_count
-
-            if dept in counts and position in counts[dept]:
-                if wfh_type.lower() == 'am':
-                    counts[dept][position]["am"] += approved_count
-                elif wfh_type.lower() == 'pm':
-                    counts[dept][position]["pm"] += approved_count
-                elif wfh_type.lower() == 'full_day':
-                    counts[dept][position]["full_day"] += approved_count
-
-                counts[dept][position]["total"] += approved_count
-
-        # Fetch leave counts for the selected date
-        with db.get_engine(app, bind='employee_leaves').connect() as conn:
-            leave_query = text(""" 
-                SELECT e.Dept, e.Position, COUNT(*) AS leave_count
-                FROM employee_leaves.employee_leave AS el
-                JOIN employee.employee AS e ON el.Staff_ID = e.Staff_ID
-                WHERE el.Leave_Date = :selected_date
-                GROUP BY e.Dept, e.Position
-            """)
-            leave_counts = conn.execute(leave_query, {'selected_date': selected_date}).fetchall()
-
-        # Update leave counts for departments and positions that have leave requests
-        for leave_row in leave_counts:
-            dept = leave_row.Dept
-            position = leave_row.Position
-            leave_count = leave_row.leave_count
-
-            if dept in counts and position in counts[dept]:
-                counts[dept][position]["leaves"] += leave_count  # Add leave counts
-
-        return jsonify(counts)
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return {'error': str(e)}
 
 
 if __name__ == "__main__": 

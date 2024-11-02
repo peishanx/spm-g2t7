@@ -1052,6 +1052,14 @@
   color: var(--dark);
   line-height: 1.5;
 }
+.organizationschedulescontainer .calendar-container #requestdate{
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid #dadada;
+  background: white;
+  width: 150px; /* Consistent width for filters */
+}
 
 /*Page: Schedules for Special HR and Jack*/
 
