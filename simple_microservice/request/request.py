@@ -12,6 +12,7 @@ import pika
 import json
 from sqlalchemy import text
 from datetime import date
+from collections import defaultdict
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(environ.get("RABBIT_URL"), heartbeat=0, blocked_connection_timeout=300))
 channel = connection.channel()
@@ -23,9 +24,6 @@ app = Flask(__name__)
 
 # Primary database URI for the request microservice
 app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("request_dbURL") or "mysql+mysqlconnector://root:example@database:3306/request"
-# app.config["SQLALCHEMY_BINDS"] = {
-#     'employee_db': environ.get("employee_dbURL")
-# }
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 299}
@@ -38,7 +36,7 @@ CORS(app)
 
 # Correct the EMPLOYEE_URL to include the /employee endpoint
 EMPLOYEE_URL = os.environ.get("EMPLOYEE_URL") or "http://localhost:5100/employee" or "http://employee:5100/employee"
-
+EMPLOYEELEAVES_URL = os.environ.get("EMPLOYEELEAVES_URL") or "http://localhost:5300/employeeleaves" or "http://employeeleaves:5300/employeeleaves "
 #Request table
 class Request(db.Model):
     __tablename__ = "request"
@@ -925,6 +923,259 @@ def get_team_schedule(staff_id):
         print(f"Error fetching team schedule for Staff ID {staff_id}: {e}")
         return jsonify({"code": 500, "message": "Internal server error"}), 500
 
+@app.route("/request/schedules/employee/<int:sid>", methods=["GET"]) 
+def get_wfh_calendar(sid): 
+    try: 
+        # Get the date range: past 30 days to upcoming 30 days 
+        today = datetime.now().date() 
+        past_30_days = today - timedelta(days=30) 
+        future_30_days = today + timedelta(days=30) 
+ 
+        # Fetch all approved requests within the date range for this employee 
+        requests = db.session.query(Request).filter( 
+            Request.sid == sid, 
+            Request.status == "Approved", 
+            Request.request_date.between(past_30_days, future_30_days) 
+        ).all() 
+ 
+        # Debug: Print the retrieved requests 
+        print(f"Retrieved requests for SID {sid}: {[req.request_date for req in requests]}") 
+ 
+        events = [] 
+        current_date = past_30_days  # Start from 30 days before today 
+ 
+        # Loop through past 30 days to future 30 days 
+        while current_date <= future_30_days: 
+            has_wfh = False 
+ 
+            for req in requests: 
+                if req.request_date == current_date: 
+                    has_wfh = True 
+                    print(f"Found WFH request for {current_date}: {req.wfh_type}")  # Debug 
+ 
+                    # Correctly handle different WFH types 
+                    if req.wfh_type == "AM": 
+                        events.append({ 
+                            "title": "WFH (AM)", 
+                            "start": f"{current_date}T09:00:00", 
+                            "end": f"{current_date}T12:00:00" 
+                        }) 
+                        events.append({ 
+                            "title": "In Office (PM)", 
+                            "start": f"{current_date}T13:00:00", 
+                            "end": f"{current_date}T17:00:00" 
+                        }) 
+                    elif req.wfh_type == "PM": 
+                        events.append({ 
+                            "title": "WFH (PM)", 
+                            "start": f"{current_date}T13:00:00", 
+                            "end": f"{current_date}T17:00:00" 
+                        }) 
+                        events.append({ 
+                            "title": "In Office (AM)", 
+                            "start": f"{current_date}T09:00:00", 
+                            "end": f"{current_date}T12:00:00" 
+                        }) 
+                    elif req.wfh_type == "Full Day": 
+                        events.append({ 
+                            "title": "WFH (Full Day)", 
+                            "start": f"{current_date}T09:00:00", 
+                            "end": f"{current_date}T17:00:00" 
+                        }) 
+                    break  # Exit the loop after processing the request 
+ 
+            # If no WFH request for this date and it's a weekday, add an "In Office" event 
+            if not has_wfh and current_date.weekday() < 5: 
+                events.append({ 
+                    "title": "In Office (Full Day)", 
+                    "start": f"{current_date}T09:00:00", 
+                    "end": f"{current_date}T17:00:00" 
+                }) 
+ 
+            current_date += timedelta(days=1) 
+ 
+        # Debug: Print events being returned 
+        print("Events being returned:", events) 
+ 
+        return jsonify({"code": 200, "data": events}), 200 
+ 
+    except Exception as e: 
+        return jsonify({ 
+            "code": 500, 
+            "message": "An error occurred while retrieving the WFH calendar. " + str(e) 
+        }), 500
+    
+
+@app.route("/wfhcount/<string:date>", methods=["GET"])
+def count_wfh(date):
+    try:
+        # Fetch all employees using the employee service
+        employee_service_url = f"{EMPLOYEE_URL}/getallemployees"
+        response = requests.get(employee_service_url)
+        if response.status_code != 200:
+            return jsonify({"code": 500, "message": "Failed to fetch employees."}), 500
+
+        employees = response.json().get("data", [])
+        
+        # Initialize counts dictionary
+        counts = defaultdict(lambda: defaultdict(lambda: {
+            "employee_count": 0,
+            "am": 0,
+            "pm": 0,
+            "full_day": 0,
+            "total": 0,
+            "leaves": 0
+        }))
+
+        # Count total employees by department and position
+        for emp in employees:
+            dept = emp.get("Dept")
+            position = emp.get("Position")
+            counts[dept][position]["employee_count"] += 1
+
+        # Get the selected date from the query parameters
+        selected_date = date
+
+        # Fetch WFH requests from the database with date filter if provided
+        if selected_date:
+            wfh_requests = Request.query.filter(Request.request_date == selected_date).all()
+        else:
+            wfh_requests = Request.query.all()
+
+        # Update WFH counts based on WFH requests
+        for wfhrequest in wfh_requests:
+            staff_id = wfhrequest.sid
+            employee = next((emp for emp in employees if emp["Staff_ID"] == staff_id), None)
+            if employee:
+                dept = employee["Dept"]
+                position = employee["Position"]
+                wfh_type = wfhrequest.wfh_type.lower()  # wfh_type should be lowercase to match
+                approved_count = 1
+
+                if wfh_type == 'am':
+                    counts[dept][position]["am"] += approved_count
+                elif wfh_type == 'pm':
+                    counts[dept][position]["pm"] += approved_count
+                elif wfh_type == 'full_day':
+                    counts[dept][position]["full_day"] += approved_count
+
+                counts[dept][position]["total"] += approved_count
+
+        # Fetch leave counts
+        if selected_date:
+            leave_response = requests.get(f"{EMPLOYEELEAVES_URL}?date={selected_date}")
+            if leave_response.status_code == 200:
+                leave_details = leave_response.json().get("data", [])
+                for leave in leave_details:
+                    dept = leave['dept']
+                    position = leave['position']
+                    if dept in counts and position in counts[dept]:
+                        counts[dept][position]["leaves"] += 1
+
+        # Convert counts to a regular dict for JSON serialization
+        formatted_counts = {dept: dict(positions) for dept, positions in counts.items()}
+        
+        return jsonify({
+            "code": 200,
+            "data": formatted_counts  # Sends correctly structured JSON to match JS
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "An error occurred while counting WFH requests. " + str(e)
+        }), 500
+# get employee wfh counts 
+
+# @app.route('/employee/wfh/counts/<str:wfhstatus>', methods=['GET'])
+# def count_wfh(wfhstatus):
+#     try:
+#         selected_date = request.args.get('date', default=None)
+#         counts = {}
+
+#         employee = Employee.query.filter_by(Staff_ID=sid).count()
+#         if not employee:
+#             return jsonify({"code": 404, "message": "Employee not found"}), 404
+        
+#         # Get all departments and positions regardless of WFH requests
+#         with db.get_engine(app, bind='employee').connect() as conn:
+#             employee_query = text(""" 
+#                 SELECT Dept, Position, COUNT(*) AS employee_count
+#                 FROM employee.employee
+#                 GROUP BY Dept, Position
+#             """)
+#             employee_counts = conn.execute(employee_query).fetchall()
+
+#         # Initialize counts with 0 WFH for each department and position
+#         for emp_row in employee_counts:
+#             dept = emp_row.Dept
+#             position = emp_row.Position
+#             if dept not in counts:
+#                 counts[dept] = {}
+#             counts[dept][position] = {
+#                 "employee_count": emp_row.employee_count,
+#                 "am": 0,
+#                 "pm": 0,
+#                 "full_day": 0,
+#                 "total": 0,
+#                 "leaves": 0  # Add a new field for leaves
+#             }
+
+#         # Fetch WFH requests for the selected date
+#         with db.get_engine(app, bind='request').connect() as conn:
+#             request_query = text(""" 
+#                 SELECT e.Dept, e.Position, r.wfh_type, COUNT(*) AS approved_request_count
+#                 FROM request.request AS r
+#                 JOIN employee.employee AS e ON r.sid = e.Staff_ID
+#                 WHERE r.status = 'Approved'
+#                 AND r.request_date = :selected_date
+#                 GROUP BY e.Dept, e.Position, r.wfh_type
+#             """)
+#             approved_counts = conn.execute(request_query, {'selected_date': selected_date}).fetchall()
+
+#         # Update WFH counts for departments and positions that have approved WFH requests
+#         for req_row in approved_counts:
+#             dept = req_row.Dept
+#             position = req_row.Position
+#             wfh_type = req_row.wfh_type
+#             approved_count = req_row.approved_request_count
+
+#             if dept in counts and position in counts[dept]:
+#                 if wfh_type.lower() == 'am':
+#                     counts[dept][position]["am"] += approved_count
+#                 elif wfh_type.lower() == 'pm':
+#                     counts[dept][position]["pm"] += approved_count
+#                 elif wfh_type.lower() == 'full_day':
+#                     counts[dept][position]["full_day"] += approved_count
+
+#                 counts[dept][position]["total"] += approved_count
+
+#         # Fetch leave counts for the selected date
+#         with db.get_engine(app, bind='employee_leaves').connect() as conn:
+#             leave_query = text(""" 
+#                 SELECT e.Dept, e.Position, COUNT(*) AS leave_count
+#                 FROM employee_leaves.employee_leave AS el
+#                 JOIN employee.employee AS e ON el.Staff_ID = e.Staff_ID
+#                 WHERE el.Leave_Date = :selected_date
+#                 GROUP BY e.Dept, e.Position
+#             """)
+#             leave_counts = conn.execute(leave_query, {'selected_date': selected_date}).fetchall()
+
+#         # Update leave counts for departments and positions that have leave requests
+#         for leave_row in leave_counts:
+#             dept = leave_row.Dept
+#             position = leave_row.Position
+#             leave_count = leave_row.leave_count
+
+#             if dept in counts and position in counts[dept]:
+#                 counts[dept][position]["leaves"] += leave_count  # Add leave counts
+
+#         return jsonify(counts)
+
+#     except Exception as e:
+#         print(f"Error: {e}")
+#         return {'error': str(e)}
+    
 
 if __name__ == "__main__":
     # Ensure upload folder exists

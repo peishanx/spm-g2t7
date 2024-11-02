@@ -20,7 +20,7 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "example"
+      MYSQL_ROOT_PASSWORD: example
     ports:
       - "3306:3306"
     healthcheck:
@@ -89,7 +89,8 @@ services:
       MYSQL_USERNAME: root
       MYSQL_PASSWORD: example
       request_dbURL: mysql+mysqlconnector://root:example@database:3306/request
-      EMPLOYEE_URL: http://spm-employee:5100/employee  # URL for the employee microservice
+      EMPLOYEE_URL: http://employee:5100/employee  # URL for the employee microservice
+      EMPLOYEELEAVES_URL: http://employeeleaves:5300/employeeleaves 
       PYTHONUNBUFFERED: 1
       RABBIT_URL: 'rabbitmq'
     depends_on:
@@ -100,28 +101,29 @@ services:
     ports:
       - "5200:5200"
 
-  #######################################
-  # Request Microservice  
-  #######################################
-  employeeleaves:
-    container_name: spm-employee_leaves
-    build:
-      context: ./simple_microservice/employee_leaves
-      dockerfile: Dockerfile
-    environment:
-      MYSQL_HOST: database
-      MYSQL_USERNAME: root
-      MYSQL_PASSWORD: example
-      employeeleaveS_dbURL: mysql+mysqlconnector://root:example@database:3306/employee_leaves
-      # EMPLOYEE_URL: http://spm-employee:5100/employee  # URL for the employee microservice
-      PYTHONUNBUFFERED: 1
-      RABBIT_URL: 'rabbitmq'
-    depends_on:
-      database:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    ports:
+
+####################################### 
+  # Employee Leaves Microservice   
+  ####################################### 
+  employeeleaves: 
+    container_name: spm-employee_leaves 
+    build: 
+      context: ./simple_microservice/employee_leaves 
+      dockerfile: Dockerfile 
+    environment: 
+      MYSQL_HOST: database 
+      MYSQL_USERNAME: root 
+      MYSQL_PASSWORD: example 
+      employeeleaves_dbURL: mysql+mysqlconnector://root:example@database:3306/employee_leaves 
+      # EMPLOYEE_URL: http://spm-employee:5100/employee  # URL for the employee microservice 
+      PYTHONUNBUFFERED: 1 
+      RABBIT_URL: 'rabbitmq' 
+    depends_on: 
+      database: 
+        condition: service_healthy 
+      rabbitmq: 
+        condition: service_healthy 
+    ports: 
       - "5300:5300"
 
 

@@ -12,50 +12,92 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
+        const isDockerReq = window.location.hostname === 'request';
+        const fetchUrlReq = isDockerReq ? 'http://request:5200/request' : 'http://localhost:5200/request';
+        // Fetch WFH requests for the current employee (staffId)
+        fetch(`${fetchUrlReq}/team/${staffId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200 || data.code === 404) {
+                    console.log("Team Requests:", data.data); // Process the returned requests as needed
+                    
+                    // Store fetched data globally for filtering
+                    const allRequests = data.data || [];
+
+                    // Call the function to populate the table with the fetched team requests
+                    populateWFHTable(allRequests);
+        
+                    // Call the function to populate the position dropdown with unique positions
+                    populatePositionDropdown(allRequests);
+        
+                    document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
+                    document.getElementById('teamdropdown').addEventListener('change', () => filterRequests(allRequests));
+                    document.getElementById('requestdate').addEventListener('change', () => filterRequests(allRequests)); // 'change' for date picker
+                    document.getElementById('clearfilters').addEventListener('click', () => clearFilters(allRequests));
+                    document.getElementById('wfhtypedropdown').addEventListener('change', () => filterRequests(allRequests));
+
+                    // allRequests = data.data; // Store all requests for filtering
+                    // console.log(allRequests);
+                    // populateWFHTable(allRequests); // Initial render of all requests
+                } else {
+                    console.error('Error fetching requests:', data.message);
+                }
+            })
         // Fetch team requests using the manager's staff ID
-        const response = await fetch(`http://localhost:5200/request/team/${staffId}`);
+        // const response = await fetch(`http://localhost:5200/request/team/${staffId}`);
         // Check if the response is OK (status code 200)
-        if (response.ok) {
-            const data = await response.json();
-            console.log("Team Requests:", data.data); // Process the returned requests as needed
+        // if (response.ok) {
+        //     const data = await response.json();
+        //     console.log("Team Requests:", data.data); // Process the returned requests as needed
 
-            // Store fetched data globally for filtering
-            const allRequests = data.data;
-            // Call the function to populate the table with the fetched team requests
-            populateWFHTable(allRequests);
+        //     // Store fetched data globally for filtering
+        //     const allRequests = data.data;
+        //     // Call the function to populate the table with the fetched team requests
+        //     populateWFHTable(allRequests);
 
-            // Call the function to populate the position dropdown with unique positions
-            populatePositionDropdown(allRequests);
+        //     // Call the function to populate the position dropdown with unique positions
+        //     populatePositionDropdown(allRequests);
 
-            document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
-            document.getElementById('teamdropdown').addEventListener('change', () => filterRequests(allRequests));
-            document.getElementById('requestdate').addEventListener('change', () => filterRequests(allRequests)); // 'change' for date picker
-            document.getElementById('clearfilters').addEventListener('click', () => clearFilters(allRequests));
-            document.getElementById('wfhtypedropdown').addEventListener('change', () => filterRequests(allRequests));
+        //     document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
+        //     document.getElementById('teamdropdown').addEventListener('change', () => filterRequests(allRequests));
+        //     document.getElementById('requestdate').addEventListener('change', () => filterRequests(allRequests)); // 'change' for date picker
+        //     document.getElementById('clearfilters').addEventListener('click', () => clearFilters(allRequests));
+        //     document.getElementById('wfhtypedropdown').addEventListener('change', () => filterRequests(allRequests));
 
-        } else {
-            const errorData = await response.json();
-            console.error("Error fetching team requests:", errorData.message);
-            // Handle error UI here
-        }
+        // } else {
+        //     const errorData = await response.json();
+        //     console.error("Error fetching team requests:", errorData.message);
+        //     // Handle error UI here
+        // }
     } catch (error) {
         console.error("An error occurred while fetching team requests:", error);
         // Handle network errors or other issues
     }
 });
 
+function searchRequests(requests, query) {
+    const lowerCaseQuery = query.toLowerCase();
+    return requests.filter(request =>
+        `${request.fname} ${request.lname}`.toLowerCase().includes(lowerCaseQuery) ||
+        request.reason.toLowerCase().includes(lowerCaseQuery) ||
+        request.status.toLowerCase().includes(lowerCaseQuery) ||
+        request.wfh_type.toLowerCase().includes(lowerCaseQuery)
+    );
+}
+
+
 
 // Function to format the date
-function formatDate(dateString,requestdate) {
+function formatDate(dateString, requestdate) {
     const date = new Date(dateString);
     const requesteddate = new Date(requestdate);
     const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
-    if (dateString == null){
+    if (dateString == null) {
         const formattedDate = requesteddate.toLocaleDateString('en-GB', options).replace(/,/, '');
         console.log(formattedDate);
         return `${formattedDate}`;
     }
-    else if (requestdate == null){
+    else if (requestdate == null) {
         const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/, '');
         const timeString = date.toLocaleTimeString('en-GB');
         return `${formattedDate}, ${timeString}`;
@@ -73,40 +115,41 @@ function truncateReason(str) {
     return str;
 }
 // Function to populate the WFH requests table
-function populateWFHTable(requests) {
+function populateWFHTable(allRequests) {
     const tableBody = document.getElementById('wfhRequestTableBody');
     tableBody.innerHTML = ''; // Clear the existing table content
-    if (requests.length === 0) {
+    if (!allRequests || allRequests.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="7">No requests found</td></tr>';
         return;
     }
 
     // Loop through the requests and create table rows
-    requests.forEach(request => {
+    allRequests.forEach(request => {
         const row = document.createElement('tr');
 
         // Concatenate first name and last name
         const fullName = `${request.fname} ${request.lname}`;
-        sessionStorage.setItem('requestStaffname',fullName);
-        console.log("hii"+request);
-
+        sessionStorage.setItem('requestStaffname', fullName);
+        console.log("hii" + request);
+        const isDockerEmp = window.location.hostname === 'employee';
+        const fetchUrlEmp = isDockerEmp ? 'http://employee:5100/employee' : 'http://localhost:5100/employee';
         // const managername;
         if (request.updated_by != null) {
-            fetch(`http://localhost:5100/employee/${request.updated_by}`)
+            fetch(`${fetchUrlEmp}/${request.updated_by}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 200) {
                         const managerdata = data.data; // Store all requests for filtering
                         console.log(managerdata);
                         const managername = managerdata["Staff_FName"] + " " + managerdata["Staff_LName"];
-                        sessionStorage.setItem('managername',managername);
+                        sessionStorage.setItem('managername', managername);
                         console.log(managername)
                         const truncatedReason = truncateReason(request.reason);
                         row.innerHTML = `
                             <td>${fullName}</td>
                             <td>${request.position}</td>
-                            <td>${formatDate(request.createdAt,null)}</td>
-                            <td>${formatDate(null,request.request_date)}</td>
+                            <td>${formatDate(request.createdAt, null)}</td>
+                            <td>${formatDate(null, request.request_date)}</td>
                             <td>${truncatedReason}</td>
                             <td>${request.wfh_type}</td>
                             <td>${request.approvalcount}</td>
@@ -146,8 +189,8 @@ function populateWFHTable(requests) {
             row.innerHTML = `
             <td>${fullName}</td>
             <td>${request.position}</td>
-            <td>${formatDate(request.createdAt,null)}</td>
-            <td>${formatDate(null,request.request_date)}</td>
+            <td>${formatDate(request.createdAt, null)}</td>
+            <td>${formatDate(null, request.request_date)}</td>
             <td>${truncateReason(request.reason)}</td>
             <td>${request.wfh_type}</td>
             <td>${request.approvalcount}</td>
@@ -225,6 +268,10 @@ function filterRequests(allRequests) {
         return matchesPosition && matchesStatus && matchesWfhType && matchesRequestDate;
     });
 
+    //searchbar
+    if (searchQuery) {
+        filteredRequests = searchRequests(filteredRequests, searchQuery);
+    }
     // Repopulate the table with filtered results
     populateWFHTable(filteredRequests);
 }
@@ -235,6 +282,7 @@ function clearFilters(allRequests) {
     document.getElementById('wfhtypedropdown').value = ''; // Reset WFH type to "All"
     document.getElementById('requestdate').value = ''; // Clear date filter
     document.getElementById('teamdropdown').value = 'All'; // Set department to "All"
+    document.getElementById('searchInput').value = '';
 
     // Reapply filters with cleared values (which should show all requests)
     populateWFHTable(allRequests);

@@ -176,7 +176,7 @@
       // Determine the base URL depending on the environment
       const baseURL = window.location.hostname === 'localhost' ?
         'http://localhost:8000' :
-        'http://spm-frontend:8000'; // Change to your domain or IP if deployed
+        'http://frontend:8000'; // Change to your domain or IP if deployed
 
       try {
         const response = await fetch(`${baseURL}/login`, {

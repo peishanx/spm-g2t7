@@ -8,9 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Staff ID is missing from session storage.');
         return;
     }
-
+    const isDockerReq = window.location.hostname === 'request';
+    const fetchUrlReq = isDockerReq ? 'http://request:5200/request' : 'http://localhost:5200/request';
     // Fetch WFH requests for the current employee (staffId)
-    fetch(`http://localhost:5200/request/employee/${staffId}`)
+    fetch(`${fetchUrlReq}/employee/${staffId}`)
         .then(response => response.json())
         .then(data => {
             if (data.code === 200) {
@@ -115,9 +116,11 @@ function populateWFHTable(requests) {
         console.log(request)
         const row = document.createElement('tr');
         row.id = "requestdetails";
+        const isDockerEmp = window.location.hostname === 'employee';
+        const fetchUrlEmp = isDockerEmp ? 'http://employee:5100/employee' : 'http://localhost:5100/employee';
         // const managername;
         if (request.updated_by != null) {
-            fetch(`http://localhost:5100/employee/${request.updated_by}`)
+            fetch(`${fetchUrlEmp}/${request.updated_by}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.code === 200) {
