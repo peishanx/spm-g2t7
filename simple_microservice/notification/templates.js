@@ -1,7 +1,7 @@
 import QRCode from 'qrcode';
 
 export default {
-    request: function(user_info, request_info) {
+    request_create: function(user_info, request_info) {
         return{
             from: process.env.email,
             to: user_info.Email, // employee's email from your employee database

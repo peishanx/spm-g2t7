@@ -11,3 +11,4 @@ export const transporter = nodemailer.createTransport({
       pass: process.env.email_password // Your allinone.com.sg email password
     },
   });
+ 
