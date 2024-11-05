@@ -33,7 +33,7 @@ try:
     conn = mysql.connector.connect(
         host=os.getenv('MYSQL_HOST', 'database'),  # Use 'database' as the host
         user=os.getenv('MYSQL_USERNAME', 'root'),  # Use environment variable for username
-        password=os.getenv('MYSQL_PASSWORD', 'example'),  # Use environment variable for password
+        password=os.getenv('MYSQL_PASSWORD', 'root'),  # Use environment variable for password
         database = 'employee'
     )
     

@@ -22,39 +22,8 @@ amqp.connect(process.env.RABBIT_URL, function(error0, connection) {
     channel.assertExchange(exchange, 'topic', { durable: true });
     console.log('Exchange asserted...');
 
-    // Assert Queue for status changes, like request submission
-    channel.assertQueue('request_status_change', { exclusive: false }, function(error2, q) {
-      if (error2) {
-        throw error2;
-      }
-      console.log(`Queue ${q.queue} created`);
-
-      // Bind queue to routing key (e.g., any status change for requests)
-      channel.bindQueue(q.queue, exchange, "*");
-      console.log(`Queue ${q.queue} binded to *...`);
-
-      // Consume messages from the queue for request status changes
-      channel.consume(q.queue, async function(msg) {
-        console.log("==Received message==");
-
-        let msgContent = JSON.parse(msg.content.toString());
-        console.log('Request status change message:', msgContent);
-
-        // Get the appropriate email template and fill it with request details
-        let filledEmail = await emailTemplates[msg.fields.routingKey](
-          msgContent["employee"], 
-          msgContent["request"]
-        );
-
-        // Send email using the transporter
-        await transporter.sendMail(filledEmail);
-        console.log("==Request status change email sent==");
-
-      }, { noAck: true });
-    });
-
-    // Assert Queue for request approval/rejection transition
-    channel.assertQueue('request_transition', { exclusive: false }, function(error2, q) {
+    // Assert Queue for request related transition
+    channel.assertQueue('request', { exclusive: false }, function(error2, q) {
       if (error2) {
         throw error2;
       }
