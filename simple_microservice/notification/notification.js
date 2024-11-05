@@ -22,7 +22,7 @@ amqp.connect(process.env.RABBIT_URL, function(error0, connection) {
     channel.assertExchange(exchange, 'topic', { durable: true });
     console.log('Exchange asserted...');
 
-    // Assert Queue for request related transition
+    // Assert Queue for request
     channel.assertQueue('request', { exclusive: false }, function(error2, q) {
       if (error2) {
         throw error2;
