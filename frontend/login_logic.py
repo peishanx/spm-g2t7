@@ -7,7 +7,7 @@ import os
 
 db_host = os.getenv('MYSQL_HOST', 'database')
 db_user = os.getenv('MYSQL_USERNAME', 'root')
-db_password = os.getenv('MYSQL_PASSWORD', 'root')
+db_password = os.getenv('MYSQL_PASSWORD', 'example')
 db_name = 'employee'  # Use the correct database name for the user service
 
 # Function to retrieve a user by email from the MySQL database
