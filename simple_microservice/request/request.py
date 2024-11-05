@@ -290,7 +290,7 @@ def approve_request(rid, sid, reportingID):
             if update_response.status_code != 200:
                 return jsonify({"code": 500, "message": "Error updating employee approval count."}), 500
             
-        if approvalcount >= approvalcountmax:
+        if approvalcount > approvalcountmax:
             return jsonify({"code": 404, "message": f"Employee {sid}, has exceed the number of wfh requests. Please check again. Current approved WFH requests: {approvalcount}"}), 404
         exchange = 'email'
         body = {
