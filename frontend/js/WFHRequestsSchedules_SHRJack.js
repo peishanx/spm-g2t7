@@ -3,8 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const wfhTypeDropdown = document.getElementById('wfhtypedropdown');
     const requestDateInput = document.getElementById('requestdate');
     const clearFiltersButton = document.getElementById('clearfilters');
+    const searchInput = document.getElementById('searchInput'); // Add search input element
 
     let allRequests = [];
+    let searchQuery = '';
 
     // Retrieve data from session storage
     const dept = sessionStorage.getItem('dept');
@@ -34,10 +36,29 @@ document.addEventListener('DOMContentLoaded', function () {
     deptDropdown.addEventListener('change', applyFilters);
     wfhTypeDropdown.addEventListener('change', applyFilters);
 
+    // Debounce function to limit the rate at which a function is called
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // Use debounced version of applyFilters for search input
+    const debouncedApplyFilters = debounce(applyFilters, 300); // Adjust delay as needed
+
+    searchInput.addEventListener('input', function () {
+        searchQuery = this.value.toLowerCase();
+        debouncedApplyFilters(); // Use the debounced function
+    });
+
     clearFiltersButton.addEventListener('click', function () {
         requestDateInput.value = today;
         wfhTypeDropdown.value = "All"; // Reset WFH type filter
         deptDropdown.value = "All"; // Reset department filter
+        searchQuery = ''; // Reset search query
+
         fetchSchedulesForDate(today);
     });
 
@@ -71,19 +92,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function applyFilters() {
         const selectedWFHType = wfhTypeDropdown.value;
-        const selectedDept = deptDropdown.value; // Get selected department
-        console.log('Selected WFH Type:', selectedWFHType); // Debugging
-        console.log('Selected Department:', selectedDept); // Debugging
+        const selectedDept = deptDropdown.value;
 
-        // Filter requests based on selected WFH type and department
         const filteredRequests = allRequests.filter(request => {
             const matchesWFHType = selectedWFHType === "All" || request.wfh_status === selectedWFHType;
-            const matchesDept = selectedDept === "All" || request.department === selectedDept; // Department filter logic
-            
-            return matchesWFHType && matchesDept; // Return true only if both conditions match
+            const matchesDept = selectedDept === "All" || request.department === selectedDept;
+            const matchesSearch = searchQuery === '' || (
+                request.employee_first_name.toLowerCase().includes(searchQuery) ||
+                request.employee_last_name.toLowerCase().includes(searchQuery) ||
+                request.position.toLowerCase().includes(searchQuery) ||
+                request.department.toLowerCase().includes(searchQuery)
+            );
+
+            return matchesWFHType && matchesDept && matchesSearch;
         });
 
-        console.log('Filtered requests:', filteredRequests); // Debugging
+        console.log('Filtered requests:', filteredRequests);
         renderTable(filteredRequests);
     }
 

@@ -7,6 +7,8 @@ function formatDateToYYYYMMDD(date) {
     return `${year}-${month}-${day}`; // Return formatted date
 }
 
+let searchQuery = '';
+
 document.addEventListener('DOMContentLoaded', async () => {
     const staffId = sessionStorage.getItem('staff_id');
     console.log("Staff ID:", staffId); // Debug: Check if staff ID is available
@@ -32,13 +34,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         const wfhType = document.getElementById('wfhTypeSelect').value; // Get selected WFH type
         fetchAndPopulateSchedule(staffId, requestDate, wfhType); // Fetch the schedule for the selected date and WFH type
     });
+
+    // Event listener for the search input
+    document.getElementById('searchInput').addEventListener('input', (event) => {
+        searchQuery = event.target.value.toLowerCase(); // Update the search query
+        filterSchedules(); // Filter schedules based on the current search query
+    });
+    document.getElementById('clearfilters').addEventListener('click', () => clearFilters());
+
 });
+
 
 // Function to fetch and populate the team schedule based on the date and WFH type
 async function fetchAndPopulateSchedule(staffId, requestDate, wfhType) {
     try {
         console.log("Formatted Date for API Call:", requestDate); // Log the date being sent to the API
-        const response = await fetch(`http://localhost:5000/team_schedule/${staffId}?date=${requestDate}`);
+        const response = await fetch(`http://localhost:5200/team_schedule/${staffId}?date=${requestDate}`);
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -63,7 +74,6 @@ async function fetchAndPopulateSchedule(staffId, requestDate, wfhType) {
 }
 
 // Function to populate the team schedule table based on date and WFH type
-// Function to populate the team schedule table based on date and WFH type
 function populateTeamScheduleTable(schedules, requestDate, wfhType) {
     const tableBody = document.getElementById('teamScheduleTableBody');
     tableBody.innerHTML = ''; // Clear the existing table content
@@ -74,7 +84,7 @@ function populateTeamScheduleTable(schedules, requestDate, wfhType) {
         // Initialize WFH status and in-office status
         let wfhStatus = 'N/A';
         let inOfficeStatus = 'In Office (Full Day)'; // Default value
-        
+
         // Handle leave status: set to "N/A" if not on leave
         let leaveStatus = (schedule.leave_status === "On Leave") ? "On Leave" : "N/A";
 
@@ -123,4 +133,28 @@ function populateTeamScheduleTable(schedules, requestDate, wfhType) {
             tableBody.appendChild(row); // Append the new row to the table body
         }
     });
+}
+// Function to filter and display the team schedule based on the search query
+function filterSchedules() {
+    const rows = document.querySelectorAll('#teamScheduleTableBody tr'); // Get all rows in the table
+    rows.forEach(row => {
+        const rowData = row.innerText.toLowerCase(); // Get text content of the row
+        row.style.display = rowData.includes(searchQuery) ? '' : 'none'; // Show or hide the row based on search query
+    });
+}
+// Clear filters: Reset all filter inputs and show all data
+function clearFilters() {
+    document.getElementById('wfhTypeSelect').value = 'All'; // Reset type to "All"
+    document.getElementById('requestDate').value = formatDateToYYYYMMDD(new Date()); // Reset to today's date
+    document.getElementById('searchInput').value = ''; // Clear search input
+
+    // Reset search query
+    searchQuery = '';
+
+    // Reapply filters with cleared values, showing all data
+    const staffId = sessionStorage.getItem('staff_id'); // Retrieve staff ID
+    const requestDate = document.getElementById('requestDate').value;
+    const wfhType = document.getElementById('wfhTypeSelect').value;
+    
+    fetchAndPopulateSchedule(staffId, requestDate, wfhType); // Call function with updated parameters
 }
