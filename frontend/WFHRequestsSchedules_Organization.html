@@ -40,6 +40,11 @@
             // Call the function to display the sidebar and apply role-based logic
             displaysidebar();
 
+            // Set today's date as default in the date picker and fetch data
+            const datePicker = document.getElementById("requestdate");
+            const today = new Date().toISOString().split('T')[0];
+            datePicker.value = today;
+
             fetchWFHCounts();
 
         });

@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     populateWFHTable(allRequests);
         
                     // Call the function to populate the position dropdown with unique positions
-                    populatePositionDropdown(allRequests);
+                    populateDepartmentnDropdown(allRequests);
         
                     document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
                     document.getElementById('departmentdropdown').addEventListener('change', () => filterRequests(allRequests));

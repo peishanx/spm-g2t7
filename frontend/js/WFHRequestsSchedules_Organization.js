@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function fetchWFHCounts(selectedDate) {
     if (!selectedDate) {
-        console.error('No date selected for fetching WFH counts.');
+        console.log('No date selected for fetching WFH counts.');
         return; // Exit if no date is selected
     }
     
-    fetch(`http://127.0.0.1:5100/employee/wfh/counts?date=${selectedDate}`)
+    fetch(`http://localhost:5200/wfhcount/${selectedDate}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -30,7 +30,9 @@ function fetchWFHCounts(selectedDate) {
         })
         .then(data => {
             console.log("Filtered data:", data); // Check what data you get
-            renderWFHData(data); // Call the function to render data
+            console.log("Filtered data:", data["data"]); // Check what data you get
+
+            renderWFHData(data["data"]); // Call the function to render data
         })
         .catch(error => console.error('Error fetching data:', error));
 }
