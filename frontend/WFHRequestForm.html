@@ -98,7 +98,7 @@
                     <form class="wfh-form" enctype="multipart/form-data">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="firstname">FirstName</label>
+                                <label for="firstname">FirstName:</label>
                                 <div class="input-wrapper">
                                     <!-- <input type="text" id="firstname" placeholder="FirstName"> -->
                                     <!--Display the log in user name, not let them input-->
@@ -106,7 +106,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="lastname">LastName</label>
+                                <label for="lastname">LastName:</label>
                                 <div class="input-wrapper">
                                     <!--Display the log in user name, not let them input-->
                                     <p class="staffLname" id="staffLname"></p>
@@ -117,7 +117,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="department">Department</label>
+                                <label for="department">Department:</label>
                                 <div class="input-wrapper">
                                     <!-- <select class="departmentdropdown" id="department">
                                         <option id="hramin">HR and Admin</option>
@@ -132,21 +132,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="role">Role</label>
+                                <label for="role">Role:</label>
                                 <!-- <input type="text" id="role"   ="Role"> -->
                                 <p class="positionDisplay" id="positionDisplay"></p>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="from-date">From Date</label>
+                                <label for="from-date">From Date:</label>
                                 <div class="input-wrapper">
                                     <input type="date" id="from-date" placeholder="From Date">
                                     <!-- <img src="img/icon-3.svg" alt="" class="input-icon"> -->
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="to-date">To Date</label>
+                                <label for="to-date">To Date:</label>
                                 <div class="input-wrapper">
                                     <input type="date" id="to-date" placeholder="To Date">
                                     <!-- <img src="img/icon-3.svg" alt="" class="input-icon"> -->
@@ -154,8 +154,11 @@
                             </div>
                         </div>
                         <div class="form-row">
+                            <div id="DateerrorText" style="color: red; margin-top: 10px; font-size: small;"></div>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group">
-                                <label for="type">Type</label>
+                                <label for="type">Type:</label>
                                 <div class="input-wrapper">
                                     <select class="typedropdown" id="type">
                                         <option value="AM">AM</option>
@@ -167,7 +170,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group full-width">
-                                <label for="reason">Reason</label>
+                                <label for="reason">Reason:</label>
                                 <textarea id="reason" placeholder="Reason"></textarea>
                             </div>
                         </div>
@@ -177,6 +180,8 @@
                                 <input type="file" id="attachment" name="attachment">
                             </div>
                         </div>
+                        <div id="errorText" style="color: red; margin-top: 10px;font-size: small;"></div>
+
                         <div class="form-actions">
                             <button type="button" class="btn btn-secondary" id="cancelbtn"
                                 onclick="navigateTo('WFHRequestsOverview_Staff.html')">Cancel</button>

@@ -1,3 +1,5 @@
+let searchQuery = '';
+
 document.addEventListener('DOMContentLoaded', function () {
     const staffId = sessionStorage.getItem('staff_id');
 
@@ -14,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch(`${fetchUrlReq}/employee/${staffId}`)
         .then(response => response.json())
         .then(data => {
-            if (data.code === 200) {
+            if (data.code === 200 || data.code === 404) {
                 allRequests = data.data; // Store all requests for filtering
                 console.log(allRequests);
                 populateWFHTable(allRequests); // Initial render of all requests
@@ -27,52 +29,78 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     // Event listeners for filters
-    document.getElementById('statusdropdown').addEventListener('change', applyFilters);
-    document.getElementById('wfhtypedropdown').addEventListener('change', applyFilters);
-    document.getElementById('requestdate').addEventListener('change', applyFilters); // 'change' for date picker
-    document.getElementById('clearfilters').addEventListener('click', clearFilters);
-
-    // Function to apply the filters and update the table
-    function applyFilters() {
-        const statusFilter = document.getElementById('statusdropdown').value;
-        const wfhTypeFilter = document.getElementById('wfhtypedropdown').value;
-        const requestDateFilter = document.getElementById('requestdate').value; // Assuming it's a date picker input
-
-        // Filter the requests based on selected filters
-        const filteredRequests = allRequests.filter(request => {
-            const matchesStatus = statusFilter === '' || request.status === statusFilter;
-            const matchesWfhType = wfhTypeFilter === '' || request.wfh_type === wfhTypeFilter;
-            // Extract only the date part from request.request_date
-            const requestDateOnly = request.request_date.split('T')[0]; // Get the date part (YYYY-MM-DD) from ISO format
-            const matchesRequestDate = requestDateFilter === '' || requestDateOnly === requestDateFilter; // Compare only the date
-
-            return matchesStatus && matchesWfhType && matchesRequestDate;
-        });
-
-        // Repopulate the table with filtered results
-        populateWFHTable(filteredRequests);
+    document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
+    document.getElementById('requestdate').addEventListener('change', () => filterRequests(allRequests)); // 'change' for date picker
+    document.getElementById('clearfilters').addEventListener('click', () => clearFilters(allRequests));
+    document.getElementById('wfhtypedropdown').addEventListener('change', () => filterRequests(allRequests));
+    // Debounce function to limit the rate at which a function is called
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
     }
 
-    // Function to clear all filters and show all requests
-    function clearFilters() {
-        document.getElementById('statusdropdown').value = ''; // Reset to "All"
-        document.getElementById('wfhtypedropdown').value = ''; // Reset to "All"
-        document.getElementById('requestdate').value = ''; // Clear date filter
-        populateWFHTable(allRequests); // Show all requests again
-    }
+    // Add event listener for search input with debounce
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', debounce(() => {
+        searchQuery = searchInput.value.trim().toLowerCase();
+        filterRequests(allRequests, searchQuery);
+    }, 300));
+
 });
+// Function to apply the filters and update the table
+function filterRequests(allRequests) {
+    const statusFilter = document.getElementById('statusdropdown').value;
+    const wfhTypeFilter = document.getElementById('wfhtypedropdown').value;
+    const requestDateFilter = document.getElementById('requestdate').value; // Assuming it's a date picker input
+
+    // Filter the requests based on selected filters
+    const filteredRequests = allRequests.filter(request => {
+        const matchesStatus = statusFilter === '' || request.status === statusFilter;
+        const matchesWfhType = wfhTypeFilter === '' || request.wfh_type === wfhTypeFilter;
+        // Extract only the date part from request.request_date
+        const requestDateOnly = request.request_date.split('T')[0]; // Get the date part (YYYY-MM-DD) from ISO format
+        const matchesRequestDate = requestDateFilter === '' || requestDateOnly === requestDateFilter; // Compare only the date
+
+        const matchesSearchQuery = searchQuery === '' ||
+            `${request.fname} ${request.lname}`.toLowerCase().includes(searchQuery) ||
+            request.reason.toLowerCase().includes(searchQuery) ||
+            request.status.toLowerCase().includes(searchQuery) ||
+            request.wfh_type.toLowerCase().includes(searchQuery) ||
+            requestDateOnly.includes(searchQuery);
+        // Return true if all conditions match (no priority for any filter)
+        return matchesStatus && matchesWfhType && matchesRequestDate && matchesSearchQuery;
+    });
+
+
+    // Repopulate the table with filtered results
+    populateWFHTable(filteredRequests);
+}
+
+// Function to clear all filters and show all requests
+function clearFilters(allRequests) {
+    document.getElementById('statusdropdown').value = ''; // Reset to "All"
+    document.getElementById('wfhtypedropdown').value = ''; // Reset to "All"
+    document.getElementById('requestdate').value = ''; // Clear date filter
+    // Reset search query and input field
+    searchQuery = '';
+    document.getElementById('searchInput').value = '';
+    populateWFHTable(allRequests); // Show all requests again
+}
 
 // Function to format the date
-function formatDate(dateString,requestdate) {
+function formatDate(dateString, requestdate) {
     const date = new Date(dateString);
     const requesteddate = new Date(requestdate);
     const options = { weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit' };
-    if (dateString == null){
+    if (dateString == null) {
         const formattedDate = requesteddate.toLocaleDateString('en-GB', options).replace(/,/, '');
         console.log(formattedDate);
         return `${formattedDate}`;
     }
-    else if (requestdate == null){
+    else if (requestdate == null) {
         const formattedDate = date.toLocaleDateString('en-GB', options).replace(/,/, '');
         const timeString = date.toLocaleTimeString('en-GB');
         return `${formattedDate}, ${timeString}`;
@@ -99,7 +127,7 @@ function populateWFHTable(requests) {
     }
     tableBody.innerHTML = ''; // Clear the table before adding new rows
 
-    if (requests.length === 0) {
+    if (!requests || requests.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="7">No requests found</td></tr>';
         return;
     }
@@ -107,11 +135,11 @@ function populateWFHTable(requests) {
     requests.forEach(request => {
         // Concatenate first name and last name
         const fullName = `${request.fname} ${request.lname}`;
-        sessionStorage.setItem('requestStaffname',fullName);
+        sessionStorage.setItem('requestStaffname', fullName);
 
-        
-        const formattedCreatedAt = formatDate(request.createdAt,null);
-        const formattedRequestDate = formatDate(null,request.request_date);
+
+        const formattedCreatedAt = formatDate(request.createdAt, null);
+        const formattedRequestDate = formatDate(null, request.request_date);
         const truncatedReason = truncateString(request.reason);
         console.log(request)
         const row = document.createElement('tr');
@@ -127,7 +155,7 @@ function populateWFHTable(requests) {
                         const managerdata = data.data; // Store all requests for filtering
                         console.log(managerdata);
                         const managername = managerdata["Staff_FName"] + " " + managerdata["Staff_LName"];
-                        sessionStorage.setItem('managername',managername);
+                        sessionStorage.setItem('managername', managername);
                         console.log(request.approvalcount)
                         row.innerHTML = `
                             <td>${formattedCreatedAt}</td>

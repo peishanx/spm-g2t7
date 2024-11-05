@@ -1,4 +1,7 @@
+let searchQuery = '';
+
 document.addEventListener('DOMContentLoaded', async () => {
+
     // Get logged-in staff ID from session storage
     const staffId = sessionStorage.getItem('staff_id'); // Logged-in manager's ID
     const roleNum = sessionStorage.getItem('rolenum'); // Assuming you also store role number
@@ -20,70 +23,56 @@ document.addEventListener('DOMContentLoaded', async () => {
             .then(data => {
                 if (data.code === 200 || data.code === 404) {
                     console.log("Team Requests:", data.data); // Process the returned requests as needed
-                    
+
                     // Store fetched data globally for filtering
                     const allRequests = data.data || [];
 
                     // Call the function to populate the table with the fetched team requests
                     populateWFHTable(allRequests);
-        
+
                     // Call the function to populate the position dropdown with unique positions
                     populatePositionDropdown(allRequests);
-        
+
                     document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
                     document.getElementById('teamdropdown').addEventListener('change', () => filterRequests(allRequests));
                     document.getElementById('requestdate').addEventListener('change', () => filterRequests(allRequests)); // 'change' for date picker
                     document.getElementById('clearfilters').addEventListener('click', () => clearFilters(allRequests));
                     document.getElementById('wfhtypedropdown').addEventListener('change', () => filterRequests(allRequests));
 
-                    // allRequests = data.data; // Store all requests for filtering
-                    // console.log(allRequests);
-                    // populateWFHTable(allRequests); // Initial render of all requests
+                    // Debounce function to limit the rate at which a function is called
+                    function debounce(func, delay) {
+                        let timeout;
+                        return function (...args) {
+                            clearTimeout(timeout);
+                            timeout = setTimeout(() => func.apply(this, args), delay);
+                        };
+                    }
+
+                    // Add event listener for search input with debounce
+                    const searchInput = document.getElementById('searchInput');
+                    searchInput.addEventListener('input', debounce(() => {
+                        searchQuery = searchInput.value.trim().toLowerCase();
+                        filterRequests(allRequests, searchQuery);
+                    }, 300));
+
                 } else {
                     console.error('Error fetching requests:', data.message);
                 }
             })
-        // Fetch team requests using the manager's staff ID
-        // const response = await fetch(`http://localhost:5200/request/team/${staffId}`);
-        // Check if the response is OK (status code 200)
-        // if (response.ok) {
-        //     const data = await response.json();
-        //     console.log("Team Requests:", data.data); // Process the returned requests as needed
-
-        //     // Store fetched data globally for filtering
-        //     const allRequests = data.data;
-        //     // Call the function to populate the table with the fetched team requests
-        //     populateWFHTable(allRequests);
-
-        //     // Call the function to populate the position dropdown with unique positions
-        //     populatePositionDropdown(allRequests);
-
-        //     document.getElementById('statusdropdown').addEventListener('change', () => filterRequests(allRequests));
-        //     document.getElementById('teamdropdown').addEventListener('change', () => filterRequests(allRequests));
-        //     document.getElementById('requestdate').addEventListener('change', () => filterRequests(allRequests)); // 'change' for date picker
-        //     document.getElementById('clearfilters').addEventListener('click', () => clearFilters(allRequests));
-        //     document.getElementById('wfhtypedropdown').addEventListener('change', () => filterRequests(allRequests));
-
-        // } else {
-        //     const errorData = await response.json();
-        //     console.error("Error fetching team requests:", errorData.message);
-        //     // Handle error UI here
-        // }
     } catch (error) {
         console.error("An error occurred while fetching team requests:", error);
         // Handle network errors or other issues
     }
 });
 
-function searchRequests(requests, query) {
-    const lowerCaseQuery = query.toLowerCase();
-    return requests.filter(request =>
-        `${request.fname} ${request.lname}`.toLowerCase().includes(lowerCaseQuery) ||
-        request.reason.toLowerCase().includes(lowerCaseQuery) ||
-        request.status.toLowerCase().includes(lowerCaseQuery) ||
-        request.wfh_type.toLowerCase().includes(lowerCaseQuery)
-    );
-}
+// function searchRequests(requests, query) {
+//     return requests.filter(request =>
+//         `${request.fname} ${request.lname}`.toLowerCase().includes(query) ||
+//         request.reason.toLowerCase().includes(query) ||
+//         request.status.toLowerCase().includes(query) ||
+//         request.wfh_type.toLowerCase().includes(query)
+//     );
+// }
 
 
 
@@ -263,15 +252,21 @@ function filterRequests(allRequests) {
         // Extract only the date part from request.request_date
         const requestDateOnly = request.request_date.split('T')[0]; // Get the date part (YYYY-MM-DD) from ISO format
         const matchesRequestDate = requestDateFilter === '' || requestDateOnly === requestDateFilter; // Compare only the date
-
+        // Match search query if provided
+        const matchesSearchQuery = searchQuery === '' ||
+            `${request.fname} ${request.lname}`.toLowerCase().includes(searchQuery) ||
+            request.reason.toLowerCase().includes(searchQuery) ||
+            request.status.toLowerCase().includes(searchQuery) ||
+            request.wfh_type.toLowerCase().includes(searchQuery) ||
+            requestDateOnly.includes(searchQuery);
         // Return true if all conditions match (no priority for any filter)
-        return matchesPosition && matchesStatus && matchesWfhType && matchesRequestDate;
+        return matchesPosition && matchesStatus && matchesWfhType && matchesRequestDate && matchesSearchQuery;
     });
 
     //searchbar
-    if (searchQuery) {
-        filteredRequests = searchRequests(filteredRequests, searchQuery);
-    }
+    // Event listener for search input
+    // const searchInput = document.getElementById('searchInput');
+    // searchInput.addEventListener('input', () => filterRequests(allRequests));
     // Repopulate the table with filtered results
     populateWFHTable(filteredRequests);
 }
@@ -283,7 +278,9 @@ function clearFilters(allRequests) {
     document.getElementById('requestdate').value = ''; // Clear date filter
     document.getElementById('teamdropdown').value = 'All'; // Set department to "All"
     document.getElementById('searchInput').value = '';
-
+    // Reset search query and input field
+    searchQuery = '';
+    document.getElementById('searchInput').value = '';
     // Reapply filters with cleared values (which should show all requests)
     populateWFHTable(allRequests);
 }
