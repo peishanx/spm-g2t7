@@ -32,7 +32,7 @@ $ docker compose up
 ```
 
 Note: 
-DO NOT RUN ‘docker compose down -d’ on command prompt after seeing the 5 services. 
+DO NOT RUN ‘docker compose down -d’ on command prompt after seeing the 7 services. 
 Run ‘docker compose down’ instead.
 
 # Service Overview
