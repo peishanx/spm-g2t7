@@ -14,12 +14,6 @@ git clone https://github.com/peishanx/spm-g2t7.git
 cd wfh-request-system
 * Install dependencies: 
 pip install -r requirements.txt
-* Set up environment variables: Create a .env file with the following variables:
-FLASK_APP=request.py
-FLASK_ENV=development
-UPLOAD_FOLDER=./uploads
-EMAIL=<your-email@example.com>
-EMAIL_PASSWORD=<your-app-specific-password>
 * Start the Flask server:
 flask run
 * Access the application: Open http://localhost:8000 in your browser to view the application
