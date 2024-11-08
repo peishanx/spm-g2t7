@@ -10,7 +10,7 @@
 Please follow the instructions below before running the files:
 
 * Clone the repository:
-git clone https://github.com/yourusername/wfh-request-system.git
+git clone https://github.com/peishanx/spm-g2t7.git
 cd wfh-request-system
 * Install dependencies: 
 pip install -r requirements.txt
