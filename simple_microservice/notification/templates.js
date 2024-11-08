@@ -4,13 +4,13 @@ export default {
     request_create: function(user_info, request_info) {
         return{
             from: process.env.email,
-            to: user_info.Email, // employee's email from your employee database
-            subject: `Your request #${request_info.rid} has been submitted`, // Subject line
+            to: user_info.email, // employee's email from your employee database
+            subject: `Your request #${request_info.request_id} has been submitted`, // Subject line
             html: `<h2>Dear ${user_info.Staff_FName},</h2>
                         
-                    <p>Your request for ${request_info.type} WFH has been submitted.</p>
+                    <p>Your request for ${request_info.request_type} WFH has been submitted.</p>
                     
-                    <p>Request ID: ${request_info.rid}</p>
+                    <p>Request ID: ${request_info.request_id}</p>
                     <p>Status: Pending</p>
                     
                     <p>If you have any questions, please reach out to your manager.</p>`, // HTML body
@@ -19,13 +19,13 @@ export default {
     request_approve: function(user_info, request_info) {
         return {
             from: process.env.email,
-            to: user_info.Email, // employee's email from your employee database
-            subject: `Your request #${request_info.rid} has been approved`, // Subject line
+            to: user_info.email, // employee's email from your employee database
+            subject: `Your request #${request_info.request_id} has been approved`, // Subject line
             html: `<h2>Dear ${user_info.Staff_FName},</h2>
                         
-                    <p>Congratulations, your request for ${request_info.type} WFH has been approved.</p>
+                    <p>Congratulations, your request for ${request_info.request_type} WFH has been approved.</p>
                     
-                    <p>Request ID: ${request_info.rid}</p>
+                    <p>Request ID: ${request_info.request_id}</p>
                     <p>Status: Approved</p>
                     
                     <p>If you have any questions, please reach out to your manager.</p>`, // HTML body
@@ -35,13 +35,13 @@ export default {
     request_reject: function(user_info, request_info) {
         return {
             from: process.env.email,
-            to: user_info.Email,
-            subject: `Your request #${request_info.rid} has been rejected`, // Subject line
+            to: user_info.email,
+            subject: `Your request #${request_info.request_id} has been rejected`, // Subject line
             html: `<h2>Dear ${user_info.Staff_FName},</h2>
                         
-                    <p>We regret to inform you that your request for ${request_info.type} WFH has been rejected.</p>
+                    <p>We regret to inform you that your request for ${request_info.request_type} WFH has been rejected.</p>
                     
-                    <p>Request ID: ${request_info.rid}</p>
+                    <p>Request ID: ${request_info.request_id}</p>
                     <p>Status: Rejected</p>
                     
                     <p>If you believe this was a mistake, please contact your manager for further assistance.</p>`, // HTML body
@@ -51,19 +51,34 @@ export default {
     request_withdraw: function(user_info, request_info) {
         return {
             from: process.env.email,
-            to: user_info.Email,
-            subject: `You have withdrawn your request #${request_info.rid}`, // Subject line
+            to: user_info.email,
+            subject: `You have withdrawn your request #${request_info.request_id}`, // Subject line
             html: `<h2>Dear ${user_info.Staff_FName},</h2>
                     
-                    <p>Your request for ${request_info.type} WFH has been withdrawn</p>
+                    <p>Your request for ${request_info.request_type} WFH has been withdrawn</p>
                     
-                    <p>Request ID: ${request_info.rid}</p>
+                    <p>Request ID: ${request_info.request_id}</p>
                     <p>Status: Withdrawn</p>
                     
                     <p>If this was done by mistake, please contact your manager.</p>`, // HTML body
         };
     },
 
+    request_revoke: function(user_info, request_info) {
+        return {
+            from: process.env.email,
+            to: user_info.email,
+            subject: `Your previously approved request #${request_info.request_id} has been revoked`, // Subject line
+            html: `<h2>Dear ${user_info.Staff_FName},</h2>
+                    
+                    <p>Your previously approved request for ${request_info.request_type} WFH has been revoked</p>
+                    
+                    <p>Request ID: ${request_info.request_id}</p>
+                    <p>Status: Rejected</p>
+                    
+                    <p>If this was done by mistake, please contact your manager.</p>`, // HTML body
+        };
+    },
     // request_pending: function(user_info, request_info) {
     //     return {
     //         from: process.env.email,

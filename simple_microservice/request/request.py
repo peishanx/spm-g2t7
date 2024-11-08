@@ -14,9 +14,14 @@ from sqlalchemy import text
 from datetime import date
 from collections import defaultdict
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(environ.get("RABBIT_URL"), heartbeat=0, blocked_connection_timeout=300))
+# connection = pika.BlockingConnection(pika.ConnectionParameters(environ.get("RABBIT_URL"), heartbeat=0, blocked_connection_timeout=300))
+# channel = connection.channel()
+# RabbitMQ setup
+RABBIT_URL = os.environ.get("RABBIT_URL", "rabbitmq")  # Use the service name 'rabbitmq'
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBIT_URL, heartbeat=0, blocked_connection_timeout=300))
 channel = connection.channel()
-
+# Define exchange type
+exchange = 'email'
 
 #Request db
 app = Flask(__name__)
@@ -179,8 +184,8 @@ def create_request():
     wfh_type = request.form.get('type')
     reason = request.form.get('reason')
     email = request.form.get('email')  # Get email from form data
-    staff_fname = request.form.get('staff_fname')  # Get staff_fname from form data
-    staff_lname = request.form.get('staff_lname')  # Get staff_lname from form data
+    staff_fname = request.form.get('fname')  # Get staff_fname from form data
+    staff_lname = request.form.get('lname')  # Get staff_lname from form data
 
     # Log values for debugging
     app.logger.info(f"SID: {sid}, wfh_type: {wfh_type}, Reason: {reason}, Email: {email}, Staff FName: {staff_fname},StaffLName: {staff_lname}")
@@ -218,11 +223,14 @@ def create_request():
                 "request_type": new_request.wfh_type
             }
         }
-        channel.exchange_declare(exchange=exchange,
-                        exchange_type='topic', durable=True)
-        channel.basic_publish(exchange=exchange,
-                    routing_key='request',
-                    body=json.dumps(body))
+        # Declare exchange and publish the message with routing key 'request.create'
+        channel.exchange_declare(exchange=exchange, exchange_type='topic', durable=True)
+        channel.basic_publish(
+            exchange=exchange,
+            routing_key='request.create',  # The routing key indicating the request has been created
+            body=json.dumps(body)
+        )
+
         
         return jsonify({"code": 201, "message": f"Employee {sid} submitted request successfully."}), 201
     except Exception as e:
@@ -597,7 +605,7 @@ def revoke_request(rid, sid,reportingID):
         channel.exchange_declare(exchange=exchange,
                         exchange_type='topic', durable=True)
         channel.basic_publish(exchange=exchange,
-                    routing_key='request.reject',
+                    routing_key='request.revoke',
                     body=json.dumps(body))
         
         return jsonify({
