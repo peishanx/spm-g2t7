@@ -5,10 +5,12 @@ volumes:
   rabbitmq_data:
   pgdata:
 
+
 networks:
   spm-net:
     driver: bridge
-  default:  # Setting the default network
+  default:
+    # Setting the default network
     name: spm-net
 
 services:
@@ -24,13 +26,13 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD']
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", '-u', 'root', '-p$$MYSQL_ROOT_PASSWORD' ]
       interval: 10s
       timeout: 5s
       retries: 5
     volumes:
       - db:/var/lib/mysql
-      - ./database:/docker-entrypoint-initdb.d  # Mount the entire directory
+      - ./database:/docker-entrypoint-initdb.d # Mount the entire directory
 
   #######################################
   # Frontend Service
@@ -75,7 +77,6 @@ services:
     volumes:
       - ./data:/data
 
-
   #######################################
   # Request Microservice  
   #######################################
@@ -89,8 +90,35 @@ services:
       MYSQL_USERNAME: root
       MYSQL_PASSWORD: example
       request_dbURL: mysql+mysqlconnector://root:example@database:3306/request
-      EMPLOYEE_URL: http://employee:5100/employee  # URL for the employee microservice
-      EMPLOYEELEAVES_URL: http://employeeleaves:5300/employeeleaves 
+      EMPLOYEE_URL: http://employee:5100/employee # URL for the employee microservice
+      EMPLOYEELEAVES_URL: http://employeeleaves:5300/employeeleaves
+      PYTHONUNBUFFERED: 1
+      RABBIT_URL: 'rabbitmq'
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      # notification:
+      #   # Make sure it waits for notification to be healthy
+      #   condition: service_healthy
+    ports:
+      - "5200:5200"
+
+  ####################################### 
+  # Employee Leaves Microservice   
+  ####################################### 
+  employeeleaves:
+    container_name: spm-employee_leaves
+    build:
+      context: ./simple_microservice/employee_leaves
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_HOST: database
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: example
+      employeeleaves_dbURL: mysql+mysqlconnector://root:example@database:3306/employee_leaves
+      # EMPLOYEE_URL: http://spm-employee:5100/employee  # URL for the employee microservice 
       PYTHONUNBUFFERED: 1
       RABBIT_URL: 'rabbitmq'
     depends_on:
@@ -99,34 +127,7 @@ services:
       rabbitmq:
         condition: service_healthy
     ports:
-      - "5200:5200"
-
-
-####################################### 
-  # Employee Leaves Microservice   
-  ####################################### 
-  employeeleaves: 
-    container_name: spm-employee_leaves 
-    build: 
-      context: ./simple_microservice/employee_leaves 
-      dockerfile: Dockerfile 
-    environment: 
-      MYSQL_HOST: database 
-      MYSQL_USERNAME: root 
-      MYSQL_PASSWORD: example 
-      employeeleaves_dbURL: mysql+mysqlconnector://root:example@database:3306/employee_leaves 
-      # EMPLOYEE_URL: http://spm-employee:5100/employee  # URL for the employee microservice 
-      PYTHONUNBUFFERED: 1 
-      RABBIT_URL: 'rabbitmq' 
-    depends_on: 
-      database: 
-        condition: service_healthy 
-      rabbitmq: 
-        condition: service_healthy 
-    ports: 
       - "5300:5300"
-
-
   #######################################
   # Notification Microservice  
   #######################################
@@ -144,18 +145,25 @@ services:
       SMTP_HOST: smtp.gmail.com
       SMTP_PORT: 587
       SMTP_USER: testspmg2t7@gmail.com
-      SMTP_PASS: abcdefghijk2024
+      SMTP_PASS: esjgolndkwgaktdt
     depends_on:
       rabbitmq:
         condition: service_healthy
+    # ports:
+    #   - "3000:3000" # Expose the health check port
+    # healthcheck:
+    #   test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
 
   #######################################
   # RabbitMQ: Messaging Broker  
   #######################################
   rabbitmq:
     container_name: spm-rabbitmq
-    build: 
-      context:  ./
+    build:
+      context: ./
       dockerfile: rabbit.Dockerfile
     restart: always
     ports:
@@ -166,7 +174,7 @@ services:
       - ./rabbitmq_definitions.json:/etc/rabbitmq/rabbitmq_definitions.json
       - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
       interval: 10s
       timeout: 5s
       retries: 5

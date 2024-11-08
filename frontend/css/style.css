@@ -620,20 +620,44 @@
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   width: 300px;
+  margin-right: 20px; /* Space between search bar and filters */
+}
+.wfhschedulestaff .filters-container label {
+  display: block; /* Makes the label take the full width */
+  margin-bottom: 5px; /* Adds space between the label and input */
+  font-size: small;
+}
+.wfhschedulestaff #clearfilters, .wfhschedulestaff #filterButton{
+  background: transparent; /* Give clear filters a different color */
+  color: black;
+  width: 100px; /* Set a consistent width for dropdowns */
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid #dadada;
+  margin-top: 25px;
+}
+/* Flexbox layout for filters and buttons */
+.wfhschedulestaff .filter-row {
+  display: flex;
+  align-items: center; /* Vertically center the items */
+  gap: 20px; /* Space between filters and buttons */
+  margin-top: 10px; /* Space above the filter row */
 }
 
-.wfhschedulestaff .btn,
-.wfhschedulestaff #statusdropdown {
+.wfhschedulestaff .filters-container {
+  display: flex; /* Maintain a horizontal layout for filters */
+  gap: 20px; /* Space between filters */
+}
+
+
+.wfhschedulestaff #wfhTypeSelect,
+.wfhschedulestaff #requestDate {
   padding: 10px;
   border-radius: 10px;
   font-size: 14px;
-  /* cursor: pointer; */
-}
-
-.wfhschedulestaff #statusdropdown,
-.wfhschedulestaff #requestdate {
   border: 1px solid #dadada;
   background: white;
+  width: 150px; /* Consistent width for filters */
 }
 
 /* #requestdate:active{

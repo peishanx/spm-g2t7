@@ -71,10 +71,10 @@
                     </div>
                 </header>
                 <div class="content">
-                    <div class="actions">
-                        <input class="searchbar" type="search" placeholder="Search">
+                    <!-- <div class="actions">
+                        <input class="searchbar" type="search" placeholder="Search all schedules..." id="searchInput">
                     </div>
-                    
+
                     <div class="filter-row">
                         <div class="filters-container">
                             <div>
@@ -92,10 +92,38 @@
                                 <input type="date" class="datefilter" id="requestDate" />
                             </div>
 
-                            <button type="button" id="filterButton">Apply Filters</button>
+                            <button type="button" class="btn" id="filterButton">Apply Filters</button>
+                            <button type="button" class="btn" id="clearfilters">Clear Filters</button>
+
                         </div>
-                        
+
+                    </div> -->
+                    <div class="actions">
+                        <input class="searchbar" type="search" placeholder="Search all schedules..." id="searchInput">
                     </div>
+                    <div class="filter-row">
+                        <div class="filters-container">
+                            <div>
+                                <label for="wfhtypedropdown">WFH Type</label>
+                                <select class="dropdown" id="wfhTypeSelect">
+                                    <option value="All">All</option>
+                                    <option value="WFH (AM)">WFH (AM)</option>
+                                    <option value="WFH (PM)">WFH (PM)</option>
+                                    <option value="WFH (Full Day)">WFH (Full Day)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="requestdate">Request Date</label>
+                                <input type="date" class="datefilter" id="requestDate" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <button type="button" class="btn" id="filterButton">Apply Filters</button>
+
+                    <button type="button" class="btn" id="clearfilters">Clear Filters</button>
+
                     <div class="contentheader">
                         <h2 class="contenttitle">My Team Schedule</h2>
                     </div>
