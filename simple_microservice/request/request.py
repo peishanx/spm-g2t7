@@ -39,6 +39,36 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
+#*******LocalHost Testing (Uncomment the codes below testing: run python -m unittest test_request.py in the terminal)***************
+# Import MagicMock for mocking RabbitMQ in tests
+#from unittest.mock import MagicMock
+
+#app = Flask(__name__)
+
+# Configure the database URI
+#if os.getenv("TESTING"):
+#    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"  # Use in-memory database for tests
+#else:
+#    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("request_dbURL") or "mysql+mysqlconnector://root:@localhost:3306/request"
+
+#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+#app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 299}
+#app.config['UPLOAD_FOLDER'] = 'uploads'
+
+#db = SQLAlchemy(app)
+
+# Configure RabbitMQ channel based on the environment
+#if os.getenv("TESTING"):
+#    channel = MagicMock()  # Mock channel for testing
+#else:
+#    import pika
+#    connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ.get("RABBIT_URL", "localhost"), heartbeat=0, blocked_connection_timeout=300))
+#    channel = connection.channel()
+# CORS(app, resources={r"/request/*": {"origins": "http://spm-frontend:8000"}})
+
+#***************************************LocalHost Testing (Uncomment the codes up to here)*****************************************************************
+
+
 # Correct the EMPLOYEE_URL to include the /employee endpoint
 EMPLOYEE_URL = os.environ.get("EMPLOYEE_URL") or "http://localhost:5100/employee" or "http://employee:5100/employee"
 EMPLOYEELEAVES_URL = os.environ.get("EMPLOYEELEAVES_URL") or "http://localhost:5300/employeeleaves" or "http://employeeleaves:5300/employeeleaves "
