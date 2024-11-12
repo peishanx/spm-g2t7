@@ -167,30 +167,44 @@
   </div>
 
   <script>
-    // Handle form submission (simplified for demonstration purposes)
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
+  
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      // Determine the base URL depending on the environment
-      const baseURL = window.location.hostname === 'localhost' ?
-        'http://localhost:8000' :
-        'http://frontend:8000'; // Change to your domain or IP if deployed
-
+      const baseURL = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`;
+      
       try {
         const response = await fetch(`${baseURL}/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Connection': 'keep-alive',  // Forces HTTP/1.1
           },
           body: JSON.stringify({ email, password }),
         });
-
-        const data = await response.json();
-
+  
+        if (!response.ok) {
+          alert(`Error: ${response.status} - Unable to complete login.`);
+          return;
+        }
+  
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          alert("The response is not in JSON format.");
+          return;
+        }
+  
+        let data;
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          console.error('JSON Parsing Error:', jsonError);
+          alert("Error parsing the response JSON.");
+          return;
+        }
+  
         if (data.success) {
-          // Store the staff details in sessionStorage
           sessionStorage.setItem('staff_id', data.staff_id);
           sessionStorage.setItem('staff_name', `${data.firstname} ${data.lastname}`);
           sessionStorage.setItem('staff_fname', data.firstname);
@@ -201,23 +215,24 @@
           sessionStorage.setItem('country', data.country);
           sessionStorage.setItem('email', data.email);
           sessionStorage.setItem('reportingmanager', data.reportingmanager);
+  
           if (data.staff_id == 130002) {
-            //Jack does not have to apply for leaves so he dont have this page.
-            window.location.href = 'WFHRequestsOverview_Jack.html';
+            window.location.replace(`${window.location.origin}/WFHRequestsOverview_Jack.html`);
+          } else {
+            window.location.href = `${window.location.origin}/WFHRequestsOverview_Staff.html`;
           }
-          else {
-            // Redirect to the overview page
-            window.location.href = 'WFHRequestsOverview_Staff.html';
-          }
-
         } else {
           alert('Invalid email or password');
         }
-      } catch (error) {
-        console.error('Error:', error);
+      } catch (networkError) {
+        console.error('Network or server error:', networkError);
+        alert("Network error: Unable to reach the server.");
       }
     });
   </script>
+  
+  
+  
 
 </body>
 
