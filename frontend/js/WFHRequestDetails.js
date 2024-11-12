@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const managername = sessionStorage.getItem('managername');
     const requesterstaffname = sessionStorage.getItem('requestStaffname');
     console.log(requesterstaffname);
+    console.log(sessionStorage.getItem('requestStaffname'));
     console.log(managername);
 
     if (!requestId) {

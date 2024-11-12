@@ -65,7 +65,7 @@ function filterRequests(allRequests) {
         const matchesRequestDate = requestDateFilter === '' || requestDateOnly === requestDateFilter; // Compare only the date
 
         const matchesSearchQuery = searchQuery === '' ||
-            `${request.fname} ${request.lname}`.toLowerCase().includes(searchQuery) ||
+            `${request.stafffname} ${request.stafflname}`.toLowerCase().includes(searchQuery) ||
             request.reason.toLowerCase().includes(searchQuery) ||
             request.status.toLowerCase().includes(searchQuery) ||
             request.wfh_type.toLowerCase().includes(searchQuery) ||
@@ -134,9 +134,9 @@ function populateWFHTable(requests) {
 
     requests.forEach(request => {
         // Concatenate first name and last name
-        const fullName = `${request.fname} ${request.lname}`;
+        const fullName = `${request.stafffname} ${request.stafflname}`;
         sessionStorage.setItem('requestStaffname', fullName);
-
+        console.log(sessionStorage.getItem('requestStaffname'));
 
         const formattedCreatedAt = formatDate(request.createdAt, null);
         const formattedRequestDate = formatDate(null, request.request_date);

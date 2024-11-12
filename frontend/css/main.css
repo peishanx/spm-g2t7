@@ -117,6 +117,11 @@ body {
   gap: 9px;
   margin-bottom: 30px;
 }
+.logo-icon{
+  display: flex;
+  align-items: center;
+  padding-left:60px;
+}
 
 .nav-item.active {
   background-color: var(--primary-500);
